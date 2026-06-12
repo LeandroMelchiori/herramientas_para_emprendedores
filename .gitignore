@@ -1,0 +1,5 @@
+# Configuración local del editor / herramientas de desarrollo
+.claude/
+
+# Comprimidos y temporales
+*.rar

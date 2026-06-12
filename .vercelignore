@@ -1,0 +1,3 @@
+# Archivos que NO deben publicarse en Vercel
+proyecto.rar
+.claude/

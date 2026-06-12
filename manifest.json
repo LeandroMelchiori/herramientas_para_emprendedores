@@ -1,0 +1,46 @@
+{
+  "name": "Herramientas para Emprendedores",
+  "short_name": "Herramientas",
+  "description": "Suite gratuita de herramientas para emprendedores: calculá costos, encontrá colores, dominá el marketing digital y usá IA.",
+  "id": "/",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "lang": "es",
+  "dir": "ltr",
+  "background_color": "#FFFFFF",
+  "theme_color": "#D5306E",
+  "categories": ["business", "productivity", "utilities"],
+  "icons": [
+    { "src": "/assets/icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "/assets/icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "/assets/icons/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ],
+  "shortcuts": [
+    {
+      "name": "Calculadora de Costos",
+      "short_name": "Calculadora",
+      "url": "/modules/calculadora/",
+      "icons": [{ "src": "/assets/icons/icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Guía de Prompts",
+      "short_name": "Prompts",
+      "url": "/modules/guiadeprompts/",
+      "icons": [{ "src": "/assets/icons/icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Combinador de Colores",
+      "short_name": "Colores",
+      "url": "/modules/combinadordecolores/",
+      "icons": [{ "src": "/assets/icons/icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Herramientas de Marketing",
+      "short_name": "Marketing",
+      "url": "/modules/herramientasdigitales/",
+      "icons": [{ "src": "/assets/icons/icon-192.png", "sizes": "192x192" }]
+    }
+  ]
+}
