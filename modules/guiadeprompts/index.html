@@ -399,10 +399,11 @@ footer {
 /* info boxes */
 .what-box p { font-family:'Inter',sans-serif !important; }
 
-/* ══ Buscador ══ */
-.search-row { max-width:700px; margin:0 auto; padding:0.5rem 1rem 0.2rem; }
+/* ══ Barra de filtros compacta (buscador + botón desplegable) ══ */
+.filter-bar-inner { max-width:700px; margin:0 auto; position:relative; }
+.filter-top { display:flex; gap:0.5rem; align-items:center; padding:0.5rem 1rem; }
 #search-input {
-  width:100%;
+  flex:1; min-width:0;
   background: var(--bg);
   border:1px solid var(--border-hard);
   color: var(--ink);
@@ -415,6 +416,38 @@ footer {
 }
 #search-input::placeholder { color: var(--ink-muted); }
 #search-input:focus { border-color: var(--cyan); box-shadow:0 0 0 3px var(--cyan-dim); }
+#filter-toggle {
+  flex-shrink:0;
+  display:inline-flex; align-items:center; gap:0.4rem;
+  background: var(--cyan-dim);
+  border:1px solid var(--border-hard);
+  color: var(--cyan);
+  border-radius:3px;
+  padding:0.55rem 0.85rem;
+  font-family:'JetBrains Mono',monospace;
+  font-size:0.72rem;
+  font-weight:600;
+  cursor:pointer;
+  white-space:nowrap;
+  transition: all 0.15s;
+}
+#filter-toggle:hover { box-shadow:0 0 12px rgba(0,212,255,0.25); }
+#filter-toggle::after { content:'▾'; opacity:0.7; font-size:0.8em; }
+#filter-toggle[aria-expanded="true"]::after { content:'▴'; }
+.filter-panel {
+  position:absolute; top:100%; left:0; right:0;
+  background: var(--bg-card);
+  border:1px solid var(--border-hard);
+  border-top:none;
+  border-radius:0 0 6px 6px;
+  margin:0 1rem;
+  padding:0.6rem 0.7rem;
+  display:flex; flex-wrap:wrap; gap:0.25rem;
+  box-shadow:0 12px 28px rgba(0,0,0,0.55);
+  z-index:101;
+}
+/* El atributo hidden debe ganarle al display:flex de arriba */
+.filter-panel[hidden] { display:none; }
 
 /* ══ Botón favorito (estrella) ══ */
 .fav-btn {
@@ -476,6 +509,8 @@ footer {
   flex-direction:column;
   gap:0.5rem;
 }
+/* El atributo hidden debe ganarle al display:flex de arriba */
+.mine-form[hidden] { display:none; }
 .mine-input {
   width:100%;
   background: var(--bg);
@@ -560,20 +595,23 @@ footer {
 </div>
 
 <div class="filter-bar">
-  <div class="search-row">
-    <input id="search-input" type="search" placeholder="› buscar prompt por palabra..." aria-label="Buscar prompts">
-  </div>
-  <div class="filter-inner">
-    <button class="filter-btn active" onclick="filterCat('all',this)">✦ Todos</button>
-    <button class="filter-btn" onclick="filterCat('favs',this)">⭐ Favoritos</button>
-    <button class="filter-btn" onclick="filterCat('mine',this)">✍️ Mis Prompts</button>
-    <button class="filter-btn" onclick="filterCat('redes',this)">📱 Redes sociales</button>
-    <button class="filter-btn" onclick="filterCat('ventas',this)">💬 Ventas y clientes</button>
-    <button class="filter-btn" onclick="filterCat('marca',this)">✨ Identidad de marca</button>
-    <button class="filter-btn" onclick="filterCat('contenido',this)">📅 Contenido</button>
-    <button class="filter-btn" onclick="filterCat('textos',this)">✍️ Textos</button>
-    <button class="filter-btn" onclick="filterCat('wabiz',this)">📲 WhatsApp Business</button>
-    <button class="filter-btn" onclick="filterCat('tiendanube',this)">🛒 Tiendanube</button>
+  <div class="filter-bar-inner">
+    <div class="filter-top">
+      <input id="search-input" type="search" placeholder="› buscar prompt..." aria-label="Buscar prompts">
+      <button id="filter-toggle" type="button" aria-expanded="false" aria-label="Mostrar categorías">☰ <span id="filter-current">Todos</span></button>
+    </div>
+    <div class="filter-panel" id="filter-panel" hidden>
+      <button class="filter-btn active" onclick="filterCat('all',this)">✦ Todos</button>
+      <button class="filter-btn" onclick="filterCat('favs',this)">⭐ Favoritos</button>
+      <button class="filter-btn" onclick="filterCat('mine',this)">✍️ Mis Prompts</button>
+      <button class="filter-btn" onclick="filterCat('redes',this)">📱 Redes sociales</button>
+      <button class="filter-btn" onclick="filterCat('ventas',this)">💬 Ventas y clientes</button>
+      <button class="filter-btn" onclick="filterCat('marca',this)">✨ Identidad de marca</button>
+      <button class="filter-btn" onclick="filterCat('contenido',this)">📅 Contenido</button>
+      <button class="filter-btn" onclick="filterCat('textos',this)">✍️ Textos</button>
+      <button class="filter-btn" onclick="filterCat('wabiz',this)">📲 WhatsApp Business</button>
+      <button class="filter-btn" onclick="filterCat('tiendanube',this)">🛒 Tiendanube</button>
+    </div>
   </div>
 </div>
 
@@ -1365,7 +1403,16 @@ function filterCat(cat, btn) {
   activeCat = cat;
   document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
   if (btn) btn.classList.add('active');
+  // Reflejar la categoría elegida en el botón desplegable y cerrar el panel
+  const cur = document.getElementById('filter-current');
+  if (cur && btn) { const parts = btn.textContent.trim().split(' '); cur.textContent = parts.slice(1).join(' ') || parts[0]; }
+  closeFilterPanel();
   applyFilters();
+}
+function closeFilterPanel(){
+  const fp = document.getElementById('filter-panel'), ft = document.getElementById('filter-toggle');
+  if (fp) fp.hidden = true;
+  if (ft) ft.setAttribute('aria-expanded','false');
 }
 
 let toastT;
@@ -1569,8 +1616,15 @@ function initGuide(){
   // Buscador
   const si = document.getElementById('search-input');
   if(si) si.addEventListener('input', e=>{ searchTerm = e.target.value; applyFilters(); });
-  // Botones de "Mis Prompts"
-  document.getElementById('btn-new-prompt').addEventListener('click',()=>openForm());
+  // Desplegable de categorías
+  const ft = document.getElementById('filter-toggle'), fp = document.getElementById('filter-panel');
+  ft.addEventListener('click', e=>{ e.stopPropagation(); fp.hidden = !fp.hidden; ft.setAttribute('aria-expanded', String(!fp.hidden)); });
+  document.addEventListener('click', e=>{ if(!fp.hidden && !fp.contains(e.target) && !ft.contains(e.target)) closeFilterPanel(); });
+  // Botones de "Mis Prompts" — el botón Crear abre/cierra el formulario
+  document.getElementById('btn-new-prompt').addEventListener('click',()=>{
+    const f = document.getElementById('mine-form');
+    f.hidden ? openForm() : closeForm();
+  });
   document.getElementById('btn-save-prompt').addEventListener('click',saveForm);
   document.getElementById('btn-cancel-prompt').addEventListener('click',closeForm);
   document.getElementById('btn-export').addEventListener('click',exportMine);
