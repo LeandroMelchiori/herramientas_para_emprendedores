@@ -1,0 +1,927 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Guía de Prompts para Emprendedores</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --cream: #faf7f2;
+  --warm-white: #fff9f4;
+  --ink: #1c1a17;
+  --ink-soft: #4a4540;
+  --ink-muted: #9c948a;
+  --rust: #c45c2e;
+  --rust-light: #f0ddd5;
+  --rust-pale: #fdf1ec;
+  --gold: #d4922a;
+  --sage: #7a9e7e;
+  --border: #e8e0d8;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: var(--cream); color: var(--ink); font-family: 'DM Sans', sans-serif; min-height: 100vh; }
+
+header { background: var(--ink); padding: 3rem 2rem 2.5rem; position: relative; overflow: hidden; }
+header::before { content:''; position:absolute; top:-40px; right:-60px; width:300px; height:300px; border-radius:50%; background:radial-gradient(circle,rgba(196,92,46,0.25) 0%,transparent 70%); }
+header::after { content:''; position:absolute; bottom:-20px; left:30%; width:200px; height:200px; border-radius:50%; background:radial-gradient(circle,rgba(212,146,42,0.15) 0%,transparent 70%); }
+.header-inner { max-width: 700px; margin: 0 auto; position: relative; z-index: 1; }
+.header-tag { display:inline-block; background:var(--rust); color:white; font-size:0.65rem; font-weight:600; letter-spacing:0.18em; text-transform:uppercase; padding:0.3rem 0.8rem; border-radius:20px; margin-bottom:1rem; }
+header h1 { font-family:'Playfair Display',serif; font-size:clamp(2rem,6vw,3rem); color:white; line-height:1.15; margin-bottom:0.8rem; }
+header h1 em { font-style:italic; color:#f0b882; }
+header p { color:#b0a898; font-size:0.92rem; line-height:1.65; max-width:480px; }
+.header-tip { margin-top:1.4rem; padding:0.8rem 1rem; background:rgba(255,255,255,0.07); border-left:3px solid var(--rust); border-radius:0 8px 8px 0; color:#d8cfc6; font-size:0.82rem; line-height:1.55; }
+.header-tip strong { color:#f0b882; }
+
+/* Structure legend */
+.legend-bar { background: #fff9f4; border-bottom: 1px solid var(--border); }
+.legend-inner { max-width:700px; margin:0 auto; padding:0.9rem 1rem; display:flex; gap:0.5rem; flex-wrap:wrap; align-items:center; }
+.legend-label { font-size:0.7rem; font-family:sans-serif; font-weight:600; color:var(--ink-muted); margin-right:0.3rem; }
+.leg { display:flex; align-items:center; gap:0.35rem; font-size:0.72rem; font-family:sans-serif; }
+.leg-dot { width:10px; height:10px; border-radius:3px; flex-shrink:0; }
+
+/* Filter */
+.filter-bar { background:var(--warm-white); border-bottom:1px solid var(--border); position:sticky; top:0; z-index:100; box-shadow:0 2px 12px rgba(28,26,23,0.06); }
+.filter-inner { max-width:700px; margin:0 auto; padding:0.3rem 1rem; display:flex; gap:0.2rem; flex-wrap:wrap; }
+
+.filter-btn { flex-shrink:0; padding:0.6rem 0.8rem; border:none; background:transparent; font-family:'DM Sans',sans-serif; font-size:0.76rem; font-weight:500; color:var(--ink-muted); cursor:pointer; border-bottom:2px solid transparent; transition:all 0.18s; white-space:nowrap; }
+.filter-btn:hover { color:var(--ink); }
+.filter-btn.active { color:var(--rust); border-bottom-color:var(--rust); font-weight:600; }
+
+main { max-width:700px; margin:0 auto; padding:2rem 1rem 4rem; }
+
+.tip-card { background:linear-gradient(135deg,#1c1a17 0%,#2e2a24 100%); border-radius:14px; padding:1.4rem 1.5rem; margin-bottom:2rem; color:white; }
+.tip-card h3 { font-family:'Playfair Display',serif; font-size:1.05rem; color:#f0b882; margin-bottom:0.7rem; }
+.tip-card ol { padding-left:1.2rem; }
+.tip-card li { font-size:0.84rem; color:#c8c0b8; line-height:1.65; margin-bottom:0.4rem; }
+.tip-card li strong { color:white; }
+
+.category { margin-bottom:2.5rem; }
+.category-header { display:flex; align-items:center; gap:0.7rem; margin-bottom:1.1rem; padding-bottom:0.7rem; border-bottom:1px solid var(--border); }
+.cat-emoji { font-size:1.3rem; }
+.cat-title { font-family:'Playfair Display',serif; font-size:1.2rem; color:var(--ink); }
+.cat-count { margin-left:auto; background:var(--border); color:var(--ink-muted); font-size:0.7rem; font-weight:600; padding:0.15rem 0.55rem; border-radius:20px; }
+
+/* ── Prompt card ── */
+.prompt-card { background:white; border:1px solid var(--border); border-radius:14px; margin-bottom:1rem; overflow:hidden; transition:box-shadow 0.2s, transform 0.2s; }
+.prompt-card:hover { box-shadow:0 4px 20px rgba(28,26,23,0.09); transform:translateY(-1px); }
+
+.prompt-header { padding:1rem 1.2rem 0.8rem; border-bottom:1px solid #f2ede8; }
+.prompt-label { font-size:0.65rem; font-weight:600; letter-spacing:0.14em; text-transform:uppercase; color:var(--ink-muted); margin-bottom:0.3rem; }
+.prompt-title { font-weight:600; font-size:0.95rem; color:var(--ink); }
+
+/* Sections */
+.prompt-sections { padding:0.8rem 1.2rem; display:flex; flex-direction:column; gap:0.45rem; }
+.ps { display:flex; gap:0.6rem; align-items:flex-start; border-radius:8px; padding:0.55rem 0.7rem; }
+.ps-rol  { background:#f0f0f0; }
+.ps-ctx  { background:#eef4fb; }
+.ps-task { background:#eef7f0; }
+.ps-fmt  { background:#fdf5e8; }
+.ps-tone { background:#f7eef8; }
+.ps-badge {
+  flex-shrink:0;
+  font-size:0.6rem;
+  font-weight:700;
+  letter-spacing:0.1em;
+  text-transform:uppercase;
+  padding:0.18rem 0.5rem;
+  border-radius:4px;
+  margin-top:1px;
+  white-space:nowrap;
+}
+.ps-rol  .ps-badge { background:#333; color:white; }
+.ps-ctx  .ps-badge { background:#2563eb; color:white; }
+.ps-task .ps-badge { background:#16a34a; color:white; }
+.ps-fmt  .ps-badge { background:#d97706; color:white; }
+.ps-tone .ps-badge { background:#9333ea; color:white; }
+.ps-text { font-size:0.83rem; color:var(--ink-soft); line-height:1.6; }
+.ph { color:var(--rust); font-weight:600; background:var(--rust-pale); border-radius:3px; padding:0 3px; font-style:normal; }
+
+.prompt-footer { padding:0.5rem 1.2rem 0.9rem; display:flex; align-items:center; justify-content:space-between; gap:0.6rem; flex-wrap:wrap; }
+.prompt-tip { font-size:0.75rem; color:var(--ink-muted); font-style:italic; flex:1; line-height:1.4; }
+.copy-btn { flex-shrink:0; display:flex; align-items:center; gap:0.4rem; background:var(--ink); color:white; border:none; border-radius:8px; padding:0.45rem 0.9rem; font-family:'DM Sans',sans-serif; font-size:0.76rem; font-weight:600; cursor:pointer; transition:background 0.15s, transform 0.12s; }
+.copy-btn:hover { background:var(--rust); transform:scale(1.04); }
+.copy-btn.copied { background:var(--sage); }
+
+#toast { position:fixed; bottom:1.5rem; left:50%; transform:translateX(-50%) translateY(60px); background:var(--ink); color:white; padding:0.55rem 1.2rem; border-radius:30px; font-family:'DM Sans',sans-serif; font-size:0.82rem; box-shadow:0 4px 20px rgba(0,0,0,0.2); transition:transform 0.28s ease,opacity 0.28s; opacity:0; pointer-events:none; white-space:nowrap; z-index:9999; }
+#toast.show { transform:translateX(-50%) translateY(0); opacity:1; }
+
+footer { background:var(--ink); color:var(--ink-muted); text-align:center; padding:1.5rem; font-size:0.75rem; letter-spacing:0.06em; }
+</style>
+</head>
+<body>
+
+<div style="background:#141210;padding:0.45rem 1rem;display:flex;justify-content:flex-end;align-items:center;gap:0.9rem;">
+  <span style="color:#4a4540;font-size:0.7rem;letter-spacing:0.06em;">creado por Sacha Melchiori</span>
+  <a href="https://www.instagram.com/sacha.melchiori" target="_blank" title="Instagram" style="color:#4a4540;transition:color 0.15s;display:flex;" onmouseover="this.style.color='#9c948a'" onmouseout="this.style.color='#4a4540'">
+    <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+  </a>
+  <a href="https://www.linkedin.com/in/leandromelchiori-developer/" target="_blank" title="LinkedIn" style="color:#4a4540;transition:color 0.15s;display:flex;" onmouseover="this.style.color='#9c948a'" onmouseout="this.style.color='#4a4540'">
+    <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+  </a>
+</div>
+<header>
+  <div class="header-inner">
+    <div class="header-tag">Herramienta para emprendedores</div>
+    <h1>Guía de <em>Prompts</em><br>para tu Emprendimiento</h1>
+    <p>Prompts listos para usar con Claude, ChatGPT o Gemini. Cada uno está estructurado con las 5 partes clave para que la IA te entienda mejor.</p>
+    <div class="header-tip">
+      <strong>¿Por qué esta estructura?</strong> Cuando le das a la IA un rol, contexto, tarea clara, formato esperado y tono, las respuestas mejoran drásticamente — pasan de genéricas a específicas para tu emprendimiento.
+    </div>
+  </div>
+</header>
+
+<div class="legend-bar">
+  <div class="legend-inner">
+    <span class="legend-label">Estructura:</span>
+    <span class="leg"><span class="leg-dot" style="background:#333"></span>Rol</span>
+    <span class="leg"><span class="leg-dot" style="background:#2563eb"></span>Contexto</span>
+    <span class="leg"><span class="leg-dot" style="background:#16a34a"></span>Tarea</span>
+    <span class="leg"><span class="leg-dot" style="background:#d97706"></span>Formato</span>
+    <span class="leg"><span class="leg-dot" style="background:#9333ea"></span>Tono</span>
+  </div>
+</div>
+
+<div class="filter-bar">
+  <div class="filter-inner">
+    <button class="filter-btn active" onclick="filterCat('all',this)">✦ Todos</button>
+    <button class="filter-btn" onclick="filterCat('redes',this)">📱 Redes sociales</button>
+    <button class="filter-btn" onclick="filterCat('ventas',this)">💬 Ventas y clientes</button>
+    <button class="filter-btn" onclick="filterCat('marca',this)">✨ Identidad de marca</button>
+    <button class="filter-btn" onclick="filterCat('contenido',this)">📅 Contenido</button>
+    <button class="filter-btn" onclick="filterCat('textos',this)">✍️ Textos</button>
+    <button class="filter-btn" onclick="filterCat('wabiz',this)">📲 WhatsApp Business</button>
+    <button class="filter-btn" onclick="filterCat('tiendanube',this)">🛒 Tiendanube</button>
+  </div>
+</div>
+
+<main>
+
+<div class="tip-card">
+  <h3>Cómo usar estos prompts en 3 pasos</h3>
+  <ol>
+    <li><strong>Copiá</strong> el prompt con el botón de cada tarjeta.</li>
+    <li><strong>Pegalo</strong> en Claude, ChatGPT o Gemini (todos tienen versión gratuita).</li>
+    <li><strong>Reemplazá</strong> los textos en <span style="color:#f0b882">[ corchetes ]</span> con la info de tu emprendimiento y enviá.</li>
+  </ol>
+</div>
+
+<!-- ════════════════ REDES SOCIALES ════════════════ -->
+<div class="category" data-cat="redes">
+  <div class="category-header">
+    <span class="cat-emoji">📱</span>
+    <span class="cat-title">Redes Sociales</span>
+    <span class="cat-count">5 prompts</span>
+  </div>
+
+  <!-- 1 -->
+  <div class="prompt-card">
+    <div class="prompt-header">
+      <div class="prompt-label">Instagram · Bio</div>
+      <div class="prompt-title">3 versiones de bio para Instagram</div>
+    </div>
+    <div class="prompt-sections">
+      <div class="ps ps-rol"><span class="ps-badge">Rol</span><span class="ps-text">Actuá como un experto en marketing digital y branding para pequeños emprendimientos.</span></div>
+      <div class="ps ps-ctx"><span class="ps-badge">Contexto</span><span class="ps-text">Tengo un emprendimiento llamado <em class="ph">[nombre del emprendimiento]</em> que vende/ofrece <em class="ph">[qué vendés o qué servicio das]</em>, especialmente para <em class="ph">[a quién va dirigido]</em>. Lo que me hace diferente es <em class="ph">[qué te hace único/a]</em>.</span></div>
+      <div class="ps ps-task"><span class="ps-badge">Tarea</span><span class="ps-text">Generame 3 versiones de bio para Instagram.</span></div>
+      <div class="ps ps-fmt"><span class="ps-badge">Formato</span><span class="ps-text">3 opciones numeradas, cada una con máximo 150 caracteres y emojis incluidos. Indicá el conteo de caracteres de cada una.</span></div>
+      <div class="ps ps-tone"><span class="ps-badge">Tono</span><span class="ps-text">Una cercana y divertida, una profesional y directa, y una creativa y llamativa.</span></div>
+    </div>
+    <div class="prompt-footer">
+      <div class="prompt-tip">💡 Podés pedirle que mezcle elementos de las opciones que más te gusten.</div>
+      <button class="copy-btn" onclick="copyPrompt(this)">📋 Copiar</button>
+    </div>
+  </div>
+
+  <!-- 2 -->
+  <div class="prompt-card">
+    <div class="prompt-header">
+      <div class="prompt-label">Instagram / Facebook · Publicación</div>
+      <div class="prompt-title">Publicación para mostrar un producto o servicio</div>
+    </div>
+    <div class="prompt-sections">
+      <div class="ps ps-rol"><span class="ps-badge">Rol</span><span class="ps-text">Actuá como un community manager especializado en redes sociales para emprendedores.</span></div>
+      <div class="ps ps-ctx"><span class="ps-badge">Contexto</span><span class="ps-text">Tengo un emprendimiento de <em class="ph">[rubro]</em> y quiero mostrar el siguiente producto/servicio: <em class="ph">[describí el producto o servicio]</em>. El precio es <em class="ph">[precio o rango]</em>.</span></div>
+      <div class="ps ps-task"><span class="ps-badge">Tarea</span><span class="ps-text">Escribime una publicación para Instagram o Facebook para presentar este producto.</span></div>
+      <div class="ps ps-fmt"><span class="ps-badge">Formato</span><span class="ps-text">Máximo 4 párrafos cortos. Incluí un llamado a la acción al final para que la gente escriba por privado. Usá emojis con moderación.</span></div>
+      <div class="ps ps-tone"><span class="ps-badge">Tono</span><span class="ps-text"><em class="ph">[cercano / profesional / entusiasta]</em>. Que suene como una persona real, no como publicidad genérica.</span></div>
+    </div>
+    <div class="prompt-footer">
+      <div class="prompt-tip">💡 Si tenés una promo o descuento, agregalo en el contexto.</div>
+      <button class="copy-btn" onclick="copyPrompt(this)">📋 Copiar</button>
+    </div>
+  </div>
+
+  <!-- 3 -->
+  <div class="prompt-card">
+    <div class="prompt-header">
+      <div class="prompt-label">Instagram · Caption</div>
+      <div class="prompt-title">Texto para una foto "detrás de escena"</div>
+    </div>
+    <div class="prompt-sections">
+      <div class="ps ps-rol"><span class="ps-badge">Rol</span><span class="ps-text">Actuá como un community manager especializado en contenido auténtico para pequeños emprendimientos.</span></div>
+      <div class="ps ps-ctx"><span class="ps-badge">Contexto</span><span class="ps-text">Tengo un emprendimiento de <em class="ph">[rubro]</em> y voy a publicar una foto mostrando <em class="ph">[qué mostrás: preparación, producción, armado, etc.]</em>.</span></div>
+      <div class="ps ps-task"><span class="ps-badge">Tarea</span><span class="ps-text">Escribime el texto para esa publicación de Instagram mostrando el proceso de trabajo.</span></div>
+      <div class="ps ps-fmt"><span class="ps-badge">Formato</span><span class="ps-text">Máximo 3 párrafos cortos. El primero debe enganchar, el segundo mostrar el esfuerzo, el tercero generar conexión con la audiencia.</span></div>
+      <div class="ps ps-tone"><span class="ps-badge">Tono</span><span class="ps-text"><em class="ph">[cercano / emotivo / orgulloso]</em>. Auténtico, como si lo escribiera yo mismo/a. Sin sonar a publicidad.</span></div>
+    </div>
+    <div class="prompt-footer">
+      <div class="prompt-tip">💡 Las publicaciones de proceso tienen mucho más alcance orgánico que las fotos de producto solo.</div>
+      <button class="copy-btn" onclick="copyPrompt(this)">📋 Copiar</button>
+    </div>
+  </div>
+
+  <!-- 4 -->
+  <div class="prompt-card">
+    <div class="prompt-header">
+      <div class="prompt-label">Instagram · Stories</div>
+      <div class="prompt-title">Secuencia de 4 historias para anunciar una novedad</div>
+    </div>
+    <div class="prompt-sections">
+      <div class="ps ps-rol"><span class="ps-badge">Rol</span><span class="ps-text">Actuá como un experto en marketing digital para emprendimientos en redes sociales.</span></div>
+      <div class="ps ps-ctx"><span class="ps-badge">Contexto</span><span class="ps-text">Tengo una novedad en mi emprendimiento: <em class="ph">[qué vas a anunciar: nuevo producto, cambio de horario, promo, etc.]</em>.</span></div>
+      <div class="ps ps-task"><span class="ps-badge">Tarea</span><span class="ps-text">Escribime una secuencia de 4 historias de Instagram para anunciar esta novedad generando expectativa.</span></div>
+      <div class="ps ps-fmt"><span class="ps-badge">Formato</span><span class="ps-text">Una historia por slide numerada. Cada una con máximo 2 oraciones cortas para leer en pantalla. La primera debe arrancar con una pregunta que genere intriga.</span></div>
+      <div class="ps ps-tone"><span class="ps-badge">Tono</span><span class="ps-text"><em class="ph">[entusiasta / misterioso / directo]</em>. Que genere ganas de seguir viendo.</span></div>
+    </div>
+    <div class="prompt-footer">
+      <div class="prompt-tip">💡 La historia 1 engancha, 2 y 3 desarrollan, la 4 revela y tiene el llamado a la acción.</div>
+      <button class="copy-btn" onclick="copyPrompt(this)">📋 Copiar</button>
+    </div>
+  </div>
+
+  <!-- 5 -->
+  <div class="prompt-card">
+    <div class="prompt-header">
+      <div class="prompt-label">Todos · Hashtags</div>
+      <div class="prompt-title">Hashtags relevantes para una publicación</div>
+    </div>
+    <div class="prompt-sections">
+      <div class="ps ps-rol"><span class="ps-badge">Rol</span><span class="ps-text">Actuá como un especialista en posicionamiento orgánico en redes sociales para emprendedores.</span></div>
+      <div class="ps ps-ctx"><span class="ps-badge">Contexto</span><span class="ps-text">Tengo un emprendimiento de <em class="ph">[rubro]</em> ubicado en <em class="ph">[ciudad o región]</em>. Acabo de publicar sobre <em class="ph">[de qué trata la publicación]</em>.</span></div>
+      <div class="ps ps-task"><span class="ps-badge">Tarea</span><span class="ps-text">Generame una lista de hashtags relevantes para esa publicación.</span></div>
+      <div class="ps ps-fmt"><span class="ps-badge">Formato</span><span class="ps-text">Entre 15 y 20 hashtags en español, organizados en 3 grupos: hashtags populares del rubro, hashtags locales y hashtags de nicho.</span></div>
+      <div class="ps ps-tone"><span class="ps-badge">Tono</span><span class="ps-text">Solo listá los hashtags agrupados, sin explicaciones largas.</span></div>
+    </div>
+    <div class="prompt-footer">
+      <div class="prompt-tip">💡 Los hashtags locales (ej: #SantaFe #EmprendedoresSantaFe) tienen menos competencia y más alcance en tu zona.</div>
+      <button class="copy-btn" onclick="copyPrompt(this)">📋 Copiar</button>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════ VENTAS Y CLIENTES ════════════════ -->
+<div class="category" data-cat="ventas">
+  <div class="category-header">
+    <span class="cat-emoji">💬</span>
+    <span class="cat-title">Ventas y Atención al Cliente</span>
+    <span class="cat-count">4 prompts</span>
+  </div>
+
+  <!-- 6 -->
+  <div class="prompt-card">
+    <div class="prompt-header">
+      <div class="prompt-label">WhatsApp · Respuesta rápida</div>
+      <div class="prompt-title">Responder consulta de precio de forma persuasiva</div>
+    </div>
+    <div class="prompt-sections">
+      <div class="ps ps-rol"><span class="ps-badge">Rol</span><span class="ps-text">Actuá como un especialista en ventas y atención al cliente para pequeños emprendimientos.</span></div>
+      <div class="ps ps-ctx"><span class="ps-badge">Contexto</span><span class="ps-text">Un cliente me preguntó por WhatsApp: "<em class="ph">[copiá la pregunta del cliente]</em>". Mi producto/servicio es <em class="ph">[descripción breve]</em> y el precio es <em class="ph">[precio]</em>.</span></div>
+      <div class="ps ps-task"><span class="ps-badge">Tarea</span><span class="ps-text">Escribime una respuesta que justifique el valor del precio sin sonar a vendedor/a agresivo/a.</span></div>
+      <div class="ps ps-fmt"><span class="ps-badge">Formato</span><span class="ps-text">Máximo 3 oraciones. Cerrá con una pregunta abierta para continuar la conversación.</span></div>
+      <div class="ps ps-tone"><span class="ps-badge">Tono</span><span class="ps-text">Amigable, confiado y natural. Como si respondiera una persona real, no una empresa.</span></div>
+    </div>
+    <div class="prompt-footer">
+      <div class="prompt-tip">💡 Cerrar con una pregunta aumenta mucho las chances de que el cliente responda.</div>
+      <button class="copy-btn" onclick="copyPrompt(this)">📋 Copiar</button>
+    </div>
+  </div>
+
+  <!-- 7 -->
+  <div class="prompt-card">
+    <div class="prompt-header">
+      <div class="prompt-label">WhatsApp · Seguimiento</div>
+      <div class="prompt-title">Mensaje a cliente que no respondió</div>
+    </div>
+    <div class="prompt-sections">
+      <div class="ps ps-rol"><span class="ps-badge">Rol</span><span class="ps-text">Actuá como un especialista en ventas consultivas para emprendedores.</span></div>
+      <div class="ps ps-ctx"><span class="ps-badge">Contexto</span><span class="ps-text">Le mandé información a un cliente hace <em class="ph">[cuántos días]</em> días sobre <em class="ph">[producto o servicio]</em> y no respondió.</span></div>
+      <div class="ps ps-task"><span class="ps-badge">Tarea</span><span class="ps-text">Escribime un mensaje de seguimiento para retomar la conversación sin sonar insistente.</span></div>
+      <div class="ps ps-fmt"><span class="ps-badge">Formato</span><span class="ps-text">Máximo 2 oraciones. Sin emojis exagerados. Que sea breve y directo.</span></div>
+      <div class="ps ps-tone"><span class="ps-badge">Tono</span><span class="ps-text">Natural y tranquilo, como si lo escribiera yo mismo/a. Nada de presión ni desesperación.</span></div>
+    </div>
+    <div class="prompt-footer">
+      <div class="prompt-tip">💡 Esperá al menos 2-3 días antes de hacer seguimiento. Un solo mensaje es suficiente.</div>
+      <button class="copy-btn" onclick="copyPrompt(this)">📋 Copiar</button>
+    </div>
+  </div>
+
+  <!-- 8 -->
+  <div class="prompt-card">
+    <div class="prompt-header">
+      <div class="prompt-label">WhatsApp / Redes · Gestión de conflictos</div>
+      <div class="prompt-title">Responder un reclamo o queja de cliente</div>
+    </div>
+    <div class="prompt-sections">
+      <div class="ps ps-rol"><span class="ps-badge">Rol</span><span class="ps-text">Actuá como un experto en atención al cliente y gestión de conflictos para pequeños emprendimientos.</span></div>
+      <div class="ps ps-ctx"><span class="ps-badge">Contexto</span><span class="ps-text">Un cliente hizo la siguiente queja: "<em class="ph">[copiá la queja]</em>". Lo que ocurrió realmente fue: <em class="ph">[tu versión de la situación]</em>.</span></div>
+      <div class="ps ps-task"><span class="ps-badge">Tarea</span><span class="ps-text">Escribime una respuesta profesional a ese reclamo que reconozca la molestia y proponga una solución concreta.</span></div>
+      <div class="ps ps-fmt"><span class="ps-badge">Formato</span><span class="ps-text">4 oraciones como máximo: una que reconozca la molestia, una breve explicación y una propuesta de solución concreta.</span></div>
+      <div class="ps ps-tone"><span class="ps-badge">Tono</span><span class="ps-text">Calmado, empático y respetuoso. Sin sonar defensivo/a ni pedir disculpas en exceso.</span></div>
+    </div>
+    <div class="prompt-footer">
+      <div class="prompt-tip">💡 Responder bien un reclamo puede convertir a un cliente insatisfecho en uno fiel.</div>
+      <button class="copy-btn" onclick="copyPrompt(this)">📋 Copiar</button>
+    </div>
+  </div>
+
+  <!-- 9 -->
+  <div class="prompt-card">
+    <div class="prompt-header">
+      <div class="prompt-label">WhatsApp Business · Catálogo</div>
+      <div class="prompt-title">Descripción de producto para el catálogo</div>
+    </div>
+    <div class="prompt-sections">
+      <div class="ps ps-rol"><span class="ps-badge">Rol</span><span class="ps-text">Actuá como un copywriter especializado en ventas para emprendedores.</span></div>
+      <div class="ps ps-ctx"><span class="ps-badge">Contexto</span><span class="ps-text">Tengo un emprendimiento de <em class="ph">[rubro]</em> y quiero agregar este producto al catálogo de WhatsApp Business: <em class="ph">[nombre y descripción básica]</em>. Precio: <em class="ph">[precio]</em>. Beneficios principales: <em class="ph">[enumerá 2 o 3 ventajas]</em>.</span></div>
+      <div class="ps ps-task"><span class="ps-badge">Tarea</span><span class="ps-text">Escribime la descripción del producto para el catálogo.</span></div>
+      <div class="ps ps-fmt"><span class="ps-badge">Formato</span><span class="ps-text">Máximo 3 líneas (respetá el límite de 300 caracteres de WhatsApp Business). Resaltá el beneficio para el cliente, no solo las características.</span></div>
+      <div class="ps ps-tone"><span class="ps-badge">Tono</span><span class="ps-text">Cercano y que invite a consultar más. Nada de lenguaje comercial genérico.</span></div>
+    </div>
+    <div class="prompt-footer">
+      <div class="prompt-tip">💡 WhatsApp Business permite hasta 300 caracteres en la descripción de cada producto.</div>
+      <button class="copy-btn" onclick="copyPrompt(this)">📋 Copiar</button>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════ IDENTIDAD DE MARCA ════════════════ -->
+<div class="category" data-cat="marca">
+  <div class="category-header">
+    <span class="cat-emoji">✨</span>
+    <span class="cat-title">Identidad de Marca</span>
+    <span class="cat-count">4 prompts</span>
+  </div>
+
+  <!-- 10 -->
+  <div class="prompt-card">
+    <div class="prompt-header">
+      <div class="prompt-label">Marca · Estrategia</div>
+      <div class="prompt-title">Definir la propuesta de valor en una frase</div>
+    </div>
+    <div class="prompt-sections">
+      <div class="ps ps-rol"><span class="ps-badge">Rol</span><span class="ps-text">Actuá como un consultor de branding y estrategia para pequeños emprendimientos.</span></div>
+      <div class="ps ps-ctx"><span class="ps-badge">Contexto</span><span class="ps-text">Tengo un emprendimiento de <em class="ph">[rubro]</em> llamado <em class="ph">[nombre]</em>. Vendo <em class="ph">[producto o servicio]</em> para <em class="ph">[quiénes son mis clientes]</em>. A diferencia de otros en mi rubro, yo <em class="ph">[qué hacés distinto: entrega a domicilio, personalización, precio, calidad, etc.]</em>.</span></div>
+      <div class="ps ps-task"><span class="ps-badge">Tarea</span><span class="ps-text">Ayudame a escribir mi propuesta de valor: la frase que explica por qué alguien debería elegirme a mí.</span></div>
+      <div class="ps ps-fmt"><span class="ps-badge">Formato</span><span class="ps-text">Dame 3 opciones de una sola frase, con un máximo de 20 palabras cada una.</span></div>
+      <div class="ps ps-tone"><span class="ps-badge">Tono</span><span class="ps-text">Directo, claro y memorable. Sin tecnicismos ni palabras vacías como "calidad" o "excelencia".</span></div>
+    </div>
+    <div class="prompt-footer">
+      <div class="prompt-tip">💡 La propuesta de valor es lo primero que tenés que decir cuando alguien te pregunta qué hacés.</div>
+      <button class="copy-btn" onclick="copyPrompt(this)">📋 Copiar</button>
+    </div>
+  </div>
+
+  <!-- 11 -->
+  <div class="prompt-card">
+    <div class="prompt-header">
+      <div class="prompt-label">Marca · Storytelling</div>
+      <div class="prompt-title">Contar la historia de tu emprendimiento</div>
+    </div>
+    <div class="prompt-sections">
+      <div class="ps ps-rol"><span class="ps-badge">Rol</span><span class="ps-text">Actuá como un consultor de comunicación y storytelling para emprendedores.</span></div>
+      <div class="ps ps-ctx"><span class="ps-badge">Contexto</span><span class="ps-text">Empecé mi emprendimiento porque <em class="ph">[por qué o cómo nació la idea]</em>. Al principio fue difícil porque <em class="ph">[un obstáculo real que tuviste]</em>. Hoy estoy orgulloso/a de <em class="ph">[un logro concreto, aunque sea pequeño]</em>.</span></div>
+      <div class="ps ps-task"><span class="ps-badge">Tarea</span><span class="ps-text">Redactame la historia de mi emprendimiento para publicar en Instagram o Facebook.</span></div>
+      <div class="ps ps-fmt"><span class="ps-badge">Formato</span><span class="ps-text">3 párrafos cortos en primera persona. El primero que enganche, el segundo que muestre el desafío, el tercero que inspire.</span></div>
+      <div class="ps ps-tone"><span class="ps-badge">Tono</span><span class="ps-text">Honesto, cercano y emotivo. Sin exagerar ni sonar a publicidad. Como si se lo contara a un conocido.</span></div>
+    </div>
+    <div class="prompt-footer">
+      <div class="prompt-tip">💡 Las historias reales conectan mucho más que los textos de venta. No tengas miedo de mostrarte vulnerable.</div>
+      <button class="copy-btn" onclick="copyPrompt(this)">📋 Copiar</button>
+    </div>
+  </div>
+
+  <!-- 12 -->
+  <div class="prompt-card">
+    <div class="prompt-header">
+      <div class="prompt-label">Marca · Naming</div>
+      <div class="prompt-title">Ideas de nombre para tu emprendimiento</div>
+    </div>
+    <div class="prompt-sections">
+      <div class="ps ps-rol"><span class="ps-badge">Rol</span><span class="ps-text">Actuá como un especialista en naming y branding para emprendimientos emergentes.</span></div>
+      <div class="ps ps-ctx"><span class="ps-badge">Contexto</span><span class="ps-text">Voy a lanzar un emprendimiento de <em class="ph">[qué]</em>. Mi público son <em class="ph">[quiénes]</em>. Los valores que quiero transmitir son <em class="ph">[ej: calidez, modernidad, artesanal, confianza]</em>.</span></div>
+      <div class="ps ps-task"><span class="ps-badge">Tarea</span><span class="ps-text">Generame opciones de nombres para mi emprendimiento que sean fáciles de recordar y pronunciar.</span></div>
+      <div class="ps ps-fmt"><span class="ps-badge">Formato</span><span class="ps-text">10 opciones variadas: algunas en español, algunas en inglés, algunas inventadas. Para cada nombre, una línea breve explicando por qué funciona.</span></div>
+      <div class="ps ps-tone"><span class="ps-badge">Tono</span><span class="ps-text">Creativo y variado. Evitá los nombres demasiado genéricos o que ya existan en el rubro.</span></div>
+    </div>
+    <div class="prompt-footer">
+      <div class="prompt-tip">💡 Antes de quedarte con uno, buscalo en Instagram para ver si ya está tomado.</div>
+      <button class="copy-btn" onclick="copyPrompt(this)">📋 Copiar</button>
+    </div>
+  </div>
+
+  <!-- 13 -->
+  <div class="prompt-card">
+    <div class="prompt-header">
+      <div class="prompt-label">Marca · Slogan</div>
+      <div class="prompt-title">Slogan memorable para tu emprendimiento</div>
+    </div>
+    <div class="prompt-sections">
+      <div class="ps ps-rol"><span class="ps-badge">Rol</span><span class="ps-text">Actuá como un copywriter creativo especializado en identidad de marca para emprendedores.</span></div>
+      <div class="ps ps-ctx"><span class="ps-badge">Contexto</span><span class="ps-text">Tengo un emprendimiento llamado "<em class="ph">[nombre del emprendimiento]</em>" que se dedica a <em class="ph">[qué hace]</em>. La sensación que quiero transmitir es <em class="ph">[ej: confianza, alegría, exclusividad, cercanía]</em>.</span></div>
+      <div class="ps ps-task"><span class="ps-badge">Tarea</span><span class="ps-text">Creame opciones de slogan para mi emprendimiento.</span></div>
+      <div class="ps ps-fmt"><span class="ps-badge">Formato</span><span class="ps-text">5 opciones numeradas, una por línea. Solo el slogan, sin explicaciones.</span></div>
+      <div class="ps ps-tone"><span class="ps-badge">Tono</span><span class="ps-text">Creativo, en español rioplatense. Cortos, fáciles de recordar y que suenen auténticos.</span></div>
+    </div>
+    <div class="prompt-footer">
+      <div class="prompt-tip">💡 El mejor slogan es el que el propio cliente repite cuando te recomienda.</div>
+      <button class="copy-btn" onclick="copyPrompt(this)">📋 Copiar</button>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════ CONTENIDO ════════════════ -->
+<div class="category" data-cat="contenido">
+  <div class="category-header">
+    <span class="cat-emoji">📅</span>
+    <span class="cat-title">Planificación de Contenido</span>
+    <span class="cat-count">4 prompts</span>
+  </div>
+
+  <!-- 14 -->
+  <div class="prompt-card">
+    <div class="prompt-header">
+      <div class="prompt-label">Contenido · Calendario</div>
+      <div class="prompt-title">Plan de publicaciones para la semana</div>
+    </div>
+    <div class="prompt-sections">
+      <div class="ps ps-rol"><span class="ps-badge">Rol</span><span class="ps-text">Actuá como un estratega de contenidos para redes sociales de pequeños emprendimientos.</span></div>
+      <div class="ps ps-ctx"><span class="ps-badge">Contexto</span><span class="ps-text">Tengo un emprendimiento de <em class="ph">[rubro]</em> y quiero publicar <em class="ph">[cuántas veces por semana: 2 / 3 / 5]</em> veces en <em class="ph">[Instagram / Facebook / ambas]</em>. Esta semana quiero destacar: <em class="ph">[ej: producto estrella, una promo, una fecha especial]</em>.</span></div>
+      <div class="ps ps-task"><span class="ps-badge">Tarea</span><span class="ps-text">Haceme un plan de publicaciones para esta semana.</span></div>
+      <div class="ps ps-fmt"><span class="ps-badge">Formato</span><span class="ps-text">Una lista por día con: tema de la publicación, tipo de formato (foto, carrusel, historia, reel) y una frase de arranque para el texto.</span></div>
+      <div class="ps ps-tone"><span class="ps-badge">Tono</span><span class="ps-text">Práctico y directo. Sin explicaciones largas, solo el plan listo para usar.</span></div>
+    </div>
+    <div class="prompt-footer">
+      <div class="prompt-tip">💡 Planificar el lunes toda la semana te ahorra mucho estrés y hace que tus redes se vean más consistentes.</div>
+      <button class="copy-btn" onclick="copyPrompt(this)">📋 Copiar</button>
+    </div>
+  </div>
+
+  <!-- 15 -->
+  <div class="prompt-card">
+    <div class="prompt-header">
+      <div class="prompt-label">Contenido · Ideas</div>
+      <div class="prompt-title">20 ideas de publicaciones para tu rubro</div>
+    </div>
+    <div class="prompt-sections">
+      <div class="ps ps-rol"><span class="ps-badge">Rol</span><span class="ps-text">Actuá como un estratega de contenidos especializado en marketing para emprendedores.</span></div>
+      <div class="ps ps-ctx"><span class="ps-badge">Contexto</span><span class="ps-text">Tengo un emprendimiento de <em class="ph">[rubro, ej: comida casera / ropa / bijouterie / servicios de limpieza]</em> y mis clientes son <em class="ph">[quiénes]</em>.</span></div>
+      <div class="ps ps-task"><span class="ps-badge">Tarea</span><span class="ps-text">Generame 20 ideas de publicaciones para Instagram y Facebook que no sean solo fotos de productos.</span></div>
+      <div class="ps ps-fmt"><span class="ps-badge">Formato</span><span class="ps-text">Lista numerada organizada por tipo: consejos útiles, detrás de escena, preguntas para generar interacción, testimonios, fechas especiales y educación sobre el rubro.</span></div>
+      <div class="ps ps-tone"><span class="ps-badge">Tono</span><span class="ps-text">Práctico y aplicable desde ya. Ideas concretas, no conceptos vagos.</span></div>
+    </div>
+    <div class="prompt-footer">
+      <div class="prompt-tip">💡 Guardá esta lista y usala cada vez que no sepas qué publicar.</div>
+      <button class="copy-btn" onclick="copyPrompt(this)">📋 Copiar</button>
+    </div>
+  </div>
+
+  <!-- 16 -->
+  <div class="prompt-card">
+    <div class="prompt-header">
+      <div class="prompt-label">Contenido · Fecha especial</div>
+      <div class="prompt-title">Publicación para aprovechar una fecha del año</div>
+    </div>
+    <div class="prompt-sections">
+      <div class="ps ps-rol"><span class="ps-badge">Rol</span><span class="ps-text">Actuá como un community manager experto en marketing estacional para emprendimientos.</span></div>
+      <div class="ps ps-ctx"><span class="ps-badge">Contexto</span><span class="ps-text">Se viene <em class="ph">[nombre de la fecha: Día de la Madre, Navidad, vuelta al cole, etc.]</em> y tengo un emprendimiento de <em class="ph">[rubro]</em>.</span></div>
+      <div class="ps ps-task"><span class="ps-badge">Tarea</span><span class="ps-text">Escribime el texto para una publicación que aproveche esa fecha sin ser solo publicidad.</span></div>
+      <div class="ps ps-fmt"><span class="ps-badge">Formato</span><span class="ps-text">Texto de máximo 3 párrafos. Al final, sugerí qué tipo de imagen o diseño iría bien.</span></div>
+      <div class="ps ps-tone"><span class="ps-badge">Tono</span><span class="ps-text">Emotivo o celebratorio según la fecha. Que sea útil o significativo para mi comunidad, no solo comercial.</span></div>
+    </div>
+    <div class="prompt-footer">
+      <div class="prompt-tip">💡 Publicar 3-5 días antes de la fecha tiene más impacto que hacerlo el mismo día.</div>
+      <button class="copy-btn" onclick="copyPrompt(this)">📋 Copiar</button>
+    </div>
+  </div>
+
+  <!-- 17 -->
+  <div class="prompt-card">
+    <div class="prompt-header">
+      <div class="prompt-label">Contenido · Video</div>
+      <div class="prompt-title">Guión para un Reel de 30 segundos</div>
+    </div>
+    <div class="prompt-sections">
+      <div class="ps ps-rol"><span class="ps-badge">Rol</span><span class="ps-text">Actuá como un productor de contenido audiovisual para redes sociales de pequeños emprendimientos.</span></div>
+      <div class="ps ps-ctx"><span class="ps-badge">Contexto</span><span class="ps-text">Quiero hacer un Reel de Instagram de 30 segundos para mi emprendimiento de <em class="ph">[rubro]</em>, mostrando <em class="ph">[qué querés mostrar: cómo se hace tu producto, una transformación, un tutorial rápido, etc.]</em>.</span></div>
+      <div class="ps ps-task"><span class="ps-badge">Tarea</span><span class="ps-text">Escribime el guión completo del Reel.</span></div>
+      <div class="ps ps-fmt"><span class="ps-badge">Formato</span><span class="ps-text">Dividido en 5-6 escenas. Para cada escena: qué se graba, qué texto aparece en pantalla y cuántos segundos dura. Incluí una frase gancho para los primeros 2 segundos.</span></div>
+      <div class="ps ps-tone"><span class="ps-badge">Tono</span><span class="ps-text">Dinámico y llamativo. Que lo pueda grabar yo solo/a con el celular, sin producción profesional.</span></div>
+    </div>
+    <div class="prompt-footer">
+      <div class="prompt-tip">💡 Los primeros 2 segundos son los más importantes — si no enganchás ahí, la gente se va.</div>
+      <button class="copy-btn" onclick="copyPrompt(this)">📋 Copiar</button>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════ TEXTOS ════════════════ -->
+<div class="category" data-cat="textos">
+  <div class="category-header">
+    <span class="cat-emoji">✍️</span>
+    <span class="cat-title">Textos y Descripciones</span>
+    <span class="cat-count">4 prompts</span>
+  </div>
+
+  <!-- 18 -->
+  <div class="prompt-card">
+    <div class="prompt-header">
+      <div class="prompt-label">Textos · Copywriting</div>
+      <div class="prompt-title">Descripción persuasiva de un producto o servicio</div>
+    </div>
+    <div class="prompt-sections">
+      <div class="ps ps-rol"><span class="ps-badge">Rol</span><span class="ps-text">Actuá como un copywriter especializado en descripciones de productos para emprendedores.</span></div>
+      <div class="ps ps-ctx"><span class="ps-badge">Contexto</span><span class="ps-text">Tengo un emprendimiento de <em class="ph">[rubro]</em> y quiero describir: <em class="ph">[nombre del producto]</em>. Características: <em class="ph">[las más importantes]</em>. Para quién es ideal: <em class="ph">[tu cliente tipo]</em>. Precio: <em class="ph">[precio]</em>.</span></div>
+      <div class="ps ps-task"><span class="ps-badge">Tarea</span><span class="ps-text">Escribime una descripción persuasiva de ese producto que resalte el beneficio para el cliente, no solo las características técnicas.</span></div>
+      <div class="ps ps-fmt"><span class="ps-badge">Formato</span><span class="ps-text">Máximo 5 líneas. Que empiece con el beneficio principal, no con el nombre del producto.</span></div>
+      <div class="ps ps-tone"><span class="ps-badge">Tono</span><span class="ps-text"><em class="ph">[cálido / profesional / entusiasta]</em>. Auténtico, sin frases vacías como "de la más alta calidad".</span></div>
+    </div>
+    <div class="prompt-footer">
+      <div class="prompt-tip">💡 La diferencia entre "torta de 3 pisos" y "torta que convierte cualquier cumpleaños en un momento único" es enorme.</div>
+      <button class="copy-btn" onclick="copyPrompt(this)">📋 Copiar</button>
+    </div>
+  </div>
+
+  <!-- 19 -->
+  <div class="prompt-card">
+    <div class="prompt-header">
+      <div class="prompt-label">Textos · Comunicación formal</div>
+      <div class="prompt-title">Mensaje formal para una institución o proveedor</div>
+    </div>
+    <div class="prompt-sections">
+      <div class="ps ps-rol"><span class="ps-badge">Rol</span><span class="ps-text">Actuá como un especialista en comunicación institucional para emprendimientos.</span></div>
+      <div class="ps ps-ctx"><span class="ps-badge">Contexto</span><span class="ps-text">Soy <em class="ph">[tu nombre]</em>, emprendedor/a de <em class="ph">[rubro]</em> con un emprendimiento llamado <em class="ph">[nombre]</em>. Necesito escribirle a <em class="ph">[a quién: municipio, feria, proveedor, institución]</em>.</span></div>
+      <div class="ps ps-task"><span class="ps-badge">Tarea</span><span class="ps-text">Redactame un mensaje formal para <em class="ph">[para qué: inscribirme, pedir información, presentar mi emprendimiento, hacer una consulta]</em>.</span></div>
+      <div class="ps ps-fmt"><span class="ps-badge">Formato</span><span class="ps-text">Estructura de carta o mail: saludo formal, cuerpo en 2-3 párrafos concisos, cierre y firma.</span></div>
+      <div class="ps ps-tone"><span class="ps-badge">Tono</span><span class="ps-text">Formal pero sin ser frío. Claro, respetuoso y profesional.</span></div>
+    </div>
+    <div class="prompt-footer">
+      <div class="prompt-tip">💡 Un mensaje bien redactado puede ser la diferencia entre que te respondan o no.</div>
+      <button class="copy-btn" onclick="copyPrompt(this)">📋 Copiar</button>
+    </div>
+  </div>
+
+  <!-- 20 -->
+  <div class="prompt-card">
+    <div class="prompt-header">
+      <div class="prompt-label">Textos · Prueba social</div>
+      <div class="prompt-title">Convertir comentario de cliente en testimonio</div>
+    </div>
+    <div class="prompt-sections">
+      <div class="ps ps-rol"><span class="ps-badge">Rol</span><span class="ps-text">Actuá como un copywriter especializado en prueba social y testimonios para emprendimientos.</span></div>
+      <div class="ps ps-ctx"><span class="ps-badge">Contexto</span><span class="ps-text">Un cliente me dijo esto sobre mi producto/servicio: "<em class="ph">[copiá el comentario tal cual, aunque esté informal o con errores]</em>".</span></div>
+      <div class="ps ps-task"><span class="ps-badge">Tarea</span><span class="ps-text">Reescribilo como un testimonio corto para publicar en redes.</span></div>
+      <div class="ps ps-fmt"><span class="ps-badge">Formato</span><span class="ps-text">Máximo 3 oraciones. Entre comillas, como si lo dijera el cliente.</span></div>
+      <div class="ps ps-tone"><span class="ps-badge">Tono</span><span class="ps-text">Auténtico y creíble. Sin exagerar. No agregues información que el cliente no haya mencionado.</span></div>
+    </div>
+    <div class="prompt-footer">
+      <div class="prompt-tip">💡 Siempre pedile permiso al cliente antes de publicar su testimonio.</div>
+      <button class="copy-btn" onclick="copyPrompt(this)">📋 Copiar</button>
+    </div>
+  </div>
+
+  <!-- 21 -->
+  <div class="prompt-card">
+    <div class="prompt-header">
+      <div class="prompt-label">Textos · Comunicación de precios</div>
+      <div class="prompt-title">Anunciar un aumento de precios</div>
+    </div>
+    <div class="prompt-sections">
+      <div class="ps ps-rol"><span class="ps-badge">Rol</span><span class="ps-text">Actuá como un consultor de comunicación de precios para pequeños emprendimientos.</span></div>
+      <div class="ps ps-ctx"><span class="ps-badge">Contexto</span><span class="ps-text">Voy a subir mis precios porque <em class="ph">[ej: suba de insumos, inflación, mejoras en el producto]</em>. El aumento es de aproximadamente <em class="ph">[porcentaje o de X a Y pesos]</em>.</span></div>
+      <div class="ps ps-task"><span class="ps-badge">Tarea</span><span class="ps-text">Escribime un mensaje para comunicar el aumento a mis clientes, para publicar en redes o enviar por WhatsApp.</span></div>
+      <div class="ps ps-fmt"><span class="ps-badge">Formato</span><span class="ps-text">Máximo 4 oraciones. Directo, que no dé vueltas innecesarias.</span></div>
+      <div class="ps ps-tone"><span class="ps-badge">Tono</span><span class="ps-text">Honesto y respetuoso. Sin pedir disculpas en exceso ni justificarse demasiado. Que mantenga la confianza del cliente.</span></div>
+    </div>
+    <div class="prompt-footer">
+      <div class="prompt-tip">💡 Comunicar los aumentos con anticipación y transparencia genera mucho más respeto que subirlos sin avisar.</div>
+      <button class="copy-btn" onclick="copyPrompt(this)">📋 Copiar</button>
+    </div>
+  </div>
+</div>
+
+
+<!-- ════════════════ WHATSAPP BUSINESS ════════════════ -->
+<div class="category" data-cat="wabiz">
+  <div class="category-header">
+    <span class="cat-emoji">📲</span>
+    <span class="cat-title">WhatsApp Business — Mensajes Automáticos</span>
+    <span class="cat-count">6 prompts</span>
+  </div>
+
+  <div class="what-box" style="background:#e7f8ef;border-color:#b7e4cb;margin-bottom:1rem;border-radius:12px;padding:1rem 1.2rem;display:flex;gap:0.8rem;">
+    <span style="font-size:1.5rem;flex-shrink:0">💡</span>
+    <div>
+      <p style="font-size:0.83rem;color:#2d5a3d;line-height:1.6;font-family:sans-serif"><strong>¿Cómo usar estos prompts?</strong> Generá el texto con la IA, luego pegalo directamente en WhatsApp Business: <strong>Ajustes → Herramientas para la empresa → Mensaje de bienvenida / ausencia / respuestas rápidas</strong>.</p>
+    </div>
+  </div>
+
+  <!-- WA1 -->
+  <div class="prompt-card">
+    <div class="prompt-header">
+      <div class="prompt-label">WhatsApp Business · Mensaje de bienvenida</div>
+      <div class="prompt-title">Primer mensaje automático cuando alguien te escribe</div>
+    </div>
+    <div class="prompt-sections">
+      <div class="ps ps-rol"><span class="ps-badge">Rol</span><span class="ps-text">Actuá como un especialista en comunicación digital para pequeños emprendimientos.</span></div>
+      <div class="ps ps-ctx"><span class="ps-badge">Contexto</span><span class="ps-text">Tengo un emprendimiento de <em class="ph">[rubro]</em> llamado <em class="ph">[nombre]</em>. Ofrezco <em class="ph">[qué vendés o qué servicio das]</em>. Mi horario de atención es <em class="ph">[ej: lunes a viernes de 9 a 18hs]</em>.</span></div>
+      <div class="ps ps-task"><span class="ps-badge">Tarea</span><span class="ps-text">Escribime el mensaje de bienvenida automático de WhatsApp Business que se envía cuando alguien me escribe por primera vez o después de 14 días sin contacto.</span></div>
+      <div class="ps ps-fmt"><span class="ps-badge">Formato</span><span class="ps-text">Máximo 3 oraciones. Que salude, presente brevemente el emprendimiento y le diga al cliente que en breve lo atienden. Sin listas ni emojis exagerados.</span></div>
+      <div class="ps ps-tone"><span class="ps-badge">Tono</span><span class="ps-text">Cálido y profesional. Que transmita confianza desde el primer contacto.</span></div>
+    </div>
+    <div class="prompt-footer">
+      <div class="prompt-tip">💡 En WhatsApp Business: Ajustes → Herramientas para la empresa → Mensaje de bienvenida.</div>
+      <button class="copy-btn" onclick="copyPrompt(this)">📋 Copiar</button>
+    </div>
+  </div>
+
+  <!-- WA2 -->
+  <div class="prompt-card">
+    <div class="prompt-header">
+      <div class="prompt-label">WhatsApp Business · Mensaje de ausencia</div>
+      <div class="prompt-title">Respuesta automática fuera del horario de atención</div>
+    </div>
+    <div class="prompt-sections">
+      <div class="ps ps-rol"><span class="ps-badge">Rol</span><span class="ps-text">Actuá como un especialista en atención al cliente para pequeños emprendimientos.</span></div>
+      <div class="ps ps-ctx"><span class="ps-badge">Contexto</span><span class="ps-text">Tengo un emprendimiento de <em class="ph">[rubro]</em> llamado <em class="ph">[nombre]</em>. Mi horario de atención es <em class="ph">[ej: lunes a viernes de 9 a 18hs]</em>. Fuera de ese horario no puedo responder de inmediato.</span></div>
+      <div class="ps ps-task"><span class="ps-badge">Tarea</span><span class="ps-text">Escribime el mensaje de ausencia automático que se envía cuando alguien me escribe fuera de mi horario de atención.</span></div>
+      <div class="ps ps-fmt"><span class="ps-badge">Formato</span><span class="ps-text">Máximo 3 oraciones. Que informe que no estoy disponible en ese momento, indique el horario en que van a recibir respuesta y cierre con algo que no los haga sentir ignorados.</span></div>
+      <div class="ps ps-tone"><span class="ps-badge">Tono</span><span class="ps-text">Amable y tranquilizador. Que el cliente sienta que va a ser atendido, solo que después.</span></div>
+    </div>
+    <div class="prompt-footer">
+      <div class="prompt-tip">💡 Podés programarlo para que se active solo en ciertos horarios y días desde la app.</div>
+      <button class="copy-btn" onclick="copyPrompt(this)">📋 Copiar</button>
+    </div>
+  </div>
+
+  <!-- WA3 -->
+  <div class="prompt-card">
+    <div class="prompt-header">
+      <div class="prompt-label">WhatsApp Business · Respuesta rápida</div>
+      <div class="prompt-title">Respuesta a "¿Cuánto cuesta?" / "¿Tienen precio?"</div>
+    </div>
+    <div class="prompt-sections">
+      <div class="ps ps-rol"><span class="ps-badge">Rol</span><span class="ps-text">Actuá como un especialista en ventas y comunicación para pequeños emprendimientos.</span></div>
+      <div class="ps ps-ctx"><span class="ps-badge">Contexto</span><span class="ps-text">Tengo un emprendimiento de <em class="ph">[rubro]</em>. Mis productos/servicios van desde <em class="ph">[precio mínimo]</em> hasta <em class="ph">[precio máximo]</em>. <em class="ph">[Opcional: mencioná si tenés catálogo, lista de precios o si los precios varían según el pedido]</em>.</span></div>
+      <div class="ps ps-task"><span class="ps-badge">Tarea</span><span class="ps-text">Escribime una respuesta rápida para WhatsApp Business para responder de forma instantánea cuando alguien pregunta por precios.</span></div>
+      <div class="ps ps-fmt"><span class="ps-badge">Formato</span><span class="ps-text">Máximo 4 oraciones. Que dé una idea de rango de precios, invite a ver el catálogo o pedir más info, y cierre con una pregunta para seguir la conversación.</span></div>
+      <div class="ps ps-tone"><span class="ps-badge">Tono</span><span class="ps-text">Directo y amigable. Sin esquivar la pregunta ni dar una respuesta que genere frustración.</span></div>
+    </div>
+    <div class="prompt-footer">
+      <div class="prompt-tip">💡 En WhatsApp Business guardás esto como respuesta rápida con el atajo /precio y la enviás con un solo toque.</div>
+      <button class="copy-btn" onclick="copyPrompt(this)">📋 Copiar</button>
+    </div>
+  </div>
+
+  <!-- WA4 -->
+  <div class="prompt-card">
+    <div class="prompt-header">
+      <div class="prompt-label">WhatsApp Business · Respuesta rápida</div>
+      <div class="prompt-title">Respuesta a "¿Hacen envíos?" / "¿Cómo compro?"</div>
+    </div>
+    <div class="prompt-sections">
+      <div class="ps ps-rol"><span class="ps-badge">Rol</span><span class="ps-text">Actuá como un especialista en ventas y logística para pequeños emprendimientos.</span></div>
+      <div class="ps ps-ctx"><span class="ps-badge">Contexto</span><span class="ps-text">Tengo un emprendimiento de <em class="ph">[rubro]</em>. <em class="ph">[Describí cómo funciona tu venta: hacés envíos / solo retiro en persona / ambos / zona de cobertura / costo del envío / forma de pago]</em>.</span></div>
+      <div class="ps ps-task"><span class="ps-badge">Tarea</span><span class="ps-text">Escribime una respuesta rápida explicando cómo funciona la compra y el envío en mi emprendimiento.</span></div>
+      <div class="ps ps-fmt"><span class="ps-badge">Formato</span><span class="ps-text">Máximo 5 líneas. Puede tener una pequeña lista con íconos si hace más fácil la lectura. Cerrar invitando a coordinar el pedido.</span></div>
+      <div class="ps ps-tone"><span class="ps-badge">Tono</span><span class="ps-text">Claro y práctico. Que el cliente entienda el proceso en 10 segundos sin necesidad de preguntar más.</span></div>
+    </div>
+    <div class="prompt-footer">
+      <div class="prompt-tip">💡 Guardalo con el atajo /envio para enviarlo con un toque cada vez que te pregunten.</div>
+      <button class="copy-btn" onclick="copyPrompt(this)">📋 Copiar</button>
+    </div>
+  </div>
+
+  <!-- WA5 -->
+  <div class="prompt-card">
+    <div class="prompt-header">
+      <div class="prompt-label">WhatsApp Business · Respuesta rápida</div>
+      <div class="prompt-title">Confirmación de pedido recibido</div>
+    </div>
+    <div class="prompt-sections">
+      <div class="ps ps-rol"><span class="ps-badge">Rol</span><span class="ps-text">Actuá como un especialista en atención postventa para pequeños emprendimientos.</span></div>
+      <div class="ps ps-ctx"><span class="ps-badge">Contexto</span><span class="ps-text">Tengo un emprendimiento de <em class="ph">[rubro]</em>. Cuando un cliente confirma un pedido, necesito enviarle un mensaje que lo tranquilice y le informe los pasos siguientes. El tiempo de preparación suele ser <em class="ph">[ej: 24hs / 2-3 días / en el momento]</em>.</span></div>
+      <div class="ps ps-task"><span class="ps-badge">Tarea</span><span class="ps-text">Escribime un mensaje de confirmación de pedido para enviarle al cliente una vez que confirma su compra.</span></div>
+      <div class="ps ps-fmt"><span class="ps-badge">Formato</span><span class="ps-text">Máximo 4 oraciones. Que confirme que recibiste el pedido, informe el tiempo estimado y el próximo paso (pago, preparación, envío), y cierre agradeciéndole la confianza.</span></div>
+      <div class="ps ps-tone"><span class="ps-badge">Tono</span><span class="ps-text">Cálido y profesional. Que el cliente sienta que está en buenas manos y su pedido está bajo control.</span></div>
+    </div>
+    <div class="prompt-footer">
+      <div class="prompt-tip">💡 Este mensaje reduce muchísimo las consultas ansiosas de "¿llegó mi pedido?" porque el cliente ya sabe qué esperar.</div>
+      <button class="copy-btn" onclick="copyPrompt(this)">📋 Copiar</button>
+    </div>
+  </div>
+
+  <!-- WA6 -->
+  <div class="prompt-card">
+    <div class="prompt-header">
+      <div class="prompt-label">WhatsApp Business · Perfil</div>
+      <div class="prompt-title">Descripción del emprendimiento para el perfil de WhatsApp Business</div>
+    </div>
+    <div class="prompt-sections">
+      <div class="ps ps-rol"><span class="ps-badge">Rol</span><span class="ps-text">Actuá como un copywriter especializado en perfiles digitales para emprendedores.</span></div>
+      <div class="ps ps-ctx"><span class="ps-badge">Contexto</span><span class="ps-text">Tengo un emprendimiento llamado <em class="ph">[nombre]</em> que se dedica a <em class="ph">[qué hacés]</em>. Mi diferencial es <em class="ph">[qué te hace único/a]</em>. Mi zona de atención es <em class="ph">[ciudad o zona]</em> y mi horario es <em class="ph">[horario]</em>.</span></div>
+      <div class="ps ps-task"><span class="ps-badge">Tarea</span><span class="ps-text">Escribime la descripción para el perfil de WhatsApp Business que van a ver los clientes cuando entren a mi contacto.</span></div>
+      <div class="ps ps-fmt"><span class="ps-badge">Formato</span><span class="ps-text">Máximo 139 caracteres (límite de WhatsApp Business). Una sola frase que diga qué hacés, para quién y qué te diferencia.</span></div>
+      <div class="ps ps-tone"><span class="ps-badge">Tono</span><span class="ps-text">Claro y directo. Que en menos de 5 segundos el cliente entienda de qué trata el emprendimiento.</span></div>
+    </div>
+    <div class="prompt-footer">
+      <div class="prompt-tip">💡 Esta descripción aparece debajo del nombre de tu emprendimiento cuando alguien te guarda o busca en WhatsApp.</div>
+      <button class="copy-btn" onclick="copyPrompt(this)">📋 Copiar</button>
+    </div>
+  </div>
+
+</div>
+
+
+<!-- ════════════════ TIENDANUBE ════════════════ -->
+<div class="category" data-cat="tiendanube">
+  <div class="category-header">
+    <span class="cat-emoji">🛒</span>
+    <span class="cat-title">Tiendanube</span>
+    <span class="cat-count">5 prompts</span>
+  </div>
+
+  <div class="what-box" style="background:#eef3ff;border:1px solid #c3d0f7;margin-bottom:1rem;border-radius:12px;padding:1rem 1.2rem;display:flex;gap:0.8rem;">
+    <span style="font-size:1.5rem;flex-shrink:0">💡</span>
+    <div>
+      <p style="font-size:0.83rem;color:#2d3a6b;line-height:1.6;font-family:sans-serif"><strong>¿Cómo usar estos prompts?</strong> Generá el texto con la IA y pegalo directamente en el panel de Tiendanube: <strong>Productos → Editar → Descripción</strong>, o en <strong>Configuración → Página "Sobre nosotros"</strong>, según el caso.</p>
+    </div>
+  </div>
+
+  <!-- TN1 -->
+  <div class="prompt-card">
+    <div class="prompt-header">
+      <div class="prompt-label">Tiendanube · Producto</div>
+      <div class="prompt-title">Descripción de producto que vende (con SEO)</div>
+    </div>
+    <div class="prompt-sections">
+      <div class="ps ps-rol"><span class="ps-badge">Rol</span><span class="ps-text">Actuá como un copywriter especializado en e-commerce para emprendimientos de Argentina.</span></div>
+      <div class="ps ps-ctx"><span class="ps-badge">Contexto</span><span class="ps-text">Tengo una tienda en Tiendanube de <em class="ph">[rubro]</em>. El producto es: <em class="ph">[nombre del producto]</em>. Sus características principales son: <em class="ph">[materiales, medidas, colores, peso, etc.]</em>. El beneficio clave para el cliente es: <em class="ph">[qué problema resuelve o qué sensación genera]</em>.</span></div>
+      <div class="ps ps-task"><span class="ps-badge">Tarea</span><span class="ps-text">Escribime la descripción del producto para mi tienda. Tiene que convencer al cliente de comprarlo y aparecer bien en Google.</span></div>
+      <div class="ps ps-fmt"><span class="ps-badge">Formato</span><span class="ps-text">Un párrafo de 2-3 oraciones que engancha, seguido de una lista de 4-5 características con beneficios (no solo specs técnicas). Total: no más de 150 palabras.</span></div>
+      <div class="ps ps-tone"><span class="ps-badge">Tono</span><span class="ps-text">Cercano y confiable. Que suene como una persona que recomienda el producto, no como un catálogo técnico.</span></div>
+    </div>
+    <div class="prompt-footer">
+      <div class="prompt-tip">💡 Una buena descripción reduce las preguntas por WhatsApp y mejora el posicionamiento en Google de tu tienda.</div>
+      <button class="copy-btn" onclick="copyPrompt(this)">📋 Copiar</button>
+    </div>
+  </div>
+
+  <!-- TN2 -->
+  <div class="prompt-card">
+    <div class="prompt-header">
+      <div class="prompt-label">Tiendanube · Página institucional</div>
+      <div class="prompt-title">Texto para la página "Sobre nosotros" / "Quiénes somos"</div>
+    </div>
+    <div class="prompt-sections">
+      <div class="ps ps-rol"><span class="ps-badge">Rol</span><span class="ps-text">Actuá como un redactor especializado en páginas institucionales para tiendas online de emprendedores.</span></div>
+      <div class="ps ps-ctx"><span class="ps-badge">Contexto</span><span class="ps-text">Tengo una tienda en Tiendanube llamada <em class="ph">[nombre]</em> que vende <em class="ph">[qué]</em>. Empecé porque <em class="ph">[motivo o historia breve]</em>. Mis clientes son principalmente <em class="ph">[quiénes]</em> y lo que me diferencia es <em class="ph">[diferencial]</em>.</span></div>
+      <div class="ps ps-task"><span class="ps-badge">Tarea</span><span class="ps-text">Escribime el texto para la sección "Quiénes somos" de mi tienda online.</span></div>
+      <div class="ps ps-fmt"><span class="ps-badge">Formato</span><span class="ps-text">3 párrafos cortos: el primero presenta la tienda, el segundo cuenta el origen o motivación, el tercero dice qué puede esperar el cliente. Máximo 120 palabras en total.</span></div>
+      <div class="ps ps-tone"><span class="ps-badge">Tono</span><span class="ps-text">Humano y cercano. Que el cliente sienta que hay una persona real detrás de la tienda, no una empresa impersonal.</span></div>
+    </div>
+    <div class="prompt-footer">
+      <div class="prompt-tip">💡 Las tiendas que muestran la historia real del emprendedor generan más confianza y convierten mejor.</div>
+      <button class="copy-btn" onclick="copyPrompt(this)">📋 Copiar</button>
+    </div>
+  </div>
+
+  <!-- TN3 -->
+  <div class="prompt-card">
+    <div class="prompt-header">
+      <div class="prompt-label">Tiendanube · Políticas</div>
+      <div class="prompt-title">Política de envíos, cambios y devoluciones</div>
+    </div>
+    <div class="prompt-sections">
+      <div class="ps ps-rol"><span class="ps-badge">Rol</span><span class="ps-text">Actuá como un especialista en atención al cliente para tiendas online de pequeños emprendimientos en Argentina.</span></div>
+      <div class="ps ps-ctx"><span class="ps-badge">Contexto</span><span class="ps-text">Tengo una tienda en Tiendanube de <em class="ph">[rubro]</em>. Mis condiciones son: envíos <em class="ph">[ej: por Correo Argentino / OCA / Andreani / retiro en persona / envío gratis a partir de $X]</em>. Los cambios <em class="ph">[se aceptan / no se aceptan / solo por producto defectuoso]</em> dentro de <em class="ph">[X días]</em>. Devoluciones: <em class="ph">[cómo las manejás]</em>.</span></div>
+      <div class="ps ps-task"><span class="ps-badge">Tarea</span><span class="ps-text">Redactame el texto para la sección de políticas de envío, cambios y devoluciones de mi tienda.</span></div>
+      <div class="ps ps-fmt"><span class="ps-badge">Formato</span><span class="ps-text">3 bloques bien separados con título (Envíos / Cambios / Devoluciones). Cada uno en 3-4 oraciones claras. Sin lenguaje legal complicado.</span></div>
+      <div class="ps ps-tone"><span class="ps-badge">Tono</span><span class="ps-text">Claro y directo. Que el cliente entienda las reglas sin sentirse amenazado ni confundido.</span></div>
+    </div>
+    <div class="prompt-footer">
+      <div class="prompt-tip">💡 Tener políticas claras visibles en la tienda reduce reclamos y genera más confianza para comprar.</div>
+      <button class="copy-btn" onclick="copyPrompt(this)">📋 Copiar</button>
+    </div>
+  </div>
+
+  <!-- TN4 -->
+  <div class="prompt-card">
+    <div class="prompt-header">
+      <div class="prompt-label">Tiendanube · Email automático</div>
+      <div class="prompt-title">Email de recuperación de carrito abandonado</div>
+    </div>
+    <div class="prompt-sections">
+      <div class="ps ps-rol"><span class="ps-badge">Rol</span><span class="ps-text">Actuá como un especialista en email marketing para tiendas online de Argentina.</span></div>
+      <div class="ps ps-ctx"><span class="ps-badge">Contexto</span><span class="ps-text">Tengo una tienda en Tiendanube de <em class="ph">[rubro]</em>. Quiero activar el email automático de carrito abandonado que envía Tiendanube cuando alguien deja productos en el carrito sin comprar. <em class="ph">[Opcional: ¿vas a ofrecer un descuento? ¿cuánto?]</em></span></div>
+      <div class="ps ps-task"><span class="ps-badge">Tarea</span><span class="ps-text">Escribime el texto para el email de carrito abandonado que voy a configurar en Tiendanube.</span></div>
+      <div class="ps ps-fmt"><span class="ps-badge">Formato</span><span class="ps-text">Asunto del email (máximo 8 palabras). Cuerpo: saludo + recordatorio del carrito + 1 frase motivadora + llamado a la acción. Máximo 80 palabras en total.</span></div>
+      <div class="ps ps-tone"><span class="ps-badge">Tono</span><span class="ps-text">Amigable y sin presión. Que suene a un recordatorio útil, no a publicidad desesperada.</span></div>
+    </div>
+    <div class="prompt-footer">
+      <div class="prompt-tip">💡 En Tiendanube: Panel → Marketing → Emails automáticos → Carrito abandonado. Activarlo puede recuperar hasta un 15% de ventas perdidas.</div>
+      <button class="copy-btn" onclick="copyPrompt(this)">📋 Copiar</button>
+    </div>
+  </div>
+
+  <!-- TN5 -->
+  <div class="prompt-card">
+    <div class="prompt-header">
+      <div class="prompt-label">Tiendanube · Pop-up / Banner</div>
+      <div class="prompt-title">Texto para pop-up de descuento por primera compra</div>
+    </div>
+    <div class="prompt-sections">
+      <div class="ps ps-rol"><span class="ps-badge">Rol</span><span class="ps-text">Actuá como un especialista en conversión para tiendas online de emprendedores.</span></div>
+      <div class="ps ps-ctx"><span class="ps-badge">Contexto</span><span class="ps-text">Tengo una tienda en Tiendanube de <em class="ph">[rubro]</em>. Quiero mostrar un pop-up a los visitantes nuevos ofreciéndoles un descuento del <em class="ph">[%]</em> en su primera compra a cambio de que dejen su email.</span></div>
+      <div class="ps ps-task"><span class="ps-badge">Tarea</span><span class="ps-text">Escribime el texto del pop-up de bienvenida y descuento para mi tienda.</span></div>
+      <div class="ps ps-fmt"><span class="ps-badge">Formato</span><span class="ps-text">Título impactante (máximo 6 palabras) + 1 oración que explica el beneficio + 1 línea que indica qué tienen que hacer (dejar el email). Sin más de 30 palabras en total.</span></div>
+      <div class="ps ps-tone"><span class="ps-badge">Tono</span><span class="ps-text">Directo y tentador. Que dé ganas de aprovechar la oportunidad sin sentirse acosado.</span></div>
+    </div>
+    <div class="prompt-footer">
+      <div class="prompt-tip">💡 En Tiendanube: Panel → Marketing → Pop-up de suscripción. Capturar emails es uno de los activos más valiosos de tu tienda.</div>
+      <button class="copy-btn" onclick="copyPrompt(this)">📋 Copiar</button>
+    </div>
+  </div>
+
+</div>
+
+</main>
+
+<footer>Guía de Prompts para Emprendedores · Creado por <strong style="color:#f0b882">Leandro Sacha Melchiori</strong>
+  <div style="margin-top:0.6rem;display:flex;justify-content:center;gap:1.2rem;">
+    <a href="https://www.instagram.com/sacha.melchiori" target="_blank" style="color:#b0a898;text-decoration:none;font-size:0.78rem;display:flex;align-items:center;gap:0.35rem;transition:color 0.15s;" onmouseover="this.style.color='#f0b882'" onmouseout="this.style.color='#b0a898'">
+      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+      @sacha.melchiori
+    </a>
+    <a href="https://www.linkedin.com/in/leandromelchiori-developer/" target="_blank" style="color:#b0a898;text-decoration:none;font-size:0.78rem;display:flex;align-items:center;gap:0.35rem;transition:color 0.15s;" onmouseover="this.style.color='#f0b882'" onmouseout="this.style.color='#b0a898'">
+      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+      leandromelchiori-developer
+    </a>
+  </div>
+</footer>
+<div id="toast"></div>
+
+<script>
+function copyPrompt(btn) {
+  const card = btn.closest('.prompt-card');
+  const sections = card.querySelectorAll('.ps');
+  const badges = {'ps-rol':'ROL','ps-ctx':'CONTEXTO','ps-task':'TAREA','ps-fmt':'FORMATO','ps-tone':'TONO'};
+  let text = '';
+  sections.forEach(sec => {
+    const key = [...sec.classList].find(c => badges[c]);
+    if (!key) return;
+    let content = '';
+    sec.querySelectorAll('.ps-text')[0].childNodes.forEach(n => {
+      content += n.textContent;
+    });
+    text += '## ' + badges[key] + '\n' + content.trim() + '\n\n';
+  });
+  text = text.trim();
+
+  const doCopy = t => {
+    if (navigator.clipboard && navigator.clipboard.writeText)
+      return navigator.clipboard.writeText(t).catch(() => fb(t));
+    fb(t);
+  };
+  const fb = t => {
+    const ta = document.createElement('textarea');
+    ta.value = t; ta.style.cssText = 'position:fixed;top:-9999px;opacity:0;';
+    document.body.appendChild(ta); ta.focus(); ta.select();
+    try { document.execCommand('copy'); } catch(e) {}
+    document.body.removeChild(ta);
+  };
+
+  doCopy(text);
+  btn.textContent = '✓ Copiado!'; btn.classList.add('copied');
+  showToast('✓ Prompt copiado — pegalo en Claude, ChatGPT o Gemini');
+  setTimeout(() => { btn.textContent = '📋 Copiar'; btn.classList.remove('copied'); }, 2000);
+}
+
+function filterCat(cat, btn) {
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('.category').forEach(s => {
+    s.style.display = (cat === 'all' || s.dataset.cat === cat) ? '' : 'none';
+  });
+}
+
+let toastT;
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  clearTimeout(toastT);
+  toastT = setTimeout(() => t.classList.remove('show'), 2200);
+}
+</script>
+</body>
+</html>

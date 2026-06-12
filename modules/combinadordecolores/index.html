@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Combinador de Colores</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: Georgia, serif; background: #f3f0ed; min-height: 100vh; }
+#hero { padding: 2rem 1.5rem 2.5rem; position: relative; overflow: hidden; transition: background 0.3s; }
+#hero-overlay { position: absolute; inset: 0; opacity: 0.4; pointer-events: none; }
+#hero-content { position: relative; z-index: 1; }
+#hero-sub { font-size: 0.7rem; letter-spacing: 0.22em; text-transform: uppercase; font-family: sans-serif; opacity: 0.75; margin-bottom: 0.25rem; }
+#hero-title { font-size: clamp(1.4rem,5vw,2.1rem); font-weight: normal; margin-bottom: 0.7rem; }
+#hero-meta { display: flex; align-items: center; gap: 0.8rem; flex-wrap: wrap; }
+#hero-emoji { font-size: 1.5rem; }
+#hero-emotion-name { font-weight: bold; font-family: sans-serif; font-size: 0.95rem; }
+#hero-emotion-words { font-family: sans-serif; font-size: 0.78rem; opacity: 0.82; }
+#copy-hex-btn { margin-left: auto; background: rgba(255,255,255,0.22); padding: 0.3rem 0.8rem; border-radius: 8px; font-family: monospace; font-size: 0.9rem; cursor: pointer; letter-spacing: 0.05em; border: none; }
+.wrap { padding: 1.1rem; max-width: 600px; margin: 0 auto; }
+.card { background: white; border-radius: 14px; padding: 1.2rem; margin-bottom: 0.9rem; box-shadow: 0 2px 14px rgba(0,0,0,0.06); }
+.card-title { font-size: 0.7rem; color: #bbb; font-family: sans-serif; text-transform: uppercase; letter-spacing: 0.12em; margin-bottom: 0.8rem; }
+#presets { display: flex; gap: 0.35rem; flex-wrap: wrap; }
+.preset-btn { border-radius: 20px; padding: 0.25rem 0.7rem; font-size: 0.76rem; font-family: sans-serif; cursor: pointer; transition: transform 0.12s; border: 2px solid transparent; }
+.preset-btn:hover { transform: scale(1.08); }
+.preset-btn.active { border: 3px solid #333 !important; }
+#circle-wrap { display: flex; gap: 1rem; align-items: center; margin-bottom: 1.2rem; }
+#circle-preview { width: 60px; height: 60px; border-radius: 50%; flex-shrink: 0; transition: all 0.3s; position: relative; cursor: pointer; }
+#native-picker { position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%; border-radius: 50%; }
+#circle-badge { position: absolute; bottom: -2px; right: -2px; background: white; border-radius: 50%; width: 18px; height: 18px; display: flex; align-items: center; justify-content: center; box-shadow: 0 1px 4px rgba(0,0,0,0.2); font-size: 0.58rem; pointer-events: none; }
+#tabs { display: flex; background: #f2f2f2; border-radius: 10px; padding: 3px; margin-bottom: 1rem; gap: 2px; }
+.tab-btn { flex: 1; padding: 0.4rem 0.1rem; border: none; border-radius: 8px; font-family: sans-serif; font-size: 0.72rem; cursor: pointer; transition: all 0.18s; background: transparent; color: #aaa; font-weight: 400; white-space: nowrap; }
+.tab-btn.active { background: white; color: #333; font-weight: 700; box-shadow: 0 1px 5px rgba(0,0,0,0.1); }
+#picker-area { display: flex; flex-direction: column; align-items: center; gap: 0.8rem; padding: 0.5rem 0; }
+#picker-canvas { display: block; cursor: crosshair; touch-action: none; }
+#picker-legend { display: flex; gap: 1rem; font-family: sans-serif; font-size: 0.7rem; color: #bbb; flex-wrap: wrap; justify-content: center; }
+.slider-wrap { margin-bottom: 0.85rem; }
+.slider-header { display: flex; justify-content: space-between; margin-bottom: 0.25rem; }
+.slider-label { font-size: 0.74rem; color: #999; font-family: sans-serif; text-transform: uppercase; letter-spacing: 0.08em; }
+.slider-value { font-size: 0.82rem; font-family: monospace; color: #333; font-weight: 600; }
+.slider-track-wrap { position: relative; height: 24px; display: flex; align-items: center; }
+.slider-track { position: absolute; left: 0; right: 0; height: 10px; border-radius: 6px; box-shadow: inset 0 1px 3px rgba(0,0,0,0.12); }
+input[type=range] { width: 100%; -webkit-appearance: none; appearance: none; background: transparent; cursor: pointer; position: relative; z-index: 1; height: 24px; }
+input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; width: 20px; height: 20px; border-radius: 50%; background: white; box-shadow: 0 1px 6px rgba(0,0,0,0.32); border: 2px solid rgba(0,0,0,0.07); }
+input[type=range]::-moz-range-thumb { width: 20px; height: 20px; border-radius: 50%; background: white; box-shadow: 0 1px 6px rgba(0,0,0,0.32); border: 2px solid rgba(0,0,0,0.07); }
+.code-display { background: #f7f7f7; border-radius: 8px; padding: 0.55rem 0.9rem; font-family: monospace; font-size: 0.82rem; color: #555; margin-top: 0.5rem; }
+#hex-row { display: flex; align-items: center; gap: 0.8rem; margin-bottom: 0.8rem; }
+#hex-preview-box { width: 42px; height: 42px; border-radius: 10px; flex-shrink: 0; }
+#hex-input { flex: 1; padding: 0.6rem 0.9rem; border-radius: 10px; font-family: monospace; font-size: 1rem; outline: none; text-transform: uppercase; letter-spacing: 0.06em; background: #fafafa; color: #333; border: 2px solid #ddd; }
+#hex-error { color: #e53935; font-size: 0.76rem; margin-bottom: 0.8rem; font-family: sans-serif; display: none; }
+#quick-colors { display: flex; gap: 0.4rem; flex-wrap: wrap; margin-top: 0.5rem; }
+.quick-color { width: 30px; height: 30px; border-radius: 7px; cursor: pointer; transition: transform 0.12s; box-shadow: 0 1px 4px rgba(0,0,0,0.15); border: 2px solid transparent; }
+.quick-color:hover { transform: scale(1.15); }
+.quick-color.active { box-shadow: 0 0 0 3px #333; }
+.row-title { font-size: 0.7rem; color: #ccc; font-family: sans-serif; text-transform: uppercase; letter-spacing: 0.1em; margin: 1rem 0 0.4rem; }
+.color-row { display: flex; gap: 4px; }
+.color-swatch { flex: 1; height: 34px; border-radius: 6px; cursor: pointer; transition: transform 0.12s; border: 2px solid transparent; }
+.color-swatch:hover { transform: scaleY(1.15); }
+.color-swatch.active { border-color: #333; }
+#harmony-header { display: flex; justify-content: space-between; align-items: center; cursor: pointer; user-select: none; }
+#harmony-title { font-size: 0.7rem; color: #bbb; font-family: sans-serif; text-transform: uppercase; letter-spacing: 0.12em; }
+#harmony-current { color: #555; font-weight: bold; }
+#harmony-list { margin-top: 0.8rem; display: none; flex-direction: column; gap: 0.38rem; }
+#harmony-list.open { display: flex; }
+.harmony-btn { border: none; border-radius: 9px; padding: 0.6rem 0.9rem; text-align: left; cursor: pointer; font-family: sans-serif; display: flex; justify-content: space-between; align-items: center; transition: all 0.18s; background: #f7f7f7; color: #444; width: 100%; }
+.harmony-btn .hlabel { font-size: 0.86rem; font-weight: 700; }
+.harmony-btn .hdesc { font-size: 0.74rem; opacity: 0.85; }
+#palette-strip { display: flex; border-radius: 10px; overflow: hidden; height: 58px; margin-bottom: 0.8rem; box-shadow: 0 2px 10px rgba(0,0,0,0.08); }
+.strip-chunk { flex: 1; }
+#palette-cards { display: flex; flex-direction: column; gap: 0.45rem; }
+.palette-card { border: none; border-radius: 9px; padding: 0.72rem 1rem; display: flex; justify-content: space-between; align-items: center; cursor: pointer; box-shadow: 0 2px 7px rgba(0,0,0,0.07); transition: transform 0.14s, box-shadow 0.14s; width: 100%; }
+.palette-card:hover { transform: scale(1.013); box-shadow: 0 4px 14px rgba(0,0,0,0.13); }
+.palette-card .plabel { font-family: sans-serif; font-weight: 600; font-size: 0.86rem; }
+.palette-card .phex { font-family: monospace; font-size: 0.86rem; opacity: 0.9; }
+#toast { position: fixed; bottom: 1.5rem; left: 50%; transform: translateX(-50%) translateY(60px); background: #222; color: white; padding: 0.6rem 1.3rem; border-radius: 30px; font-family: sans-serif; font-size: 0.85rem; box-shadow: 0 4px 20px rgba(0,0,0,0.25); transition: transform 0.3s, opacity 0.3s; opacity: 0; pointer-events: none; white-space: nowrap; z-index: 9999; }
+#toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+#print-btn-wrap { max-width: 600px; margin: 0 auto 2rem; padding: 0 1.1rem; }
+#print-btn { width: 100%; padding: 1rem; border: none; border-radius: 14px; font-family: sans-serif; font-size: 1rem; font-weight: 700; cursor: pointer; letter-spacing: 0.04em; display: flex; align-items: center; justify-content: center; gap: 0.6rem; transition: transform 0.15s, box-shadow 0.15s; box-shadow: 0 4px 18px rgba(0,0,0,0.12); }
+#print-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 24px rgba(0,0,0,0.16); }
+#print-btn:disabled { opacity: 0.7; cursor: not-allowed; transform: none; }
+.rule-row { display: flex; align-items: center; gap: 0.8rem; margin-bottom: 0.65rem; }
+.rule-box { width: 44px; height: 44px; border-radius: 9px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 0.68rem; font-weight: bold; font-family: sans-serif; }
+.rule-info .role { font-weight: 600; font-size: 0.82rem; font-family: sans-serif; color: #333; }
+.rule-info .tip { font-size: 0.74rem; color: #aaa; font-family: sans-serif; }
+#tip-box { margin-top: 0.5rem; padding: 0.75rem 0.9rem; background: #fef9f0; border-radius: 9px; border-left: 3px solid #ccc; transition: border-color 0.3s; }
+#tip-text { font-size: 0.78rem; color: #666; font-family: sans-serif; font-style: italic; line-height: 1.5; }
+</style>
+</head>
+<body>
+<div id="hero">
+  <div id="hero-overlay"></div>
+  <div id="hero-content">
+    <p id="hero-sub">Herramienta para emprendedores</p>
+    <h1 id="hero-title">Combinador de Colores</h1>
+    <div id="hero-meta">
+      <span id="hero-emoji">🧡</span>
+      <div><div id="hero-emotion-name"></div><div id="hero-emotion-words"></div></div>
+      <button id="copy-hex-btn" onclick="copyHeroHex()"></button>
+    </div>
+  </div>
+</div>
+<div class="wrap">
+  <div class="card">
+    <p class="card-title">Empezar desde un rubro</p>
+    <div id="presets"></div>
+  </div>
+  <div class="card">
+    <p class="card-title">Personalizar color</p>
+    <div id="circle-wrap">
+      <div id="circle-preview" style="position:relative">
+        <input type="color" id="native-picker" oninput="fromHex(this.value)">
+        <div id="circle-badge">🎨</div>
+      </div>
+      <div>
+        <p style="font-size:0.8rem;color:#555;font-family:sans-serif;margin-bottom:0.2rem">Ideal para: <strong id="rubro-text"></strong></p>
+        <p style="font-size:0.74rem;color:#aaa;font-family:sans-serif;font-style:italic">Tocá el círculo para el selector del dispositivo</p>
+      </div>
+    </div>
+    <div id="tabs">
+      <button class="tab-btn active" onclick="setTab('wheel')">🎡 Rueda</button>
+      <button class="tab-btn"        onclick="setTab('hsl')">HSL</button>
+      <button class="tab-btn"        onclick="setTab('rgb')">RGB</button>
+      <button class="tab-btn"        onclick="setTab('hex')">HEX</button>
+    </div>
+    <!-- WHEEL -->
+    <div id="panel-wheel">
+      <div id="picker-area">
+        <canvas id="picker-canvas" width="260" height="260"></canvas>
+        <div id="picker-legend">
+          <span>⬤ Anillo → matiz</span>
+          <span>⬤ Cuadrado → saturación / luminosidad</span>
+        </div>
+      </div>
+    </div>
+    <!-- HSL -->
+    <div id="panel-hsl" style="display:none">
+      <div class="slider-wrap">
+        <div class="slider-header"><span class="slider-label">Matiz (Hue)</span><span class="slider-value" id="v-h">25°</span></div>
+        <div class="slider-track-wrap"><div class="slider-track" id="t-h"></div><input type="range" id="s-h" min="0" max="359" value="25" oninput="fromHslSliders()"></div>
+      </div>
+      <div class="slider-wrap">
+        <div class="slider-header"><span class="slider-label">Saturación</span><span class="slider-value" id="v-hs">72%</span></div>
+        <div class="slider-track-wrap"><div class="slider-track" id="t-hs"></div><input type="range" id="s-hs" min="0" max="100" value="72" oninput="fromHslSliders()"></div>
+      </div>
+      <div class="slider-wrap">
+        <div class="slider-header"><span class="slider-label">Luminosidad</span><span class="slider-value" id="v-hl">55%</span></div>
+        <div class="slider-track-wrap"><div class="slider-track" id="t-hl"></div><input type="range" id="s-hl" min="2" max="97" value="55" oninput="fromHslSliders()"></div>
+      </div>
+      <div class="code-display" id="hsl-display"></div>
+    </div>
+    <!-- RGB -->
+    <div id="panel-rgb" style="display:none">
+      <div class="slider-wrap">
+        <div class="slider-header"><span class="slider-label">Rojo (R)</span><span class="slider-value" id="v-r">224</span></div>
+        <div class="slider-track-wrap"><div class="slider-track" id="t-r"></div><input type="range" id="s-r" min="0" max="255" value="224" oninput="fromRgbSliders()"></div>
+      </div>
+      <div class="slider-wrap">
+        <div class="slider-header"><span class="slider-label">Verde (G)</span><span class="slider-value" id="v-g">123</span></div>
+        <div class="slider-track-wrap"><div class="slider-track" id="t-g"></div><input type="range" id="s-g" min="0" max="255" value="123" oninput="fromRgbSliders()"></div>
+      </div>
+      <div class="slider-wrap">
+        <div class="slider-header"><span class="slider-label">Azul (B)</span><span class="slider-value" id="v-b">57</span></div>
+        <div class="slider-track-wrap"><div class="slider-track" id="t-b"></div><input type="range" id="s-b" min="0" max="255" value="57" oninput="fromRgbSliders()"></div>
+      </div>
+      <div class="code-display" id="rgb-display"></div>
+    </div>
+    <!-- HEX -->
+    <div id="panel-hex" style="display:none">
+      <div id="hex-row">
+        <div id="hex-preview-box"></div>
+        <input type="text" id="hex-input" placeholder="#RRGGBB" maxlength="7" oninput="fromHexInput(this.value)">
+      </div>
+      <div id="hex-error">Formato inválido — usá # seguido de 6 caracteres (ej: #FF5733)</div>
+      <p style="font-size:0.7rem;color:#ccc;font-family:sans-serif;text-transform:uppercase;letter-spacing:0.1em;margin-bottom:0.45rem;">Ejemplos rápidos:</p>
+      <div id="quick-colors"></div>
+    </div>
+    <p class="row-title">Variaciones de luminosidad</p>
+    <div class="color-row" id="row-l"></div>
+    <p class="row-title">Variaciones de saturación</p>
+    <div class="color-row" id="row-s"></div>
+    <p class="row-title">Variaciones de matiz</p>
+    <div class="color-row" id="row-h"></div>
+  </div>
+  <div class="card">
+    <div id="harmony-header" onclick="toggleHarmonies()">
+      <p id="harmony-title">Combinación — <span id="harmony-current">Análogos</span></p>
+      <span id="harmony-arrow">▼</span>
+    </div>
+    <div id="harmony-list"></div>
+  </div>
+  <div class="card">
+    <p class="card-title">Tu paleta — tocá para copiar</p>
+    <div id="palette-strip"></div>
+    <div id="palette-cards"></div>
+  </div>
+  <div class="card" style="margin-bottom:2rem">
+    <p class="card-title">Regla 60 · 30 · 10</p>
+    <div id="rules"></div>
+    <div id="tip-box"><p id="tip-text">💡 Usá el color principal el 60%, el secundario el 30% y el acento solo el 10%. Tu marca se va a ver ordenada y reconocible desde el primer vistazo.</p></div>
+  </div>
+</div>
+<div id="toast"></div>
+
+<!-- Print button -->
+<div id="print-btn-wrap">
+  <button id="print-btn" onclick="printPDF()">
+    🖨️ Imprimir / Guardar como PDF
+  </button>
+</div>
+<script>
+function hslToRgb(h,s,l){s/=100;l/=100;const a=s*Math.min(l,1-l);const f=n=>{const k=(n+h/30)%12;return l-a*Math.max(Math.min(k-3,9-k,1),-1);};return[Math.round(f(0)*255),Math.round(f(8)*255),Math.round(f(4)*255)];}
+function rgbToHex(r,g,b){return"#"+[r,g,b].map(v=>Math.max(0,Math.min(255,Math.round(v))).toString(16).padStart(2,"0")).join("");}
+function hslToHex(h,s,l){return rgbToHex(...hslToRgb(h,s,l));}
+function hexToRgb(hex){const c=hex.replace("#","");if(c.length!==6)return[128,128,128];return[parseInt(c.slice(0,2),16),parseInt(c.slice(2,4),16),parseInt(c.slice(4,6),16)];}
+function rgbToHsl(r,g,b){r/=255;g/=255;b/=255;const max=Math.max(r,g,b),min=Math.min(r,g,b);let h,s,l=(max+min)/2;if(max===min){h=s=0;}else{const d=max-min;s=l>0.5?d/(2-max-min):d/(max+min);switch(max){case r:h=((g-b)/d+(g<b?6:0))/6;break;case g:h=((b-r)/d+2)/6;break;case b:h=((r-g)/d+4)/6;break;}h=Math.round(h*360);}return[h,Math.round(s*100),Math.round(l*100)];}
+function hexToHsl(hex){return rgbToHsl(...hexToRgb(hex));}
+function isValidHex(h){return/^#[0-9a-fA-F]{6}$/.test(h);}
+function getTextColor(hex){const[r,g,b]=hexToRgb(hex);return(0.299*r+0.587*g+0.114*b)/255>0.55?"#1a1a1a":"#ffffff";}
+function clamp(v,a,b){return Math.max(a,Math.min(b,v));}
+function currentHex(){return hslToHex(H,S,L);}
+let H=25,S=72,L=55,currentHarmony="analogos",currentTab="wheel";
+function copyToClipboard(text){if(navigator.clipboard&&navigator.clipboard.writeText)return navigator.clipboard.writeText(text).catch(()=>fbCopy(text));fbCopy(text);}
+function fbCopy(text){const t=document.createElement("textarea");t.value=text;t.style.cssText="position:fixed;top:-9999px;left:-9999px;opacity:0;";document.body.appendChild(t);t.focus();t.select();try{document.execCommand("copy");}catch(e){}document.body.removeChild(t);}
+let toastT=null;
+function showToast(msg){const t=document.getElementById("toast");t.textContent=msg;t.classList.add("show");clearTimeout(toastT);toastT=setTimeout(()=>t.classList.remove("show"),2000);}
+function copyColor(hex){copyToClipboard(hex);showToast("✓ "+hex.toUpperCase()+" copiado");}
+function copyHeroHex(){const hex=currentHex();copyColor(hex);const btn=document.getElementById("copy-hex-btn");const o=btn.textContent;btn.textContent="✓ Copiado!";setTimeout(()=>btn.textContent=o,1500);}
+function copyPaletteColor(hex,btn){copyColor(hex);const s=btn.querySelector(".phex");const o=s.textContent;s.textContent="✓ Copiado!";setTimeout(()=>s.textContent=o,1500);}
+const emotions=[
+  {r:[345,360],e:"❤️",n:"Rojo",w:"pasión · energía · fuerza",rb:"Gastronomía, deporte, moda"},
+  {r:[0,15],e:"❤️",n:"Rojo",w:"pasión · energía · fuerza",rb:"Gastronomía, deporte, moda"},
+  {r:[15,45],e:"🧡",n:"Naranja",w:"creatividad · calidez · juventud",rb:"Comida, entretenimiento"},
+  {r:[45,70],e:"💛",n:"Amarillo",w:"optimismo · alegría · atención",rb:"Bebidas, infantil"},
+  {r:[70,165],e:"💚",n:"Verde",w:"naturaleza · salud · frescura",rb:"Orgánico, bienestar"},
+  {r:[165,200],e:"🩵",n:"Celeste",w:"tranquilidad · limpieza · modernidad",rb:"Tecnología, salud"},
+  {r:[200,255],e:"💙",n:"Azul",w:"confianza · profesionalismo · calma",rb:"Finanzas, tech, servicios"},
+  {r:[255,310],e:"💜",n:"Violeta",w:"creatividad · lujo · misterio",rb:"Belleza, arte, bienestar"},
+  {r:[310,345],e:"🩷",n:"Rosa",w:"ternura · romance · delicadeza",rb:"Belleza, moda, regalos"},
+];
+function getEmotion(h){return emotions.find(e=>e.r[0]>e.r[1]?h>=e.r[0]||h<e.r[1]:h>=e.r[0]&&h<e.r[1])||emotions[6];}
+const harmonies={complementario:{label:"Complementaria",desc:"Máximo contraste y energía",offsets:[180]},analogos:{label:"Análoga",desc:"Colores vecinos, armonía natural",offsets:[30,60,-30]},triadico:{label:"Tríada",desc:"3 colores equidistantes, vibrante",offsets:[120,240]},split:{label:"Complementaria Dividida",desc:"Variante suave de la complementaria",offsets:[150,210]},monocromatico:{label:"Monocromática",desc:"Un tono en distintas luminosidades",offsets:[]},cuadrado:{label:"Cuadrada",desc:"4 colores en cuadrado perfecto",offsets:[90,180,270]},tetradica:{label:"Tetrádica",desc:"4 colores en rectángulo",offsets:[60,180,240]}};
+const harmLabels={complementario:["Complementaria"],analogos:["Análogo+","Análogo++","Análogo−"],triadico:["Tríada 2","Tríada 3"],split:["Comp. Div. 1","Comp. Div. 2"],cuadrado:["Cuadrada 2","Cuadrada 3","Cuadrada 4"],tetradica:["Tetrádica 2","Tetrádica 3","Tetrádica 4"]};
+function generatePalette(h,s,l,key){const colors=[{hex:hslToHex(h,s,l),label:"Principal"}];if(key==="monocromatico"){colors.push({hex:hslToHex(h,s,clamp(l+22,5,95)),label:"Claro"});colors.push({hex:hslToHex(h,s,clamp(l-22,5,95)),label:"Oscuro"});colors.push({hex:hslToHex(h,Math.max(s-35,5),clamp(l+40,5,97)),label:"Neutro"});}else{(harmonies[key].offsets||[]).forEach((off,i)=>{colors.push({hex:hslToHex(((h+off)%360+360)%360,s,l),label:harmLabels[key]?.[i]||`Color ${i+2}`});});colors.push({hex:hslToHex(h,Math.max(s-48,5),clamp(l+38,5,96)),label:"Neutro"});}return colors;}
+const SIZE=260,RING=24,GAP=6,CX=130,CY=130,OUTER_R=128,INNER_R=OUTER_R-RING;
+const SQ_HALF=(INNER_R-GAP)*0.707,SQ_X=CX-SQ_HALF,SQ_Y=CY-SQ_HALF,SQ_W=SQ_HALF*2;
+let canvas,ctx,dragging=null;
+function drawPicker(){
+  ctx.clearRect(0,0,SIZE,SIZE);
+  for(let i=0;i<360;i++){const a1=(i/360)*Math.PI*2-Math.PI/2,a2=((i+1.5)/360)*Math.PI*2-Math.PI/2;ctx.beginPath();ctx.moveTo(CX+INNER_R*Math.cos(a1),CY+INNER_R*Math.sin(a1));ctx.arc(CX,CY,OUTER_R,a1,a2);ctx.arc(CX,CY,INNER_R,a2,a1,true);ctx.closePath();ctx.fillStyle=`hsl(${i},100%,50%)`;ctx.fill();}
+  const hRad=(H/360)*Math.PI*2-Math.PI/2,rMid=(OUTER_R+INNER_R)/2;
+  const rcx=CX+rMid*Math.cos(hRad),rcy=CY+rMid*Math.sin(hRad);
+  ctx.beginPath();ctx.arc(rcx,rcy,RING/2-1,0,Math.PI*2);ctx.fillStyle=hslToHex(H,100,50);ctx.fill();ctx.strokeStyle="white";ctx.lineWidth=3;ctx.stroke();ctx.strokeStyle="rgba(0,0,0,0.3)";ctx.lineWidth=1;ctx.stroke();
+  const sqW=Math.ceil(SQ_W),sqH=Math.ceil(SQ_W),imgData=ctx.createImageData(sqW,sqH);
+  for(let py=0;py<sqH;py++){for(let px=0;px<sqW;px++){const[r,g,b]=hslToRgb(H,(px/SQ_W)*100,100-(py/SQ_W)*100);const idx=(py*sqW+px)*4;imgData.data[idx]=r;imgData.data[idx+1]=g;imgData.data[idx+2]=b;imgData.data[idx+3]=255;}}
+  ctx.save();ctx.beginPath();ctx.arc(CX,CY,INNER_R-GAP,0,Math.PI*2);ctx.clip();ctx.putImageData(imgData,SQ_X,SQ_Y);ctx.restore();
+  const scx=SQ_X+(S/100)*SQ_W,scy=SQ_Y+((100-L)/100)*SQ_W;
+  ctx.beginPath();ctx.arc(scx,scy,7,0,Math.PI*2);ctx.fillStyle=currentHex();ctx.fill();ctx.strokeStyle="white";ctx.lineWidth=2.5;ctx.stroke();ctx.strokeStyle="rgba(0,0,0,0.4)";ctx.lineWidth=1;ctx.stroke();
+}
+function getXY(e){const rect=canvas.getBoundingClientRect();const cx=e.touches?e.touches[0].clientX:e.clientX;const cy=e.touches?e.touches[0].clientY:e.clientY;return[(cx-rect.left)*(SIZE/rect.width),(cy-rect.top)*(SIZE/rect.height)];}
+function hitZone(x,y){const dx=x-CX,dy=y-CY,dist=Math.sqrt(dx*dx+dy*dy);if(dist>=INNER_R-6&&dist<=OUTER_R+6)return'ring';return'square';}
+function applyRing(x,y){let a=Math.atan2(y-CY,x-CX)*180/Math.PI+90;if(a<0)a+=360;H=Math.round(a)%360;}
+function applySquare(x,y){S=Math.round(clamp((x-SQ_X)/SQ_W,0,1)*100);L=Math.round(clamp(1-(y-SQ_Y)/SQ_W,0,1)*100);}
+function onDown(e){e.preventDefault();const[x,y]=getXY(e);dragging=hitZone(x,y);dragging==='ring'?applyRing(x,y):applySquare(x,y);syncAll();}
+function onMove(e){if(!dragging)return;e.preventDefault();const[x,y]=getXY(e);dragging==='ring'?applyRing(x,y):applySquare(x,y);syncAll();}
+function onUp(){dragging=null;}
+function initPicker(){
+  canvas=document.getElementById("picker-canvas");ctx=canvas.getContext("2d");
+  const w=Math.min(canvas.parentElement.clientWidth-20,280);canvas.style.width=w+"px";canvas.style.height=w+"px";
+  canvas.addEventListener("mousedown",onDown,{passive:false});canvas.addEventListener("mousemove",onMove,{passive:false});canvas.addEventListener("mouseup",onUp);canvas.addEventListener("mouseleave",onUp);
+  canvas.addEventListener("touchstart",onDown,{passive:false});canvas.addEventListener("touchmove",onMove,{passive:false});canvas.addEventListener("touchend",onUp);
+  drawPicker();
+}
+function fromHslSliders(){H=+document.getElementById("s-h").value;S=+document.getElementById("s-hs").value;L=+document.getElementById("s-hl").value;syncAll();}
+function fromRgbSliders(){[H,S,L]=rgbToHsl(+document.getElementById("s-r").value,+document.getElementById("s-g").value,+document.getElementById("s-b").value);syncAll();}
+function fromHex(hex){if(isValidHex(hex)){[H,S,L]=hexToHsl(hex);syncAll();}}
+function fromHexInput(val){const err=document.getElementById("hex-error");if(isValidHex(val)){err.style.display="none";[H,S,L]=hexToHsl(val);syncAll();}else err.style.display=val.length>2?"block":"none";}
+const TABS=["wheel","hsl","rgb","hex"];
+function setTab(t){currentTab=t;document.querySelectorAll(".tab-btn").forEach((b,i)=>b.classList.toggle("active",TABS[i]===t));TABS.forEach(p=>document.getElementById("panel-"+p).style.display=p===t?"block":"none");}
+function toggleHarmonies(){const l=document.getElementById("harmony-list");l.classList.toggle("open");document.getElementById("harmony-arrow").textContent=l.classList.contains("open")?"▲":"▼";}
+function setHarmony(key){currentHarmony=key;document.getElementById("harmony-current").textContent=harmonies[key].label;document.getElementById("harmony-list").classList.remove("open");document.getElementById("harmony-arrow").textContent="▼";renderPalette();}
+function renderRow(id,items){const row=document.getElementById(id);row.innerHTML="";items.forEach(item=>{const d=document.createElement("div");d.className="color-swatch"+(item.active?" active":"");d.style.background=item.hex;d.onclick=item.cb;row.appendChild(d);});}
+function renderPalette(){
+  const hex=currentHex(),tc=getTextColor(hex),palette=generatePalette(H,S,L,currentHarmony);
+  const strip=document.getElementById("palette-strip");strip.innerHTML="";palette.forEach(c=>{const d=document.createElement("div");d.className="strip-chunk";d.style.background=c.hex;strip.appendChild(d);});
+  const cards=document.getElementById("palette-cards");cards.innerHTML="";palette.forEach(c=>{const btn=document.createElement("button");btn.className="palette-card";btn.style.background=c.hex;btn.style.color=getTextColor(c.hex);btn.innerHTML=`<span class="plabel">${c.label}</span><span class="phex">${c.hex.toUpperCase()}</span>`;btn.onclick=()=>copyPaletteColor(c.hex,btn);cards.appendChild(btn);});
+  const rD=[{pct:"60%",role:"Principal",tip:"Fondo, logo, elemento dominante",idx:0},{pct:"30%",role:"Secundario",tip:"Títulos, botones, destacados",idx:1},{pct:"10%",role:"Acento",tip:"Llamadas a la acción, detalles",idx:Math.min(2,palette.length-1)}];
+  const rules=document.getElementById("rules");rules.innerHTML="";rD.forEach(r=>{const ph=palette[r.idx]?.hex||hex;rules.innerHTML+=`<div class="rule-row"><div class="rule-box" style="background:${ph};color:${getTextColor(ph)}">${r.pct}</div><div class="rule-info"><div class="role">${r.role}</div><div class="tip">${r.tip}</div></div></div>`;});
+  document.getElementById("tip-box").style.borderLeftColor=hex;
+  document.querySelectorAll(".harmony-btn").forEach(b=>{const active=b.dataset.key===currentHarmony;b.style.background=active?hex:"#f7f7f7";b.style.color=active?tc:"#444";});
+  // Print button
+  const pb=document.getElementById("print-btn");if(pb){pb.style.background=hex;pb.style.color=tc;}
+}
+function syncAll(){
+  const hex=currentHex(),tc=getTextColor(hex),[r,g,b]=hexToRgb(hex),em=getEmotion(H);
+  document.getElementById("hero").style.background=hex;
+  document.getElementById("hero-overlay").style.background=`radial-gradient(ellipse at 75% 40%,${hslToHex((H+40)%360,S,Math.min(L+10,70))} 0%,transparent 65%)`;
+  ["hero-sub","hero-title","hero-emoji","hero-emotion-name","hero-emotion-words","copy-hex-btn"].forEach(id=>{const el=document.getElementById(id);if(el)el.style.color=tc;});
+  document.getElementById("hero-emoji").textContent=em.e;document.getElementById("hero-emotion-name").textContent=em.n;document.getElementById("hero-emotion-words").textContent=em.w;
+  const hBtn=document.getElementById("copy-hex-btn");if(!hBtn.textContent.includes("Copiado"))hBtn.textContent=hex.toUpperCase();hBtn.style.background="rgba(255,255,255,0.22)";
+  document.getElementById("circle-preview").style.background=hex;document.getElementById("circle-preview").style.boxShadow=`0 5px 22px ${hex}80`;document.getElementById("native-picker").value=hex;document.getElementById("rubro-text").textContent=em.rb;
+  document.getElementById("s-h").value=H;document.getElementById("v-h").textContent=H+"°";
+  document.getElementById("s-hs").value=S;document.getElementById("v-hs").textContent=S+"%";
+  document.getElementById("s-hl").value=L;document.getElementById("v-hl").textContent=L+"%";
+  document.getElementById("t-h").style.background=`linear-gradient(to right,hsl(0,${S}%,${L}%),hsl(60,${S}%,${L}%),hsl(120,${S}%,${L}%),hsl(180,${S}%,${L}%),hsl(240,${S}%,${L}%),hsl(300,${S}%,${L}%),hsl(360,${S}%,${L}%))`;
+  document.getElementById("t-hs").style.background=`linear-gradient(to right,${hslToHex(H,0,L)},${hslToHex(H,100,L)})`;
+  document.getElementById("t-hl").style.background=`linear-gradient(to right,#111,${hslToHex(H,S,50)},#fff)`;
+  document.getElementById("hsl-display").textContent=`hsl(${H}°, ${S}%, ${L}%)`;
+  document.getElementById("s-r").value=r;document.getElementById("v-r").textContent=r;
+  document.getElementById("s-g").value=g;document.getElementById("v-g").textContent=g;
+  document.getElementById("s-b").value=b;document.getElementById("v-b").textContent=b;
+  document.getElementById("t-r").style.background=`linear-gradient(to right,${rgbToHex(0,g,b)},${rgbToHex(255,g,b)})`;
+  document.getElementById("t-g").style.background=`linear-gradient(to right,${rgbToHex(r,0,b)},${rgbToHex(r,255,b)})`;
+  document.getElementById("t-b").style.background=`linear-gradient(to right,${rgbToHex(r,g,0)},${rgbToHex(r,g,255)})`;
+  document.getElementById("rgb-display").textContent=`rgb(${r}, ${g}, ${b})`;
+  document.getElementById("hex-input").value=hex;document.getElementById("hex-input").style.borderColor=hex;document.getElementById("hex-preview-box").style.background=hex;
+  document.querySelectorAll(".preset-btn").forEach(b=>b.classList.toggle("active",b.dataset.hex.toLowerCase()===hex.toLowerCase()));
+  document.querySelectorAll(".quick-color").forEach(d=>d.classList.toggle("active",d.dataset.hex.toLowerCase()===hex.toLowerCase()));
+  renderRow("row-l",[8,18,30,45,58,70,82,93].map(lv=>({hex:hslToHex(H,S,lv),active:Math.abs(L-lv)<4,cb:()=>{L=lv;syncAll();}})));
+  renderRow("row-s",[5,18,32,46,60,74,87,100].map(sv=>({hex:hslToHex(H,sv,L),active:Math.abs(S-sv)<6,cb:()=>{S=sv;syncAll();}})));
+  renderRow("row-h",[0,45,90,135,180,225,270,315].map(hv=>({hex:hslToHex(hv,S,L),active:Math.abs(H-hv)<22||(H>338&&hv===0),cb:()=>{H=hv;syncAll();}})));
+  drawPicker();renderPalette();
+}
+const presets=[{name:"Panadería",hex:"#C0392B"},{name:"Belleza",hex:"#E91E8C"},{name:"Orgánico",hex:"#4CAF50"},{name:"Tech",hex:"#1565C0"},{name:"Arte",hex:"#7B1FA2"},{name:"Catering",hex:"#E65100"},{name:"Salud",hex:"#00897B"},{name:"Moda",hex:"#F48FB1"}];
+const quickColors=["#FF6B35","#004E89","#1A936F","#C9B1FF","#F7B731","#E84393","#2D2D2D","#F5E6D3"];
+function init(){
+  const pW=document.getElementById("presets");presets.forEach(p=>{const b=document.createElement("button");b.className="preset-btn";b.dataset.hex=p.hex;b.style.background=p.hex;b.style.color=getTextColor(p.hex);b.textContent=p.name;b.onclick=()=>fromHex(p.hex);pW.appendChild(b);});
+  const qW=document.getElementById("quick-colors");quickColors.forEach(c=>{const d=document.createElement("div");d.className="quick-color";d.dataset.hex=c;d.style.background=c;d.title=c;d.onclick=()=>fromHex(c);qW.appendChild(d);});
+  const hL=document.getElementById("harmony-list");Object.entries(harmonies).forEach(([key,val])=>{const b=document.createElement("button");b.className="harmony-btn";b.dataset.key=key;b.innerHTML=`<span class="hlabel">${val.label}</span><span class="hdesc">${val.desc}</span>`;b.onclick=()=>setHarmony(key);hL.appendChild(b);});
+  initPicker();syncAll();
+}
+// ─── Generate PDF with jsPDF ──────────────────────────────────────────────────
+function hexToRgbArr(hex){ return hexToRgb(hex); }
+
+function setFill(doc, hex) {
+  const [r,g,b] = hexToRgbArr(hex);
+  doc.setFillColor(r,g,b);
+}
+function setTextCol(doc, hex) {
+  const [r,g,b] = hexToRgbArr(hex);
+  doc.setTextColor(r,g,b);
+}
+function roundRect(doc, x, y, w, h, r) {
+  doc.roundedRect(x, y, w, h, r, r, 'F');
+}
+
+function printPDF() {
+  const btn = document.getElementById('print-btn');
+  btn.textContent = '⏳ Generando PDF...';
+  btn.disabled = true;
+
+  // Load jsPDF dynamically
+  const script = document.createElement('script');
+  script.src = 'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js';
+  script.onload = () => {
+    try { buildJsPDF(); }
+    catch(e) { alert('Error al generar el PDF: ' + e.message); }
+    finally { btn.textContent = '🖨️ Imprimir / Guardar como PDF'; btn.disabled = false; }
+  };
+  script.onerror = () => {
+    alert('No se pudo cargar jsPDF. Verificá tu conexión a internet.');
+    btn.textContent = '🖨️ Imprimir / Guardar como PDF'; btn.disabled = false;
+  };
+  // If already loaded
+  if (window.jspdf) { try { buildJsPDF(); } catch(e) { alert(e.message); } finally { btn.textContent = '🖨️ Imprimir / Guardar como PDF'; btn.disabled = false; } return; }
+  document.head.appendChild(script);
+}
+
+function buildJsPDF() {
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF({ unit: 'mm', format: 'a4' });
+  const hex = currentHex();
+  const [r,g,b] = hexToRgbArr(hex);
+  const em = getEmotion(H);
+  const palette = generatePalette(H, S, L, currentHarmony);
+  const harmonyName = harmonies[currentHarmony].label;
+  const now = new Date().toLocaleDateString('es-AR', {day:'2-digit', month:'long', year:'numeric'});
+
+  const PW = 210, PH = 297;
+  const ML = 14, MR = 14, MW = PW - ML - MR;
+  let y = 0;
+
+  // ── Header bar ──
+  setFill(doc, hex);
+  doc.rect(0, 0, PW, 28, 'F');
+  setTextCol(doc, getTextColor(hex));
+  doc.setFontSize(18); doc.setFont('helvetica','bold');
+  doc.text('Mi Paleta de Marca', ML, 12);
+  doc.setFontSize(8); doc.setFont('helvetica','normal');
+  doc.text('Resumen generado con el Combinador de Colores', ML, 18);
+  doc.text(now, PW - MR, 18, { align:'right' });
+  y = 36;
+
+  // ── Section label helper ──
+  const sectionLabel = (label) => {
+    doc.setFontSize(7); doc.setFont('helvetica','normal');
+    doc.setTextColor(180,180,180);
+    doc.text(label.toUpperCase(), ML, y);
+    y += 5;
+    doc.setDrawColor(230,230,230); doc.setLineWidth(0.3);
+    doc.line(ML, y, PW-MR, y);
+    y += 4;
+  };
+
+  // ── Color principal ──
+  sectionLabel('Color Principal');
+  // Big swatch
+  setFill(doc, hex);
+  roundRect(doc, ML, y, 22, 22, 3);
+  // Color info
+  doc.setTextColor(30,30,30);
+  doc.setFontSize(14); doc.setFont('helvetica','bold');
+  doc.text(hex.toUpperCase(), ML + 27, y + 6);
+  doc.setFontSize(8.5); doc.setFont('helvetica','normal');
+  doc.setTextColor(100,100,100);
+  doc.text(`rgb(${r}, ${g}, ${b})`, ML + 27, y + 12);
+  doc.text(`hsl(${H}°, ${S}%, ${L}%)`, ML + 27, y + 17);
+  // Emotion
+  doc.setFontSize(9); doc.setFont('helvetica','bold'); doc.setTextColor(50,50,50);
+  doc.text(`${em.n}  —  ${em.w}`, ML + 27, y + 23);
+  doc.setFontSize(8); doc.setFont('helvetica','normal'); doc.setTextColor(120,120,120);
+  doc.text(`Ideal para: ${em.rb}`, ML + 27, y + 28);
+  y += 38;
+
+  // ── Paleta ──
+  sectionLabel(`Paleta — ${harmonyName}`);
+  palette.forEach(c => {
+    const [cr,cg,cb] = hexToRgbArr(c.hex);
+    // Swatch
+    doc.setFillColor(cr,cg,cb);
+    roundRect(doc, ML, y, 12, 10, 2);
+    // Label
+    doc.setFontSize(9); doc.setFont('helvetica','bold'); doc.setTextColor(40,40,40);
+    doc.text(c.label, ML + 15, y + 7);
+    // HEX
+    doc.setFontSize(8.5); doc.setFont('helvetica','normal'); doc.setTextColor(60,60,60);
+    doc.text(c.hex.toUpperCase(), ML + 48, y + 7);
+    // RGB
+    doc.setFontSize(7.5); doc.setTextColor(150,150,150);
+    doc.text(`rgb(${cr}, ${cg}, ${cb})`, ML + 75, y + 7);
+    y += 13;
+  });
+  y += 4;
+
+  // ── Regla 60-30-10 ──
+  sectionLabel('Regla 60 · 30 · 10');
+  const boxW = (MW - 8) / 3;
+  const rules = [
+    { pct:'60%', role:'Principal',   idx:0 },
+    { pct:'30%', role:'Secundario',  idx:1 },
+    { pct:'10%', role:'Acento',      idx:Math.min(2, palette.length-1) },
+  ];
+  rules.forEach((rule, i) => {
+    const bx = ML + i * (boxW + 4);
+    const ph = palette[rule.idx]?.hex || hex;
+    setFill(doc, ph);
+    roundRect(doc, bx, y, boxW, 20, 3);
+    const tc = getTextColor(ph);
+    setTextCol(doc, tc);
+    doc.setFontSize(13); doc.setFont('helvetica','bold');
+    doc.text(rule.pct, bx + boxW/2, y + 10, { align:'center' });
+    doc.setFontSize(7.5); doc.setFont('helvetica','normal');
+    doc.text(rule.role, bx + boxW/2, y + 16, { align:'center' });
+  });
+  y += 30;
+
+  // ── Footer ──
+  doc.setFontSize(7); doc.setFont('helvetica','normal');
+  doc.setTextColor(200,200,200);
+  doc.text('Generado con el Combinador de Colores para emprendedores  ·  Dirección Economía Social', PW/2, PH - 10, { align:'center' });
+
+  // ── Save ──
+  const fname = `paleta-${hex.replace('#','')}-${Date.now()}.pdf`;
+  doc.save(fname);
+}
+
+window.addEventListener("load",init);
+</script>
+
+<footer style="text-align:center;padding:20px 16px 28px;font-family:sans-serif;font-size:0.78rem;color:#aaa;letter-spacing:0.03em;">
+  Creado por Leandro Sacha Melchiori
+  <a href="https://www.linkedin.com/in/leandromelchiori-developer/" target="_blank" rel="noopener"
+    style="display:inline-flex;align-items:center;gap:5px;margin-left:8px;color:#aaa;text-decoration:none;vertical-align:middle;transition:color 0.2s;"
+    onmouseover="this.style.color='#0A66C2'" onmouseout="this.style.color='#aaa'">
+    <img src="https://cdn.simpleicons.org/linkedin/aaaaaa" alt="LinkedIn" width="14" height="14"
+      onerror="this.replaceWith('🔗')"
+      style="vertical-align:middle;">
+    LinkedIn
+  </a>
+</footer>
+
+</body>
+</html>

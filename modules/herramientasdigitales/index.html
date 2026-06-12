@@ -1,0 +1,886 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Herramientas Gratuitas para Marketing Digital</title>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,700;12..96,800&family=Nunito+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:      #0a0c10;
+  --bg2:     #0f1219;
+  --surface: #141720;
+  --surface2:#191e2a;
+  --border:  #1e2535;
+  --border2: #252d40;
+  --text:    #eef0f6;
+  --soft:    #a8b0c8;
+  --muted:   #5a6480;
+  --accent:  #6ee7b7;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Nunito Sans', sans-serif;
+  font-weight: 400;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── Header ── */
+header {
+  padding: 4rem 2rem 3rem;
+  position: relative;
+  overflow: hidden;
+  border-bottom: 1px solid var(--border);
+}
+.header-glow {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  pointer-events: none;
+}
+.glow-1 { width: 500px; height: 500px; top: -200px; right: -100px; background: rgba(110,231,183,0.06); }
+.glow-2 { width: 350px; height: 350px; bottom: -150px; left: -50px; background: rgba(99,102,241,0.05); }
+
+.header-inner { max-width: 780px; margin: 0 auto; position: relative; z-index: 1; }
+
+.header-eyebrow {
+  display: inline-flex; align-items: center; gap: 0.5rem;
+  font-family: 'Nunito Sans', sans-serif;
+  font-size: 0.7rem; font-weight: 600;
+  letter-spacing: 0.2em; text-transform: uppercase;
+  color: var(--accent); margin-bottom: 1.2rem;
+}
+.eyebrow-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); }
+
+header h1 {
+  font-family: 'Bricolage Grotesque', sans-serif;
+  font-size: clamp(2.2rem, 6vw, 3.6rem);
+  font-weight: 800;
+  line-height: 1.08;
+  letter-spacing: -0.02em;
+  margin-bottom: 1rem;
+  color: var(--text);
+}
+header h1 span {
+  background: linear-gradient(90deg, #6ee7b7, #60a5fa);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+header p {
+  color: var(--soft);
+  font-size: 1rem;
+  line-height: 1.75;
+  max-width: 520px;
+  font-weight: 400;
+}
+
+.header-meta {
+  display: flex; gap: 2rem; margin-top: 2rem; flex-wrap: wrap;
+}
+.meta-item {
+  display: flex; flex-direction: column; gap: 0.1rem;
+}
+.meta-num {
+  font-family: 'Bricolage Grotesque', sans-serif;
+  font-size: 1.6rem; font-weight: 800; color: var(--text);
+  line-height: 1;
+}
+.meta-label { font-size: 0.72rem; color: var(--muted); font-weight: 500; letter-spacing: 0.06em; }
+
+/* ── Filter bar ── */
+.filter-bar {
+  background: var(--bg2);
+  border-bottom: 1px solid var(--border);
+  position: sticky; top: 0; z-index: 100;
+}
+.filter-inner {
+  max-width: 780px; margin: 0 auto;
+  padding: 0 1rem;
+  display: flex; gap: 0; overflow-x: auto; scrollbar-width: none;
+}
+.filter-inner::-webkit-scrollbar { display: none; }
+.filter-btn {
+  flex-shrink: 0;
+  padding: 1rem 1.1rem;
+  border: none; background: transparent;
+  font-family: 'Nunito Sans', sans-serif;
+  font-size: 0.8rem; font-weight: 600;
+  color: var(--muted); cursor: pointer;
+  border-bottom: 2px solid transparent;
+  transition: all 0.18s; white-space: nowrap;
+  letter-spacing: 0.02em;
+}
+.filter-btn:hover { color: var(--soft); }
+.filter-btn.active { color: var(--accent); border-bottom-color: var(--accent); }
+
+/* ── Main ── */
+main { max-width: 780px; margin: 0 auto; padding: 2.5rem 1rem 5rem; }
+
+/* ── Intro ── */
+.intro-box {
+  background: linear-gradient(135deg, rgba(110,231,183,0.06), rgba(96,165,250,0.04));
+  border: 1px solid rgba(110,231,183,0.15);
+  border-radius: 16px;
+  padding: 1.2rem 1.5rem;
+  margin-bottom: 2.5rem;
+  display: flex; gap: 0.9rem; align-items: flex-start;
+}
+.intro-icon { font-size: 1.3rem; flex-shrink: 0; margin-top: 1px; }
+.intro-box p { font-size: 0.85rem; color: #9de8c8; line-height: 1.65; }
+.intro-box p strong { color: var(--accent); font-weight: 600; }
+
+/* ── Category ── */
+.category { margin-bottom: 3rem; }
+.cat-header {
+  display: flex; align-items: center; gap: 0.7rem;
+  margin-bottom: 1.2rem;
+}
+.cat-label {
+  font-size: 0.62rem; font-weight: 700; letter-spacing: 0.18em;
+  text-transform: uppercase; color: var(--muted);
+  flex-shrink: 0;
+}
+.cat-title {
+  font-family: 'Bricolage Grotesque', sans-serif;
+  font-size: 1.15rem; font-weight: 700;
+  color: var(--text); letter-spacing: -0.01em;
+}
+.cat-line { flex: 1; height: 1px; background: var(--border); }
+.cat-count {
+  background: var(--surface2); color: var(--muted);
+  font-size: 0.65rem; font-weight: 600;
+  padding: 0.2rem 0.6rem; border-radius: 20px;
+  border: 1px solid var(--border);
+  flex-shrink: 0;
+}
+
+/* ── Tool Card ── */
+.tool-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  margin-bottom: 0.75rem;
+  overflow: hidden;
+  transition: border-color 0.22s, transform 0.18s, box-shadow 0.22s;
+  position: relative;
+}
+.tool-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; height: 1px;
+  background: linear-gradient(90deg, transparent, var(--card-accent, #6ee7b7), transparent);
+  opacity: 0;
+  transition: opacity 0.25s;
+}
+.tool-card:hover { border-color: var(--border2); transform: translateY(-2px); box-shadow: 0 12px 40px rgba(0,0,0,0.4); }
+.tool-card:hover::before { opacity: 0.5; }
+
+.tool-main {
+  padding: 1.2rem 1.3rem;
+  display: flex; gap: 1rem; align-items: flex-start;
+}
+
+/* Logo icon */
+.tool-logo {
+  width: 48px; height: 48px;
+  border-radius: 12px;
+  flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.4rem;
+  overflow: hidden;
+  position: relative;
+}
+.tool-logo img {
+  width: 28px; height: 28px;
+  object-fit: contain;
+  filter: brightness(0) invert(1);
+}
+.tool-logo .logo-emoji {
+  font-size: 1.5rem;
+  line-height: 1;
+}
+
+.tool-info { flex: 1; min-width: 0; }
+.tool-header {
+  display: flex; align-items: flex-start; gap: 0.5rem;
+  margin-bottom: 0.3rem; flex-wrap: wrap;
+}
+.tool-name {
+  font-family: 'Bricolage Grotesque', sans-serif;
+  font-size: 1rem; font-weight: 700;
+  color: var(--text); letter-spacing: -0.01em;
+}
+.tool-badge {
+  font-size: 0.58rem; font-weight: 700;
+  letter-spacing: 0.1em; text-transform: uppercase;
+  padding: 0.18rem 0.55rem; border-radius: 4px;
+  flex-shrink: 0; margin-top: 2px;
+  font-family: 'Nunito Sans', sans-serif;
+}
+.tool-tagline { font-size: 0.82rem; color: var(--muted); margin-bottom: 0.8rem; font-weight: 400; }
+.tool-desc { font-size: 0.84rem; color: var(--soft); line-height: 1.7; margin-bottom: 1rem; }
+
+.tool-features { display: flex; flex-direction: column; gap: 0.35rem; }
+.feat {
+  display: flex; align-items: flex-start; gap: 0.55rem;
+  font-size: 0.8rem; color: var(--soft); line-height: 1.5;
+}
+.feat-icon { font-size: 0.75rem; flex-shrink: 0; margin-top: 1px; opacity: 0.7; }
+
+.tool-footer {
+  padding: 0.8rem 1.3rem;
+  background: var(--surface2);
+  border-top: 1px solid var(--border);
+  display: flex; align-items: center; gap: 0.7rem; flex-wrap: wrap;
+}
+.platforms { display: flex; gap: 0.35rem; flex-wrap: wrap; }
+.plat {
+  display: flex; align-items: center; gap: 0.3rem;
+  font-size: 0.67rem; color: var(--muted);
+  background: var(--border); border-radius: 5px;
+  padding: 0.18rem 0.5rem; font-weight: 500;
+}
+.tool-tip {
+  font-size: 0.74rem; color: var(--muted); font-style: italic;
+  flex: 1; min-width: 180px; line-height: 1.45;
+}
+.visit-btn {
+  flex-shrink: 0;
+  display: inline-flex; align-items: center; gap: 0.4rem;
+  text-decoration: none;
+  border-radius: 8px; padding: 0.45rem 1rem;
+  font-family: 'Nunito Sans', sans-serif;
+  font-size: 0.76rem; font-weight: 700;
+  transition: all 0.18s; border: 1px solid var(--border2);
+  background: var(--surface2); color: var(--soft);
+  letter-spacing: 0.02em;
+}
+.visit-btn:hover { transform: scale(1.04); color: var(--text); }
+
+/* ── Brand colors ── */
+/* Canva */      .bc-canva    { background: #00c4cc22; --card-accent:#00c4cc; } .bc-canva .tool-badge { background:#00c4cc22; color:#00c4cc; border:1px solid #00c4cc44; } .bc-canva .visit-btn:hover { background:#00c4cc; color:#000; border-color:#00c4cc; }
+/* AdobeExp */   .bc-adobe    { background: #ff000022; --card-accent:#ff5252; } .bc-adobe .tool-badge { background:#ff000022; color:#ff6b6b; border:1px solid #ff000044; } .bc-adobe .visit-btn:hover { background:#ff5252; color:#fff; border-color:#ff5252; }
+/* Photopea */   .bc-photopea { background: #18a49722; --card-accent:#18a497; } .bc-photopea .tool-badge { background:#18a49722; color:#18a497; border:1px solid #18a49744; } .bc-photopea .visit-btn:hover { background:#18a497; color:#fff; border-color:#18a497; }
+/* Remove.bg */  .bc-removebg { background: #7c3aed22; --card-accent:#a78bfa; } .bc-removebg .tool-badge { background:#7c3aed22; color:#a78bfa; border:1px solid #7c3aed44; } .bc-removebg .visit-btn:hover { background:#a78bfa; color:#000; border-color:#a78bfa; }
+/* CapCut */     .bc-capcut   { background: #ffffff10; --card-accent:#e8e8e8; } .bc-capcut .tool-badge { background:#ffffff10; color:#ccc; border:1px solid #ffffff22; } .bc-capcut .visit-btn:hover { background:#e8e8e8; color:#000; border-color:#e8e8e8; }
+/* InShot */     .bc-inshot   { background: #ff6b2222; --card-accent:#ff8c42; } .bc-inshot .tool-badge { background:#ff6b2222; color:#ff8c42; border:1px solid #ff6b2244; } .bc-inshot .visit-btn:hover { background:#ff8c42; color:#fff; border-color:#ff8c42; }
+/* Clipchamp */  .bc-clipchamp{ background: #0078d422; --card-accent:#60a5fa; } .bc-clipchamp .tool-badge { background:#0078d422; color:#60a5fa; border:1px solid #0078d444; } .bc-clipchamp .visit-btn:hover { background:#60a5fa; color:#000; border-color:#60a5fa; }
+/* Pinterest */  .bc-pinterest { background: #e6002322; --card-accent:#fb7185; } .bc-pinterest .tool-badge { background:#e6002322; color:#fb7185; border:1px solid #e6002344; } .bc-pinterest .visit-btn:hover { background:#fb7185; color:#fff; border-color:#fb7185; }
+/* Behance */    .bc-behance  { background: #1769ff22; --card-accent:#60a5fa; } .bc-behance .tool-badge { background:#1769ff22; color:#60a5fa; border:1px solid #1769ff44; } .bc-behance .visit-btn:hover { background:#1769ff; color:#fff; border-color:#1769ff; }
+/* Trends */     .bc-trends   { background: #34d39922; --card-accent:#6ee7b7; } .bc-trends .tool-badge { background:#34d39922; color:#6ee7b7; border:1px solid #34d39944; } .bc-trends .visit-btn:hover { background:#34d399; color:#000; border-color:#34d399; }
+/* Unsplash */   .bc-unsplash { background: #ffffff10; --card-accent:#d1d5db; } .bc-unsplash .tool-badge { background:#ffffff10; color:#d1d5db; border:1px solid #ffffff22; } .bc-unsplash .visit-btn:hover { background:#d1d5db; color:#000; border-color:#d1d5db; }
+/* Pexels */     .bc-pexels   { background: #05a08122; --card-accent:#2dd4bf; } .bc-pexels .tool-badge { background:#05a08122; color:#2dd4bf; border:1px solid #05a08144; } .bc-pexels .visit-btn:hover { background:#2dd4bf; color:#000; border-color:#2dd4bf; }
+/* Flaticon */   .bc-flaticon { background: #1fb2ff22; --card-accent:#67d7fa; } .bc-flaticon .tool-badge { background:#1fb2ff22; color:#67d7fa; border:1px solid #1fb2ff44; } .bc-flaticon .visit-btn:hover { background:#67d7fa; color:#000; border-color:#67d7fa; }
+/* QR */         .bc-qr       { background: #6366f122; --card-accent:#a5b4fc; } .bc-qr .tool-badge { background:#6366f122; color:#a5b4fc; border:1px solid #6366f144; } .bc-qr .visit-btn:hover { background:#a5b4fc; color:#000; border-color:#a5b4fc; }
+/* Meta */       .bc-meta     { background: #0082fb22; --card-accent:#60a5fa; } .bc-meta .tool-badge { background:#0082fb22; color:#60a5fa; border:1px solid #0082fb44; } .bc-meta .visit-btn:hover { background:#0082fb; color:#fff; border-color:#0082fb; }
+/* Google */     .bc-google   { background: #4285f422; --card-accent:#93c5fd; } .bc-google .tool-badge { background:#4285f422; color:#93c5fd; border:1px solid #4285f444; } .bc-google .visit-btn:hover { background:#4285f4; color:#fff; border-color:#4285f4; }
+/* Linktree */   .bc-linktree { background: #43e55e22; --card-accent:#6ee7b7; } .bc-linktree .tool-badge { background:#43e55e22; color:#6ee7b7; border:1px solid #43e55e44; } .bc-linktree .visit-btn:hover { background:#43e55e; color:#000; border-color:#43e55e; }
+/* Notion */     .bc-notion   { background: #ffffff10; --card-accent:#e5e7eb; } .bc-notion .tool-badge { background:#ffffff10; color:#e5e7eb; border:1px solid #ffffff22; } .bc-notion .visit-btn:hover { background:#e5e7eb; color:#000; border-color:#e5e7eb; }
+/* Claude */     .bc-claude   { background: #d4856a22; --card-accent:#f0b882; } .bc-claude .tool-badge { background:#d4856a22; color:#f0b882; border:1px solid #d4856a44; } .bc-claude .visit-btn:hover { background:#f0b882; color:#000; border-color:#f0b882; }
+/* ChatGPT */    .bc-openai   { background: #74aa9c22; --card-accent:#6ee7b7; } .bc-openai .tool-badge { background:#74aa9c22; color:#6ee7b7; border:1px solid #74aa9c44; } .bc-openai .visit-btn:hover { background:#74aa9c; color:#fff; border-color:#74aa9c; }
+/* Gemini */     .bc-gemini   { background: #4285f422; --card-accent:#93c5fd; } .bc-gemini .tool-badge { background:#4285f422; color:#93c5fd; border:1px solid #4285f444; } .bc-gemini .visit-btn:hover { background:#4285f4; color:#fff; border-color:#4285f4; }
+
+/* logo bg colors */
+.lb-canva    { background: #00c4cc; }
+.lb-adobe    { background: #ff0000; }
+.lb-photopea { background: #18a497; }
+.lb-removebg { background: #7c3aed; }
+.lb-capcut   { background: #111; border: 1px solid #333; }
+.lb-inshot   { background: #ff6b22; }
+.lb-clipchamp{ background: #0078d4; }
+.lb-pinterest{ background: #e60023; }
+.lb-behance  { background: #1769ff; }
+.lb-trends   { background: #34a853; }
+.lb-unsplash { background: #111; border: 1px solid #333; }
+.lb-pexels   { background: #05a081; }
+.lb-flaticon { background: #1fb2ff; }
+.lb-qr       { background: #6366f1; }
+.lb-meta     { background: #0082fb; }
+.lb-google   { background: #4285f4; }
+.lb-linktree { background: #43e55e; }
+.lb-notion   { background: #111; border: 1px solid #333; }
+.lb-claude   { background: #d4856a; }
+.lb-openai   { background: #10a37f; }
+.lb-gemini   { background: #4285f4; }
+
+/* ── Footer ── */
+footer {
+  background: var(--bg2);
+  border-top: 1px solid var(--border);
+  text-align: center;
+  padding: 1.8rem;
+  font-size: 0.75rem;
+  color: var(--muted);
+  letter-spacing: 0.04em;
+}
+footer strong { color: var(--accent); font-weight: 600; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-glow glow-1"></div>
+  <div class="header-glow glow-2"></div>
+  <div class="header-inner">
+    <div class="header-eyebrow"><span class="eyebrow-dot"></span>100% gratuitas</div>
+    <h1>Herramientas Digitales<br>para tu <span>Emprendimiento</span></h1>
+    <p>Las mejores herramientas gratuitas para diseñar, editar videos, buscar inspiración y gestionar tus redes — todas desde el celular o la computadora, sin gastar un peso.</p>
+    <div class="header-meta">
+      <div class="meta-item"><div class="meta-num">21</div><div class="meta-label">herramientas</div></div>
+      <div class="meta-item"><div class="meta-num">6</div><div class="meta-label">categorías</div></div>
+      <div class="meta-item"><div class="meta-num">$0</div><div class="meta-label">costo</div></div>
+    </div>
+  </div>
+</header>
+
+<div class="filter-bar">
+  <div class="filter-inner">
+    <button class="filter-btn active" onclick="filterCat('all',this)">Todas</button>
+    <button class="filter-btn" onclick="filterCat('diseno',this)">🎨 Diseño</button>
+    <button class="filter-btn" onclick="filterCat('video',this)">🎬 Video</button>
+    <button class="filter-btn" onclick="filterCat('inspiracion',this)">💡 Inspiración</button>
+    <button class="filter-btn" onclick="filterCat('imagenes',this)">🖼️ Imágenes</button>
+    <button class="filter-btn" onclick="filterCat('gestion',this)">📊 Gestión</button>
+    <button class="filter-btn" onclick="filterCat('ia',this)">🤖 IA</button>
+  </div>
+</div>
+
+<main>
+
+<div class="intro-box">
+  <span class="intro-icon">💡</span>
+  <p>Todas tienen un <strong>plan gratuito</strong> que es más que suficiente para emprendedores que empiezan. No necesitás tarjeta de crédito ni pagar nada para comenzar.</p>
+</div>
+
+<!-- ══ DISEÑO ══ -->
+<div class="category" data-cat="diseno">
+  <div class="cat-header">
+    <span class="cat-label">01</span>
+    <span class="cat-title">Diseño Gráfico</span>
+    <div class="cat-line"></div>
+    <span class="cat-count">4</span>
+  </div>
+
+  <div class="tool-card bc-canva">
+    <div class="tool-main">
+      <div class="tool-logo lb-canva"><img src="https://cdn.simpleicons.org/canva/ffffff" alt="Canva"></div>
+      <div class="tool-info">
+        <div class="tool-header"><span class="tool-name">Canva</span><span class="tool-badge">⭐ Imprescindible</span></div>
+        <div class="tool-tagline">Diseñá publicaciones, flyers, logos y más sin saber diseño</div>
+        <div class="tool-desc">La herramienta de diseño más popular para emprendedores. Miles de plantillas listas para redes sociales, historias, catálogos y tarjetas de presentación. Muy fácil e intuitiva.</div>
+        <div class="tool-features">
+          <div class="feat"><span class="feat-icon">→</span><span>Plantillas para Instagram, Facebook, WhatsApp y más</span></div>
+          <div class="feat"><span class="feat-icon">→</span><span>Guardá tus colores y logo para mantener consistencia</span></div>
+          <div class="feat"><span class="feat-icon">→</span><span>IA para generar imágenes, quitar fondos y redactar textos</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="tool-footer">
+      <div class="platforms"><span class="plat">🌐 Web</span><span class="plat">📱 iOS</span><span class="plat">🤖 Android</span></div>
+      <span class="tool-tip">💡 Creá una "carpeta de marca" con tus colores y logo para que todo sea consistente.</span>
+      <a href="https://canva.com" target="_blank" class="visit-btn">Abrir →</a>
+    </div>
+  </div>
+
+  <div class="tool-card bc-adobe">
+    <div class="tool-main">
+      <div class="tool-logo lb-adobe"><img src="https://cdn.simpleicons.org/adobe/ffffff" alt="Adobe Express"></div>
+      <div class="tool-info">
+        <div class="tool-header"><span class="tool-name">Adobe Express</span><span class="tool-badge">Alternativa</span></div>
+        <div class="tool-tagline">Efectos y fuentes premium de Adobe, completamente gratis</div>
+        <div class="tool-desc">La versión gratuita de Adobe para diseño rápido. Tiene tipografías y efectos de texto exclusivos que no están en Canva. Ideal si buscás una estética diferente y más refinada.</div>
+        <div class="tool-features">
+          <div class="feat"><span class="feat-icon">→</span><span>Cientos de fuentes premium de Adobe disponibles gratis</span></div>
+          <div class="feat"><span class="feat-icon">→</span><span>Animaciones para publicaciones que se mueven</span></div>
+          <div class="feat"><span class="feat-icon">→</span><span>Integración con Adobe Stock para imágenes sin cargo</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="tool-footer">
+      <div class="platforms"><span class="plat">🌐 Web</span><span class="plat">📱 iOS</span><span class="plat">🤖 Android</span></div>
+      <span class="tool-tip">💡 Probalo si querés tipografías más originales que las de Canva.</span>
+      <a href="https://express.adobe.com" target="_blank" class="visit-btn">Abrir →</a>
+    </div>
+  </div>
+
+  <div class="tool-card bc-photopea">
+    <div class="tool-main">
+      <div class="tool-logo lb-photopea"><img src="https://cdn.simpleicons.org/photopea/ffffff" alt="Photopea"></div>
+      <div class="tool-info">
+        <div class="tool-header"><span class="tool-name">Photopea</span><span class="tool-badge">Avanzado</span></div>
+        <div class="tool-tagline">Photoshop gratis que funciona directo en el navegador</div>
+        <div class="tool-desc">Un Photoshop completo sin instalar nada. Ideal para retocar fotos de productos, quitar fondos complejos o hacer ediciones que Canva no permite. Abre archivos .PSD.</div>
+        <div class="tool-features">
+          <div class="feat"><span class="feat-icon">→</span><span>Edición avanzada de imágenes sin instalar software</span></div>
+          <div class="feat"><span class="feat-icon">→</span><span>Abre archivos de Photoshop (.PSD) directamente</span></div>
+          <div class="feat"><span class="feat-icon">→</span><span>Quita fondos, ajusta colores y aplica filtros profesionales</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="tool-footer">
+      <div class="platforms"><span class="plat">🌐 Web</span></div>
+      <span class="tool-tip">💡 Usalo cuando necesitás editar una foto de producto con más precisión que Canva.</span>
+      <a href="https://photopea.com" target="_blank" class="visit-btn">Abrir →</a>
+    </div>
+  </div>
+
+  <div class="tool-card bc-removebg">
+    <div class="tool-main">
+      <div class="tool-logo lb-removebg"><span class="logo-emoji">✂️</span></div>
+      <div class="tool-info">
+        <div class="tool-header"><span class="tool-name">Remove.bg</span><span class="tool-badge">Específico</span></div>
+        <div class="tool-tagline">Eliminá el fondo de cualquier foto en segundos con IA</div>
+        <div class="tool-desc">Subís una foto y en segundos la IA elimina el fondo automáticamente. Perfecto para fotos de catálogo, stickers o publicaciones con fondo de color liso.</div>
+        <div class="tool-features">
+          <div class="feat"><span class="feat-icon">→</span><span>Elimina fondos con un solo click, sin edición manual</span></div>
+          <div class="feat"><span class="feat-icon">→</span><span>Funciona excelente con personas, productos y logos</span></div>
+          <div class="feat"><span class="feat-icon">→</span><span>Descarga gratis en resolución estándar (suficiente para redes)</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="tool-footer">
+      <div class="platforms"><span class="plat">🌐 Web</span><span class="plat">📱 iOS</span><span class="plat">🤖 Android</span></div>
+      <span class="tool-tip">💡 Combinalo con Canva: quitá el fondo acá y luego usá la imagen en tus diseños.</span>
+      <a href="https://remove.bg" target="_blank" class="visit-btn">Abrir →</a>
+    </div>
+  </div>
+</div>
+
+<!-- ══ VIDEO ══ -->
+<div class="category" data-cat="video">
+  <div class="cat-header">
+    <span class="cat-label">02</span>
+    <span class="cat-title">Edición de Video</span>
+    <div class="cat-line"></div>
+    <span class="cat-count">3</span>
+  </div>
+
+  <div class="tool-card bc-capcut">
+    <div class="tool-main">
+      <div class="tool-logo lb-capcut"><span class="logo-emoji">🎬</span></div>
+      <div class="tool-info">
+        <div class="tool-header"><span class="tool-name">CapCut</span><span class="tool-badge">⭐ Imprescindible</span></div>
+        <div class="tool-tagline">El editor de Reels y videos cortos más popular del mundo</div>
+        <div class="tool-desc">Herramienta número uno para hacer Reels y TikToks desde el celular. Plantillas de video listas, subtítulos automáticos en español, música, efectos y transiciones. Muy fácil aunque nunca hayas editado un video.</div>
+        <div class="tool-features">
+          <div class="feat"><span class="feat-icon">→</span><span>Subtítulos automáticos en español con un solo toque</span></div>
+          <div class="feat"><span class="feat-icon">→</span><span>Plantillas de video viral listas para adaptar a tu contenido</span></div>
+          <div class="feat"><span class="feat-icon">→</span><span>Exporta en la resolución perfecta para Instagram, TikTok y YouTube</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="tool-footer">
+      <div class="platforms"><span class="plat">📱 iOS</span><span class="plat">🤖 Android</span><span class="plat">🌐 Web</span></div>
+      <span class="tool-tip">💡 Activá los subtítulos automáticos — el 80% de la gente ve videos sin sonido.</span>
+      <a href="https://capcut.com" target="_blank" class="visit-btn">Abrir →</a>
+    </div>
+  </div>
+
+  <div class="tool-card bc-inshot">
+    <div class="tool-main">
+      <div class="tool-logo lb-inshot"><img src="https://cdn.simpleicons.org/inshot/ffffff" alt="InShot"></div>
+      <div class="tool-info">
+        <div class="tool-header"><span class="tool-name">InShot</span><span class="tool-badge">Fácil</span></div>
+        <div class="tool-tagline">Edición de video simple y rápida desde el celular</div>
+        <div class="tool-desc">Más sencillo que CapCut. Ideal para recortar videos, agregar música, texto y filtros sin complicarse. Muy bueno para historias de Instagram y videos cortos del día a día.</div>
+        <div class="tool-features">
+          <div class="feat"><span class="feat-icon">→</span><span>Recortá, unís y ajustá velocidad en segundos</span></div>
+          <div class="feat"><span class="feat-icon">→</span><span>Ajusta automáticamente el formato para cada red social</span></div>
+          <div class="feat"><span class="feat-icon">→</span><span>Música libre de derechos incluida</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="tool-footer">
+      <div class="platforms"><span class="plat">📱 iOS</span><span class="plat">🤖 Android</span></div>
+      <span class="tool-tip">💡 Si CapCut te parece complicado, empezá con InShot — menos opciones, más intuitivo.</span>
+      <a href="https://inshot.com" target="_blank" class="visit-btn">Abrir →</a>
+    </div>
+  </div>
+
+  <div class="tool-card bc-clipchamp">
+    <div class="tool-main">
+      <div class="tool-logo lb-clipchamp"><img src="https://cdn.simpleicons.org/clipchamp/ffffff" alt="Clipchamp"></div>
+      <div class="tool-info">
+        <div class="tool-header"><span class="tool-name">Clipchamp</span><span class="tool-badge">Computadora</span></div>
+        <div class="tool-tagline">Editor de video de Microsoft, gratis en Windows</div>
+        <div class="tool-desc">Si tenés Windows ya lo tenés instalado. Permite editar videos con varias pistas, agregar subtítulos y exportar en buena calidad sin marcas de agua.</div>
+        <div class="tool-features">
+          <div class="feat"><span class="feat-icon">→</span><span>Viene incluido en Windows 11 — no necesitás instalar nada</span></div>
+          <div class="feat"><span class="feat-icon">→</span><span>Edición en múltiples pistas de video y audio</span></div>
+          <div class="feat"><span class="feat-icon">→</span><span>Exporta en 1080p sin marca de agua en el plan gratuito</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="tool-footer">
+      <div class="platforms"><span class="plat">🌐 Web</span><span class="plat">💻 Windows</span></div>
+      <span class="tool-tip">💡 Buscalo en el menú Inicio de Windows si estás en una PC.</span>
+      <a href="https://clipchamp.com" target="_blank" class="visit-btn">Abrir →</a>
+    </div>
+  </div>
+</div>
+
+<!-- ══ INSPIRACIÓN ══ -->
+<div class="category" data-cat="inspiracion">
+  <div class="cat-header">
+    <span class="cat-label">03</span>
+    <span class="cat-title">Inspiración y Tendencias</span>
+    <div class="cat-line"></div>
+    <span class="cat-count">3</span>
+  </div>
+
+  <div class="tool-card bc-pinterest">
+    <div class="tool-main">
+      <div class="tool-logo lb-pinterest"><img src="https://cdn.simpleicons.org/pinterest/ffffff" alt="Pinterest"></div>
+      <div class="tool-info">
+        <div class="tool-header"><span class="tool-name">Pinterest</span><span class="tool-badge">⭐ Imprescindible</span></div>
+        <div class="tool-tagline">El mejor buscador visual de inspiración para tu marca</div>
+        <div class="tool-desc">No es solo una red social — es el mejor lugar para encontrar inspiración visual: paletas de colores, estilos de fotos, packaging, logos, estéticas de feed. Guardás todo en tableros organizados.</div>
+        <div class="tool-features">
+          <div class="feat"><span class="feat-icon">→</span><span>Buscá "identidad visual [tu rubro]" y encontrás miles de ideas</span></div>
+          <div class="feat"><span class="feat-icon">→</span><span>Tableros para organizar referencias de marca por tema</span></div>
+          <div class="feat"><span class="feat-icon">→</span><span>También sirve para publicar y vender tus productos</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="tool-footer">
+      <div class="platforms"><span class="plat">🌐 Web</span><span class="plat">📱 iOS</span><span class="plat">🤖 Android</span></div>
+      <span class="tool-tip">💡 Buscá "moodboard [tu rubro]" para encontrar la estética exacta que querés.</span>
+      <a href="https://pinterest.com" target="_blank" class="visit-btn">Abrir →</a>
+    </div>
+  </div>
+
+  <div class="tool-card bc-behance">
+    <div class="tool-main">
+      <div class="tool-logo lb-behance"><img src="https://cdn.simpleicons.org/behance/ffffff" alt="Behance"></div>
+      <div class="tool-info">
+        <div class="tool-header"><span class="tool-name">Behance</span><span class="tool-badge">Diseño profesional</span></div>
+        <div class="tool-tagline">Portafolios de diseñadores de todo el mundo</div>
+        <div class="tool-desc">La red de Adobe donde diseñadores publican sus trabajos. Ideal para buscar inspiración en logos, packaging e identidades de marca de nivel profesional.</div>
+        <div class="tool-features">
+          <div class="feat"><span class="feat-icon">→</span><span>Buscá "brand identity [tu rubro]" para ver logos y diseños reales</span></div>
+          <div class="feat"><span class="feat-icon">→</span><span>Proyectos de branding completos con proceso incluido</span></div>
+          <div class="feat"><span class="feat-icon">→</span><span>Podés contactar diseñadores para pedirles trabajo freelance</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="tool-footer">
+      <div class="platforms"><span class="plat">🌐 Web</span><span class="plat">📱 iOS</span></div>
+      <span class="tool-tip">💡 Compartí links de Behance como referencias cuando le pedís algo a un diseñador.</span>
+      <a href="https://behance.net" target="_blank" class="visit-btn">Abrir →</a>
+    </div>
+  </div>
+
+  <div class="tool-card bc-trends">
+    <div class="tool-main">
+      <div class="tool-logo lb-trends"><img src="https://cdn.simpleicons.org/google/ffffff" alt="Google Trends"></div>
+      <div class="tool-info">
+        <div class="tool-header"><span class="tool-name">Google Trends</span><span class="tool-badge">Tendencias</span></div>
+        <div class="tool-tagline">Descubrí qué busca la gente en tu rubro y cuándo</div>
+        <div class="tool-desc">Te muestra qué palabras busca la gente en Google, en qué momento del año hay más demanda y qué temas están creciendo. Útil para planificar tus publicaciones y promociones.</div>
+        <div class="tool-features">
+          <div class="feat"><span class="feat-icon">→</span><span>Filtrá por Argentina para ver tendencias locales reales</span></div>
+          <div class="feat"><span class="feat-icon">→</span><span>Descubrí en qué meses hay más demanda de tu producto</span></div>
+          <div class="feat"><span class="feat-icon">→</span><span>Comparás términos para saber cuál usar en tus publicaciones</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="tool-footer">
+      <div class="platforms"><span class="plat">🌐 Web</span></div>
+      <span class="tool-tip">💡 Buscá tu rubro + "Argentina" para ver la estacionalidad real de tu negocio.</span>
+      <a href="https://trends.google.com" target="_blank" class="visit-btn">Abrir →</a>
+    </div>
+  </div>
+</div>
+
+<!-- ══ IMÁGENES ══ -->
+<div class="category" data-cat="imagenes">
+  <div class="cat-header">
+    <span class="cat-label">04</span>
+    <span class="cat-title">Imágenes y Recursos Gratuitos</span>
+    <div class="cat-line"></div>
+    <span class="cat-count">4</span>
+  </div>
+
+  <div class="tool-card bc-unsplash">
+    <div class="tool-main">
+      <div class="tool-logo lb-unsplash"><img src="https://cdn.simpleicons.org/unsplash/ffffff" alt="Unsplash"></div>
+      <div class="tool-info">
+        <div class="tool-header"><span class="tool-name">Unsplash</span><span class="tool-badge">Fotos</span></div>
+        <div class="tool-tagline">Fotos profesionales gratis, sin derechos de autor</div>
+        <div class="tool-desc">Banco de fotos de alta calidad completamente gratuitas. Más de 3 millones de imágenes que podés usar en publicaciones, diseños y materiales de tu negocio sin pedir permiso.</div>
+        <div class="tool-features">
+          <div class="feat"><span class="feat-icon">→</span><span>Sin marca de agua y en alta resolución</span></div>
+          <div class="feat"><span class="feat-icon">→</span><span>Se integra directamente con Canva para buscar desde ahí</span></div>
+          <div class="feat"><span class="feat-icon">→</span><span>Podés usarlas comercialmente sin pagar nada</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="tool-footer">
+      <div class="platforms"><span class="plat">🌐 Web</span></div>
+      <span class="tool-tip">💡 Usá fotos de Unsplash como fondo cuando no tenés fotos propias de buena calidad.</span>
+      <a href="https://unsplash.com" target="_blank" class="visit-btn">Abrir →</a>
+    </div>
+  </div>
+
+  <div class="tool-card bc-pexels">
+    <div class="tool-main">
+      <div class="tool-logo lb-pexels"><img src="https://cdn.simpleicons.org/pexels/ffffff" alt="Pexels"></div>
+      <div class="tool-info">
+        <div class="tool-header"><span class="tool-name">Pexels</span><span class="tool-badge">Fotos y video</span></div>
+        <div class="tool-tagline">Fotos y videos cortos gratuitos para tus publicaciones</div>
+        <div class="tool-desc">Como Unsplash pero también tiene videos cortos gratuitos. Muy útil para usar como fondo en Reels o Stories sin tener que grabar vos mismo.</div>
+        <div class="tool-features">
+          <div class="feat"><span class="feat-icon">→</span><span>Videos y fotos sin derechos en alta calidad</span></div>
+          <div class="feat"><span class="feat-icon">→</span><span>App móvil para descargar directo al celular</span></div>
+          <div class="feat"><span class="feat-icon">→</span><span>Se integra con Canva y CapCut directamente</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="tool-footer">
+      <div class="platforms"><span class="plat">🌐 Web</span><span class="plat">📱 iOS</span><span class="plat">🤖 Android</span></div>
+      <span class="tool-tip">💡 Bajá un video de fondo de tu rubro y usalo en Reels con texto encima — ahorra mucho tiempo.</span>
+      <a href="https://pexels.com" target="_blank" class="visit-btn">Abrir →</a>
+    </div>
+  </div>
+
+  <div class="tool-card bc-flaticon">
+    <div class="tool-main">
+      <div class="tool-logo lb-flaticon"><span class="logo-emoji">⭐</span></div>
+      <div class="tool-info">
+        <div class="tool-header"><span class="tool-name">Flaticon</span><span class="tool-badge">Íconos</span></div>
+        <div class="tool-tagline">Millones de íconos gratuitos para tus diseños</div>
+        <div class="tool-desc">La biblioteca de íconos más grande del mundo. Perfecta para agregar pequeños gráficos a tus publicaciones, listas de servicios, catálogos o presentaciones.</div>
+        <div class="tool-features">
+          <div class="feat"><span class="feat-icon">→</span><span>Íconos en PNG, SVG y múltiples estilos</span></div>
+          <div class="feat"><span class="feat-icon">→</span><span>Cambiá el color antes de descargar</span></div>
+          <div class="feat"><span class="feat-icon">→</span><span>Se integra directamente con Canva</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="tool-footer">
+      <div class="platforms"><span class="plat">🌐 Web</span></div>
+      <span class="tool-tip">💡 En el plan gratuito hay que dar crédito al autor. Canva ya los incluye si querés evitar eso.</span>
+      <a href="https://flaticon.com" target="_blank" class="visit-btn">Abrir →</a>
+    </div>
+  </div>
+
+  <div class="tool-card bc-qr">
+    <div class="tool-main">
+      <div class="tool-logo lb-qr"><span class="logo-emoji">⬛</span></div>
+      <div class="tool-info">
+        <div class="tool-header"><span class="tool-name">QR Code Generator</span><span class="tool-badge">Útil</span></div>
+        <div class="tool-tagline">Creá códigos QR personalizados para tu negocio</div>
+        <div class="tool-desc">Generá códigos QR que lleven a tu WhatsApp, Instagram, catálogo o menú. Ideal para imprimir en packaging, volantes o tarjetas.</div>
+        <div class="tool-features">
+          <div class="feat"><span class="feat-icon">→</span><span>QR para cualquier link, número de WhatsApp o red social</span></div>
+          <div class="feat"><span class="feat-icon">→</span><span>Personalizá los colores para que combine con tu marca</span></div>
+          <div class="feat"><span class="feat-icon">→</span><span>Descargá en alta resolución para imprimir</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="tool-footer">
+      <div class="platforms"><span class="plat">🌐 Web</span></div>
+      <span class="tool-tip">💡 Creá un QR que abra directo un chat de WhatsApp con tu número y ponelo en tus flyers.</span>
+      <a href="https://qr-code-generator.com" target="_blank" class="visit-btn">Abrir →</a>
+    </div>
+  </div>
+</div>
+
+<!-- ══ GESTIÓN ══ -->
+<div class="category" data-cat="gestion">
+  <div class="cat-header">
+    <span class="cat-label">05</span>
+    <span class="cat-title">Gestión de Redes y Negocio</span>
+    <div class="cat-line"></div>
+    <span class="cat-count">4</span>
+  </div>
+
+  <div class="tool-card bc-meta">
+    <div class="tool-main">
+      <div class="tool-logo lb-meta"><img src="https://cdn.simpleicons.org/meta/ffffff" alt="Meta Business Suite"></div>
+      <div class="tool-info">
+        <div class="tool-header"><span class="tool-name">Meta Business Suite</span><span class="tool-badge">⭐ Imprescindible</span></div>
+        <div class="tool-tagline">Gestioná Facebook e Instagram desde un solo lugar</div>
+        <div class="tool-desc">La herramienta oficial de Meta para gestionar tu página de Facebook y cuenta de Instagram juntas. Programá publicaciones, ve estadísticas y respondé mensajes de ambas redes en un solo lugar.</div>
+        <div class="tool-features">
+          <div class="feat"><span class="feat-icon">→</span><span>Programá publicaciones para que se publiquen solas</span></div>
+          <div class="feat"><span class="feat-icon">→</span><span>Estadísticas de alcance e interacciones unificadas</span></div>
+          <div class="feat"><span class="feat-icon">→</span><span>Bandeja unificada para mensajes de Facebook e Instagram</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="tool-footer">
+      <div class="platforms"><span class="plat">🌐 Web</span><span class="plat">📱 iOS</span><span class="plat">🤖 Android</span></div>
+      <span class="tool-tip">💡 Programá toda la semana el lunes — Meta las publica solas y vos te despreocupás.</span>
+      <a href="https://business.facebook.com" target="_blank" class="visit-btn">Abrir →</a>
+    </div>
+  </div>
+
+  <div class="tool-card bc-google">
+    <div class="tool-main">
+      <div class="tool-logo lb-google"><img src="https://cdn.simpleicons.org/google/ffffff" alt="Google Business Profile"></div>
+      <div class="tool-info">
+        <div class="tool-header"><span class="tool-name">Google Business Profile</span><span class="tool-badge">⭐ Esencial</span></div>
+        <div class="tool-tagline">Tu negocio en Google Maps y búsquedas de Google</div>
+        <div class="tool-desc">Completamente gratis y muy poderoso: hace que tu negocio aparezca en Google Maps cuando buscan lo que ofrecés en tu zona. Horarios, fotos, WhatsApp y reseñas de clientes.</div>
+        <div class="tool-features">
+          <div class="feat"><span class="feat-icon">→</span><span>Aparecés en Google Maps cuando buscan tu rubro cerca</span></div>
+          <div class="feat"><span class="feat-icon">→</span><span>Las reseñas de clientes construyen tu reputación online</span></div>
+          <div class="feat"><span class="feat-icon">→</span><span>Publicá novedades y ofertas directo en Google</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="tool-footer">
+      <div class="platforms"><span class="plat">🌐 Web</span><span class="plat">📱 iOS</span><span class="plat">🤖 Android</span></div>
+      <span class="tool-tip">💡 Si no estás en Google Maps perdés clientes. Darse de alta es gratis y toma 10 minutos.</span>
+      <a href="https://business.google.com" target="_blank" class="visit-btn">Abrir →</a>
+    </div>
+  </div>
+
+  <div class="tool-card bc-linktree">
+    <div class="tool-main">
+      <div class="tool-logo lb-linktree"><img src="https://cdn.simpleicons.org/linktree/ffffff" alt="Linktree"></div>
+      <div class="tool-info">
+        <div class="tool-header"><span class="tool-name">Linktree</span><span class="tool-badge">Bio de Instagram</span></div>
+        <div class="tool-tagline">Un solo link en tu bio que lleva a todos tus canales</div>
+        <div class="tool-desc">Instagram te deja poner solo un link en la bio. Linktree crea una página simple con todos tus links: WhatsApp, catálogo, tienda, Facebook, YouTube. El cliente elige adónde ir.</div>
+        <div class="tool-features">
+          <div class="feat"><span class="feat-icon">→</span><span>Una URL que agrupa todos tus canales de contacto</span></div>
+          <div class="feat"><span class="feat-icon">→</span><span>Personalizás con tus colores y logo</span></div>
+          <div class="feat"><span class="feat-icon">→</span><span>Ve cuántas personas hacen click en cada link</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="tool-footer">
+      <div class="platforms"><span class="plat">🌐 Web</span><span class="plat">📱 iOS</span><span class="plat">🤖 Android</span></div>
+      <span class="tool-tip">💡 Ponelo en tu bio y en stories con "link en bio" para dirigir tráfico a WhatsApp o tu tienda.</span>
+      <a href="https://linktr.ee" target="_blank" class="visit-btn">Abrir →</a>
+    </div>
+  </div>
+
+  <div class="tool-card bc-notion">
+    <div class="tool-main">
+      <div class="tool-logo lb-notion"><img src="https://cdn.simpleicons.org/notion/ffffff" alt="Notion"></div>
+      <div class="tool-info">
+        <div class="tool-header"><span class="tool-name">Notion</span><span class="tool-badge">Organización</span></div>
+        <div class="tool-tagline">Tu calendario de contenidos y notas del negocio</div>
+        <div class="tool-desc">Herramienta todo-en-uno para organizar tu negocio: calendario de publicaciones, ideas de contenido, pedidos, proveedores y gastos. La versión gratuita es más que suficiente.</div>
+        <div class="tool-features">
+          <div class="feat"><span class="feat-icon">→</span><span>Calendario visual para planificar publicaciones semanales</span></div>
+          <div class="feat"><span class="feat-icon">→</span><span>Tablas para registrar pedidos, clientes y stock</span></div>
+          <div class="feat"><span class="feat-icon">→</span><span>Compartí el tablero con quien te ayude en el negocio</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="tool-footer">
+      <div class="platforms"><span class="plat">🌐 Web</span><span class="plat">📱 iOS</span><span class="plat">🤖 Android</span></div>
+      <span class="tool-tip">💡 Una tabla simple con Día / Red / Tema / Estado ya organiza todo tu contenido.</span>
+      <a href="https://notion.so" target="_blank" class="visit-btn">Abrir →</a>
+    </div>
+  </div>
+</div>
+
+<!-- ══ IA ══ -->
+<div class="category" data-cat="ia">
+  <div class="cat-header">
+    <span class="cat-label">06</span>
+    <span class="cat-title">Inteligencia Artificial</span>
+    <div class="cat-line"></div>
+    <span class="cat-count">3</span>
+  </div>
+
+  <div class="tool-card bc-claude">
+    <div class="tool-main">
+      <div class="tool-logo lb-claude"><img src="https://cdn.simpleicons.org/claude/ffffff" alt="Claude"></div>
+      <div class="tool-info">
+        <div class="tool-header"><span class="tool-name">Claude</span><span class="tool-badge">⭐ Recomendado</span></div>
+        <div class="tool-tagline">La IA que mejor entiende contexto y genera textos naturales</div>
+        <div class="tool-desc">Ideal para redactar publicaciones, responder mensajes, generar ideas de contenido y planificar tu negocio. Es la IA que mejor responde los prompts de esta guía.</div>
+        <div class="tool-features">
+          <div class="feat"><span class="feat-icon">→</span><span>Respuestas más largas y detalladas en el plan gratuito</span></div>
+          <div class="feat"><span class="feat-icon">→</span><span>Excelente con español rioplatense y contexto argentino</span></div>
+          <div class="feat"><span class="feat-icon">→</span><span>Podés subir fotos o documentos para que los analice</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="tool-footer">
+      <div class="platforms"><span class="plat">🌐 Web</span><span class="plat">📱 iOS</span><span class="plat">🤖 Android</span></div>
+      <span class="tool-tip">💡 Usá los prompts de la Guía de Prompts con Claude para resultados óptimos desde el primer intento.</span>
+      <a href="https://claude.ai" target="_blank" class="visit-btn">Abrir →</a>
+    </div>
+  </div>
+
+  <div class="tool-card bc-openai">
+    <div class="tool-main">
+      <div class="tool-logo lb-openai"><img src="https://cdn.simpleicons.org/openai/ffffff" alt="ChatGPT"></div>
+      <div class="tool-info">
+        <div class="tool-header"><span class="tool-name">ChatGPT</span><span class="tool-badge">Popular</span></div>
+        <div class="tool-tagline">La IA más conocida del mundo</div>
+        <div class="tool-desc">La IA más popular. Muy buena para redactar, responder preguntas y generar ideas. La versión gratuita es suficiente para el día a día de un emprendimiento.</div>
+        <div class="tool-features">
+          <div class="feat"><span class="feat-icon">→</span><span>Genera imágenes con DALL·E en el plan gratuito (limitado)</span></div>
+          <div class="feat"><span class="feat-icon">→</span><span>Modo de voz — hablale y te responde en voz alta</span></div>
+          <div class="feat"><span class="feat-icon">→</span><span>Miles de tutoriales disponibles para aprender a usarla</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="tool-footer">
+      <div class="platforms"><span class="plat">🌐 Web</span><span class="plat">📱 iOS</span><span class="plat">🤖 Android</span></div>
+      <span class="tool-tip">💡 Los prompts de nuestra Guía funcionan exactamente igual en ChatGPT. Usá el que prefieras.</span>
+      <a href="https://chat.openai.com" target="_blank" class="visit-btn">Abrir →</a>
+    </div>
+  </div>
+
+  <div class="tool-card bc-gemini">
+    <div class="tool-main">
+      <div class="tool-logo lb-gemini"><img src="https://cdn.simpleicons.org/googlegemini/ffffff" alt="Gemini"></div>
+      <div class="tool-info">
+        <div class="tool-header"><span class="tool-name">Gemini</span><span class="tool-badge">Integrado con Google</span></div>
+        <div class="tool-tagline">La IA de Google con acceso a búsqueda en tiempo real</div>
+        <div class="tool-desc">La IA de Google integrada con Gmail, Drive y Docs. Su ventaja es el acceso a internet en tiempo real y la integración con las herramientas de Google que ya usás.</div>
+        <div class="tool-features">
+          <div class="feat"><span class="feat-icon">→</span><span>Acceso a internet en tiempo real — información actualizada</span></div>
+          <div class="feat"><span class="feat-icon">→</span><span>Se integra con Gmail para ayudarte a redactar y responder</span></div>
+          <div class="feat"><span class="feat-icon">→</span><span>Guardá los resultados directamente en Google Docs</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="tool-footer">
+      <div class="platforms"><span class="plat">🌐 Web</span><span class="plat">📱 iOS</span><span class="plat">🤖 Android</span></div>
+      <span class="tool-tip">💡 Si ya usás Gmail en tu negocio, Gemini se integra naturalmente con todo lo que tenés.</span>
+      <a href="https://gemini.google.com" target="_blank" class="visit-btn">Abrir →</a>
+    </div>
+  </div>
+</div>
+
+</main>
+
+<footer>
+  Herramientas Gratuitas para Marketing Digital · Creado por <strong>Leandro Sacha Melchiori</strong>
+  <a href="https://www.linkedin.com/in/leandromelchiori-developer/" target="_blank" rel="noopener"
+    style="display:inline-flex;align-items:center;gap:5px;margin-left:8px;color:var(--muted);text-decoration:none;vertical-align:middle;transition:color 0.2s;"
+    onmouseover="this.style.color='#0A66C2'" onmouseout="this.style.color=''">
+    <img src="https://cdn.simpleicons.org/linkedin/aaaaaa" alt="LinkedIn" width="14" height="14"
+      onerror="this.replaceWith('🔗')"
+      style="vertical-align:middle;">
+    LinkedIn
+  </a>
+</footer>
+
+<script>
+function filterCat(cat, btn) {
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('.category').forEach(s => {
+    s.style.display = (cat === 'all' || s.dataset.cat === cat) ? '' : 'none';
+  });
+}
+</script>
+</body>
+</html>
