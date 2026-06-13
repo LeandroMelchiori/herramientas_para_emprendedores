@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Política de Privacidad — Herramientas para Emprendedores</title>
+<meta name="description" content="Cómo cuidamos tu privacidad: usamos estadísticas anónimas, sin cookies de seguimiento ni datos personales.">
+
+<!-- ══ PWA + íconos ══ -->
+<link rel="manifest" href="/manifest.json">
+<meta name="theme-color" content="#D5306E">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="apple-touch-icon" href="/assets/icons/apple-touch-icon.png">
+<script src="/analytics.js" defer></script>
+
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --gradient: linear-gradient(90deg, #F2A33B 0%, #E85D3A 28%, #D5306E 60%, #6B3FA0 100%);
+  --magenta: #D5306E;
+  --ink: #2E3147;
+  --ink-soft: #5C5F75;
+  --ink-muted: #9A9DB0;
+  --bg: #FFFFFF;
+  --bg-soft: #F7F7FA;
+  --borde: #E7E8F0;
+  --verde: #2C8050;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--ink); min-height: 100vh; }
+
+/* Botón volver */
+#back-home-btn {
+  position: fixed; top: 14px; left: 14px; z-index: 9999;
+  width: 40px; height: 40px; border-radius: 50%;
+  background: rgba(255,255,255,0.92); color: #2E3147;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.2rem; text-decoration: none;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.15); border: 1px solid #E7E8F0;
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+#back-home-btn:hover { transform: scale(1.08); box-shadow: 0 4px 14px rgba(0,0,0,0.2); }
+
+header { background: var(--gradient); padding: 3rem 1.5rem 2.5rem; color: white; text-align: center; }
+header .tag {
+  display: inline-block; background: rgba(255,255,255,0.18); border: 1px solid rgba(255,255,255,0.35);
+  color: white; font-size: 0.65rem; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase;
+  padding: 0.3rem 0.9rem; border-radius: 20px; margin-bottom: 1rem;
+}
+header h1 { font-family: 'DM Serif Display', serif; font-size: clamp(1.8rem, 6vw, 2.6rem); line-height: 1.15; }
+header p { color: rgba(255,255,255,0.92); font-size: 0.9rem; margin-top: 0.7rem; }
+
+main { max-width: 680px; margin: 0 auto; padding: 2rem 1.2rem 4rem; }
+
+.card { background: var(--bg); border: 1px solid var(--borde); border-radius: 14px; padding: 1.3rem 1.4rem; margin-bottom: 1rem; }
+.card h2 { font-size: 1.05rem; color: var(--ink); margin-bottom: 0.7rem; display: flex; align-items: center; gap: 0.5rem; }
+.card p { font-size: 0.9rem; color: var(--ink-soft); line-height: 1.7; }
+.card ul { list-style: none; margin-top: 0.6rem; }
+.card li { font-size: 0.9rem; color: var(--ink-soft); line-height: 1.6; padding-left: 1.5rem; position: relative; margin-bottom: 0.45rem; }
+.card li::before { content: ''; position: absolute; left: 0; top: 0.55rem; width: 7px; height: 7px; border-radius: 2px; background: var(--magenta); }
+.card.ok li::before { background: var(--verde); }
+.card strong { color: var(--ink); }
+
+.intro { background: var(--bg-soft); border-left: 3px solid var(--magenta); border-radius: 0 12px 12px 0; }
+.note { font-size: 0.82rem; color: var(--ink-muted); text-align: center; margin-top: 1.5rem; }
+.note a { color: var(--magenta); }
+
+footer { text-align: center; padding: 1.5rem; font-size: 0.78rem; color: var(--ink-muted); border-top: 1px solid var(--borde); }
+footer a { color: var(--magenta); text-decoration: none; }
+</style>
+</head>
+<body>
+<a href="/" id="back-home-btn" title="Volver al inicio" aria-label="Volver al inicio">←</a>
+
+<header>
+  <div class="tag">Transparencia</div>
+  <h1>Política de Privacidad</h1>
+  <p>Cuidamos tu privacidad. Esto es todo lo que hacemos —y lo que no hacemos— con la información.</p>
+</header>
+
+<main>
+  <div class="card intro">
+    <p>Este sitio usa <strong>estadísticas anónimas</strong> para entender qué herramientas sirven más y poder mejorarlas. No recolectamos datos personales ni te seguimos por la web.</p>
+  </div>
+
+  <div class="card">
+    <h2>📊 Qué medimos (de forma anónima)</h2>
+    <ul>
+      <li>Cantidad de visitas y de visitantes (sin identificar a nadie).</li>
+      <li>País y región aproximada desde donde se usa.</li>
+      <li>Tipo de dispositivo (celular, computadora) y navegador.</li>
+      <li>Desde dónde llegaste (Google, Instagram, link directo, etc.).</li>
+      <li>Qué herramientas y funciones se usan más (por ejemplo, qué prompts se copian).</li>
+    </ul>
+  </div>
+
+  <div class="card ok">
+    <h2>🔒 Qué NO hacemos</h2>
+    <ul>
+      <li>No pedimos ni guardamos datos personales: ni nombre, ni email, ni DNI.</li>
+      <li>No usamos cookies de seguimiento.</li>
+      <li>No creamos perfiles tuyos ni te reconocemos entre visitas a lo largo del tiempo.</li>
+      <li>No vendemos ni compartimos datos con terceros, ni mostramos publicidad.</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h2>🛠 Cómo lo hacemos</h2>
+    <p>Usamos <strong>GoatCounter</strong>, una herramienta de estadísticas respetuosa de la privacidad que funciona <strong>sin cookies</strong>. La dirección IP se usa solo en el momento para estimar la ubicación aproximada y <strong>no se almacena</strong> de forma que te identifique. Por eso este sitio no necesita el típico cartel de "aceptar cookies".</p>
+  </div>
+
+  <div class="card">
+    <h2>💾 Lo que guardás en tus herramientas</h2>
+    <p>Cuando guardás paletas de color, marcás prompts como favoritos o creás tus propios prompts, esa información se almacena <strong>únicamente en tu dispositivo</strong> (en el navegador). No se envía a ningún servidor ni la vemos nosotros. Si limpiás los datos del navegador, se borra.</p>
+  </div>
+
+  <p class="note">Última actualización: junio de 2026 · Ante cualquier consulta, escribinos por
+    <a href="https://www.instagram.com/sacha.melchiori" target="_blank" rel="noopener">Instagram</a>.</p>
+</main>
+
+<footer>
+  Herramientas para Emprendedores · <a href="/">Volver al inicio</a>
+</footer>
+</body>
+</html>
