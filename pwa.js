@@ -58,4 +58,5 @@ function showInstallButton() {
 window.addEventListener('appinstalled', () => {
   document.getElementById('pwa-install-btn')?.remove();
   deferredPrompt = null;
+  if (window.trackEvent) window.trackEvent('Instalar PWA');
 });

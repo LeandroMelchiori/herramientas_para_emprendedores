@@ -9,7 +9,7 @@
    ============================================================ */
 
 // Subí este número en cada deploy para invalidar las caches viejas.
-const VERSION   = 'v1.0.0';
+const VERSION   = 'v1.0.1';
 const APP_CACHE = `app-${VERSION}`;       // Núcleo: HTML + iconos + assets propios
 const RUNTIME   = `runtime-${VERSION}`;   // Externos: Google Fonts, CDNs, etc.
 
@@ -23,6 +23,8 @@ const PRECACHE = [
   '/modules/herramientasdigitales/',
   '/manifest.json',
   '/favicon.ico',
+  '/pwa.js',
+  '/analytics.js',
   '/assets/icons/icon-192.png',
   '/assets/icons/icon-512.png',
   '/assets/icons/apple-touch-icon.png',

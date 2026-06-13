@@ -14,6 +14,7 @@
 <meta name="apple-mobile-web-app-title" content="Herramientas">
 <meta name="mobile-web-app-capable" content="yes">
 <script src="/pwa.js" defer></script>
+<script src="/analytics.js" defer></script>
 
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
@@ -1396,6 +1397,7 @@ function copyPrompt(btn) {
   doCopy(text);
   btn.textContent = '✓ Copiado!'; btn.classList.add('copied');
   showToast('✓ Prompt copiado — pegalo en Claude, ChatGPT o Gemini');
+  trackEvent('Copiar prompt', { titulo: (card.querySelector('.prompt-title')?.textContent || '').slice(0,100), categoria: card.closest('.category')?.dataset.cat || 'mine' });
   setTimeout(() => { btn.textContent = '📋 Copiar'; btn.classList.remove('copied'); }, 2000);
 }
 
@@ -1565,6 +1567,7 @@ function saveForm(){
     const obj = { id: Date.now().toString(36) };
     FIELDS.forEach(f=>obj[f]=get(f));
     arr.unshift(obj);
+    trackEvent('Crear prompt propio');
   }
   setMine(arr); renderMine(); closeForm(); applyFilters();
   showToast('✓ Prompt guardado');

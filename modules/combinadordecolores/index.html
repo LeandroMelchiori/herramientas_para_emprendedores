@@ -14,6 +14,7 @@
 <meta name="apple-mobile-web-app-title" content="Herramientas">
 <meta name="mobile-web-app-capable" content="yes">
 <script src="/pwa.js" defer></script>
+<script src="/analytics.js" defer></script>
 
 <!-- Fuente de marca (igual que el resto de la suite) -->
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -615,6 +616,7 @@ function buildJsPDF() {
   // ── Save ──
   const fname = `paleta-${hex.replace('#','')}-${Date.now()}.pdf`;
   doc.save(fname);
+  trackEvent("Exportar paleta", { formato: "pdf" });
 }
 
 /* ═══════════════════════════════════════════════════════════════
@@ -676,6 +678,7 @@ function saveCurrentPalette(){
   if(a.some(s=>s.h===st.h&&s.s===st.s&&s.l===st.l&&s.arm===st.arm)){showToast("Ya tenías esta paleta guardada");return;}
   a.unshift(st);setSaved(a.slice(0,12));   // guardamos hasta 12
   renderSavedPalettes();showToast("💾 Paleta guardada");
+  trackEvent("Guardar paleta", { armonia: currentHarmony });
 }
 function deleteSaved(i){const a=getSaved();a.splice(i,1);setSaved(a);renderSavedPalettes();}
 function renderSavedPalettes(){
@@ -732,7 +735,7 @@ function exportPNG(){
   // Pie
   x.fillStyle="#aaa";x.font="400 22px 'DM Sans',sans-serif";
   x.fillText("Generado con el Combinador de Colores · Herramientas para Emprendedores",60,Hc-36);
-  cv.toBlob(b=>{const url=URL.createObjectURL(b);const a=document.createElement("a");a.href=url;a.download=`paleta-${hex.replace('#','')}.png`;a.click();URL.revokeObjectURL(url);showToast("🖼️ Imagen PNG descargada");});
+  cv.toBlob(b=>{const url=URL.createObjectURL(b);const a=document.createElement("a");a.href=url;a.download=`paleta-${hex.replace('#','')}.png`;a.click();URL.revokeObjectURL(url);showToast("🖼️ Imagen PNG descargada");trackEvent("Exportar paleta",{formato:"png"});});
 }
 
 // ── Extraer colores de una foto ────────────────────────────────
