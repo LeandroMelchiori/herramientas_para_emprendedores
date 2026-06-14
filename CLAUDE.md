@@ -78,6 +78,14 @@ Cada módulo es **autocontenido**: CSS y JS están inline en su `index.html`. Al
 
 **Persistencia solo local**: localStorage es la única forma de guardar datos del usuario (proyectos de calculadora, prompts favoritos, paletas guardadas). No existe sincronización entre dispositivos ni autenticación.
 
+## Convenciones de desarrollo
+
+**Comentarios en el código**: todo bloque lógico no trivial debe tener un comentario breve que explique el *por qué* o el *qué hace*, no cómo. Una línea es suficiente; evitar comentarios que solo repitan lo que el código ya dice.
+
+**README.md**: actualizarlo en cada commit que agregue, quite o modifique funcionalidad visible para el usuario o la estructura del proyecto.
+
+**Mensajes de commit**: breves, en español, en infinitivo, describiendo el cambio concreto. Ejemplos correctos: `Agregar filtro por categoría en guía de prompts`, `Corregir cálculo de punto de equilibrio`. Evitar mensajes genéricos como `fix`, `update`, `cambios`.
+
 ## Analytics
 
 `analytics.js` expone la función global `trackEvent(action, fields)` que envía eventos a GoatCounter. Úsala desde cualquier módulo para registrar interacciones relevantes (copiar prompt, exportar PDF, guardar paleta, etc.). No trackear datos personales ni contenido sensible.
