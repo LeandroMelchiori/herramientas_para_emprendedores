@@ -41,67 +41,49 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
+/* ── Botón volver ── */
+#back-home-btn {
+  position: fixed; top: 14px; left: 14px; z-index: 9999;
+  width: 40px; height: 40px; border-radius: 50%;
+  background: rgba(255,255,255,0.92); color: #2E3147;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.2rem; text-decoration: none;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.15); border: 1px solid #E7E8F0;
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+#back-home-btn:hover { transform: scale(1.08); box-shadow: 0 4px 14px rgba(0,0,0,0.2); }
+
 /* ── Header ── */
 header {
   padding: 4rem 2rem 3rem;
-  position: relative;
-  overflow: hidden;
+  position: relative; overflow: hidden;
   border-bottom: 1px solid var(--border);
 }
-.header-glow {
-  position: absolute;
-  border-radius: 50%;
-  filter: blur(80px);
-  pointer-events: none;
-}
+.header-glow { position: absolute; border-radius: 50%; filter: blur(80px); pointer-events: none; }
 .glow-1 { width: 500px; height: 500px; top: -200px; right: -100px; background: rgba(110,231,183,0.06); }
 .glow-2 { width: 350px; height: 350px; bottom: -150px; left: -50px; background: rgba(99,102,241,0.05); }
-
 .header-inner { max-width: 780px; margin: 0 auto; position: relative; z-index: 1; }
-
 .header-eyebrow {
   display: inline-flex; align-items: center; gap: 0.5rem;
-  font-family: 'Nunito Sans', sans-serif;
-  font-size: 0.7rem; font-weight: 600;
-  letter-spacing: 0.2em; text-transform: uppercase;
+  font-size: 0.7rem; font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase;
   color: var(--accent); margin-bottom: 1.2rem;
 }
 .eyebrow-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); }
-
 header h1 {
   font-family: 'Bricolage Grotesque', sans-serif;
-  font-size: clamp(2.2rem, 6vw, 3.6rem);
-  font-weight: 800;
-  line-height: 1.08;
-  letter-spacing: -0.02em;
-  margin-bottom: 1rem;
-  color: var(--text);
+  font-size: clamp(2.2rem, 6vw, 3.6rem); font-weight: 800;
+  line-height: 1.08; letter-spacing: -0.02em; margin-bottom: 1rem; color: var(--text);
 }
 header h1 span {
   background: linear-gradient(90deg, #6ee7b7, #60a5fa);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
 }
-
-header p {
-  color: var(--soft);
-  font-size: 1rem;
-  line-height: 1.75;
-  max-width: 520px;
-  font-weight: 400;
-}
-
-.header-meta {
-  display: flex; gap: 2rem; margin-top: 2rem; flex-wrap: wrap;
-}
-.meta-item {
-  display: flex; flex-direction: column; gap: 0.1rem;
-}
+header p { color: var(--soft); font-size: 1rem; line-height: 1.75; max-width: 520px; }
+.header-meta { display: flex; gap: 2rem; margin-top: 2rem; flex-wrap: wrap; }
+.meta-item { display: flex; flex-direction: column; gap: 0.1rem; }
 .meta-num {
   font-family: 'Bricolage Grotesque', sans-serif;
-  font-size: 1.6rem; font-weight: 800; color: var(--text);
-  line-height: 1;
+  font-size: 1.6rem; font-weight: 800; color: var(--text); line-height: 1;
 }
 .meta-label { font-size: 0.72rem; color: var(--muted); font-weight: 500; letter-spacing: 0.06em; }
 
@@ -111,258 +93,259 @@ header p {
   border-bottom: 1px solid var(--border);
   position: sticky; top: 0; z-index: 100;
 }
-.filter-inner {
+.filter-top {
   max-width: 780px; margin: 0 auto;
-  padding: 0 1rem;
+  padding: 0.55rem 1rem;
+  display: flex; gap: 0.6rem; align-items: center;
+  border-bottom: 1px solid var(--border);
+}
+.search-input {
+  flex: 1;
+  background: var(--surface); border: 1px solid var(--border2);
+  border-radius: 8px; padding: 0.48rem 0.85rem;
+  font-family: 'Nunito Sans', sans-serif; font-size: 0.82rem; color: var(--text);
+  outline: none; transition: border-color 0.18s;
+}
+.search-input:focus { border-color: var(--accent); }
+.search-input::placeholder { color: var(--muted); }
+.quiz-toggle-btn {
+  flex-shrink: 0;
+  background: linear-gradient(90deg, rgba(110,231,183,0.12), rgba(96,165,250,0.12));
+  border: 1px solid rgba(110,231,183,0.25); border-radius: 8px;
+  padding: 0.45rem 0.85rem; color: var(--accent);
+  font-family: 'Nunito Sans', sans-serif; font-size: 0.74rem; font-weight: 600;
+  cursor: pointer; white-space: nowrap; transition: all 0.18s;
+}
+.quiz-toggle-btn:hover { background: rgba(110,231,183,0.2); }
+.quiz-toggle-btn.open { background: rgba(110,231,183,0.2); border-color: var(--accent); }
+
+.filter-tabs-wrap { position: relative; overflow: hidden; }
+.filter-inner {
+  max-width: 780px; margin: 0 auto; padding: 0 1rem;
   display: flex; gap: 0; overflow-x: auto; scrollbar-width: none;
 }
 .filter-inner::-webkit-scrollbar { display: none; }
+/* Fade derecho para indicar scroll horizontal */
+.filter-tabs-wrap::after {
+  content: ''; position: absolute; right: 0; top: 0; bottom: 0; width: 36px;
+  background: linear-gradient(to left, var(--bg2), transparent);
+  pointer-events: none;
+}
 .filter-btn {
-  flex-shrink: 0;
-  padding: 1rem 1.1rem;
+  flex-shrink: 0; padding: 0.9rem 1.1rem;
   border: none; background: transparent;
-  font-family: 'Nunito Sans', sans-serif;
-  font-size: 0.8rem; font-weight: 600;
+  font-family: 'Nunito Sans', sans-serif; font-size: 0.8rem; font-weight: 600;
   color: var(--muted); cursor: pointer;
   border-bottom: 2px solid transparent;
-  transition: all 0.18s; white-space: nowrap;
-  letter-spacing: 0.02em;
+  transition: all 0.18s; white-space: nowrap; letter-spacing: 0.02em;
 }
 .filter-btn:hover { color: var(--soft); }
 .filter-btn.active { color: var(--accent); border-bottom-color: var(--accent); }
+.filter-btn.favs-btn.active { color: #fbbf24; border-bottom-color: #fbbf24; }
 
 /* ── Main ── */
-main { max-width: 780px; margin: 0 auto; padding: 2.5rem 1rem 5rem; }
+main { max-width: 780px; margin: 0 auto; padding: 2rem 1rem 5rem; }
+
+/* ── Quiz panel ── */
+#quiz-panel[hidden] { display: none; }
+.quiz-panel {
+  background: linear-gradient(135deg, rgba(110,231,183,0.06), rgba(96,165,250,0.04));
+  border: 1px solid rgba(110,231,183,0.2); border-radius: 16px;
+  padding: 1.4rem 1.5rem; margin-bottom: 1.5rem;
+}
+.quiz-q {
+  font-family: 'Bricolage Grotesque', sans-serif; font-size: 0.95rem; font-weight: 700;
+  color: var(--text); margin-bottom: 1rem;
+}
+.quiz-opts { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 0.8rem; }
+.quiz-opt {
+  background: var(--surface2); border: 1px solid var(--border2); border-radius: 8px;
+  padding: 0.5rem 0.9rem; color: var(--soft);
+  font-family: 'Nunito Sans', sans-serif; font-size: 0.82rem; font-weight: 600;
+  cursor: pointer; transition: all 0.18s;
+}
+.quiz-opt:hover { border-color: var(--accent); color: var(--accent); }
+.quiz-opt.selected { background: rgba(110,231,183,0.15); border-color: var(--accent); color: var(--accent); }
+.quiz-back {
+  background: none; border: none; color: var(--muted);
+  font-family: 'Nunito Sans', sans-serif; font-size: 0.78rem; cursor: pointer; padding: 0;
+}
+.quiz-back:hover { color: var(--soft); }
+.quiz-results { text-align: center; }
+.quiz-results-title { font-family: 'Bricolage Grotesque', sans-serif; font-size: 1rem; font-weight: 700; color: var(--accent); margin-bottom: 0.35rem; }
+.quiz-results-sub { font-size: 0.82rem; color: var(--muted); margin-bottom: 1rem; }
+.quiz-reset {
+  background: none; border: 1px solid var(--border2); border-radius: 8px;
+  padding: 0.4rem 1rem; color: var(--muted);
+  font-family: 'Nunito Sans', sans-serif; font-size: 0.78rem; cursor: pointer; transition: all 0.18s;
+}
+.quiz-reset:hover { color: var(--soft); border-color: var(--soft); }
+
+/* Quiz highlight/dim */
+.tool-card.quiz-recommended {
+  border-color: var(--accent) !important;
+  box-shadow: 0 0 0 1px var(--accent), 0 8px 32px rgba(110,231,183,0.15) !important;
+  transform: translateY(-1px);
+}
+.tool-card.quiz-dimmed { opacity: 0.3; }
 
 /* ── Intro ── */
 .intro-box {
   background: linear-gradient(135deg, rgba(110,231,183,0.06), rgba(96,165,250,0.04));
-  border: 1px solid rgba(110,231,183,0.15);
-  border-radius: 16px;
-  padding: 1.2rem 1.5rem;
-  margin-bottom: 2.5rem;
+  border: 1px solid rgba(110,231,183,0.15); border-radius: 16px;
+  padding: 1.2rem 1.5rem; margin-bottom: 2.5rem;
   display: flex; gap: 0.9rem; align-items: flex-start;
 }
 .intro-icon { font-size: 1.3rem; flex-shrink: 0; margin-top: 1px; }
 .intro-box p { font-size: 0.85rem; color: #9de8c8; line-height: 1.65; }
 .intro-box p strong { color: var(--accent); font-weight: 600; }
 
+/* ── No results ── */
+#no-results {
+  text-align: center; padding: 3rem 1rem; color: var(--muted);
+  font-size: 0.9rem; line-height: 1.7;
+}
+#no-results strong { color: var(--soft); display: block; font-size: 1.1rem; margin-bottom: 0.4rem; }
+
 /* ── Category ── */
 .category { margin-bottom: 3rem; }
-.cat-header {
-  display: flex; align-items: center; gap: 0.7rem;
-  margin-bottom: 1.2rem;
-}
-.cat-label {
-  font-size: 0.62rem; font-weight: 700; letter-spacing: 0.18em;
-  text-transform: uppercase; color: var(--muted);
-  flex-shrink: 0;
-}
-.cat-title {
-  font-family: 'Bricolage Grotesque', sans-serif;
-  font-size: 1.15rem; font-weight: 700;
-  color: var(--text); letter-spacing: -0.01em;
-}
+.cat-header { display: flex; align-items: center; gap: 0.7rem; margin-bottom: 1.2rem; }
+.cat-label { font-size: 0.62rem; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); flex-shrink: 0; }
+.cat-title { font-family: 'Bricolage Grotesque', sans-serif; font-size: 1.15rem; font-weight: 700; color: var(--text); letter-spacing: -0.01em; }
 .cat-line { flex: 1; height: 1px; background: var(--border); }
-.cat-count {
-  background: var(--surface2); color: var(--muted);
-  font-size: 0.65rem; font-weight: 600;
-  padding: 0.2rem 0.6rem; border-radius: 20px;
-  border: 1px solid var(--border);
-  flex-shrink: 0;
-}
+.cat-count { background: var(--surface2); color: var(--muted); font-size: 0.65rem; font-weight: 600; padding: 0.2rem 0.6rem; border-radius: 20px; border: 1px solid var(--border); flex-shrink: 0; }
 
 /* ── Tool Card ── */
 .tool-card {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 16px;
-  margin-bottom: 0.75rem;
-  overflow: hidden;
-  transition: border-color 0.22s, transform 0.18s, box-shadow 0.22s;
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 16px; margin-bottom: 0.75rem; overflow: hidden;
+  transition: border-color 0.22s, transform 0.18s, box-shadow 0.22s, opacity 0.22s;
   position: relative;
 }
 .tool-card::before {
-  content: '';
-  position: absolute;
-  top: 0; left: 0; right: 0; height: 1px;
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px;
   background: linear-gradient(90deg, transparent, var(--card-accent, #6ee7b7), transparent);
-  opacity: 0;
-  transition: opacity 0.25s;
+  opacity: 0; transition: opacity 0.25s;
 }
 .tool-card:hover { border-color: var(--border2); transform: translateY(-2px); box-shadow: 0 12px 40px rgba(0,0,0,0.4); }
 .tool-card:hover::before { opacity: 0.5; }
 
-.tool-main {
-  padding: 1.2rem 1.3rem;
-  display: flex; gap: 1rem; align-items: flex-start;
-}
+.tool-main { padding: 1.2rem 1.3rem; display: flex; gap: 1rem; align-items: flex-start; }
 
-/* Logo icon */
 .tool-logo {
-  width: 48px; height: 48px;
-  border-radius: 12px;
-  flex-shrink: 0;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 1.4rem;
-  overflow: hidden;
-  position: relative;
+  width: 48px; height: 48px; border-radius: 12px; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center; overflow: hidden;
 }
-.tool-logo img {
-  width: 28px; height: 28px;
-  object-fit: contain;
-  filter: brightness(0) invert(1);
-}
-.tool-logo .logo-emoji {
-  font-size: 1.5rem;
-  line-height: 1;
-}
+.tool-logo img { width: 28px; height: 28px; object-fit: contain; filter: brightness(0) invert(1); }
+.tool-logo .logo-emoji { font-size: 1.5rem; line-height: 1; }
 
 .tool-info { flex: 1; min-width: 0; }
-.tool-header {
-  display: flex; align-items: flex-start; gap: 0.5rem;
-  margin-bottom: 0.3rem; flex-wrap: wrap;
-}
-.tool-name {
-  font-family: 'Bricolage Grotesque', sans-serif;
-  font-size: 1rem; font-weight: 700;
-  color: var(--text); letter-spacing: -0.01em;
-}
-.tool-badge {
-  font-size: 0.58rem; font-weight: 700;
-  letter-spacing: 0.1em; text-transform: uppercase;
-  padding: 0.18rem 0.55rem; border-radius: 4px;
-  flex-shrink: 0; margin-top: 2px;
-  font-family: 'Nunito Sans', sans-serif;
-}
-.tool-tagline { font-size: 0.82rem; color: var(--muted); margin-bottom: 0.8rem; font-weight: 400; }
+.tool-header { display: flex; align-items: flex-start; gap: 0.5rem; margin-bottom: 0.3rem; flex-wrap: wrap; }
+.tool-name { font-family: 'Bricolage Grotesque', sans-serif; font-size: 1rem; font-weight: 700; color: var(--text); letter-spacing: -0.01em; }
+.tool-badge { font-size: 0.58rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; padding: 0.18rem 0.55rem; border-radius: 4px; flex-shrink: 0; margin-top: 2px; font-family: 'Nunito Sans', sans-serif; }
+.tool-tagline { font-size: 0.82rem; color: var(--muted); margin-bottom: 0.8rem; }
 .tool-desc { font-size: 0.84rem; color: var(--soft); line-height: 1.7; margin-bottom: 1rem; }
-
 .tool-features { display: flex; flex-direction: column; gap: 0.35rem; }
-.feat {
-  display: flex; align-items: flex-start; gap: 0.55rem;
-  font-size: 0.8rem; color: var(--soft); line-height: 1.5;
-}
+.feat { display: flex; align-items: flex-start; gap: 0.55rem; font-size: 0.8rem; color: var(--soft); line-height: 1.5; }
 .feat-icon { font-size: 0.75rem; flex-shrink: 0; margin-top: 1px; opacity: 0.7; }
 
 .tool-footer {
-  padding: 0.8rem 1.3rem;
-  background: var(--surface2);
-  border-top: 1px solid var(--border);
+  padding: 0.8rem 1.3rem; background: var(--surface2); border-top: 1px solid var(--border);
   display: flex; align-items: center; gap: 0.7rem; flex-wrap: wrap;
 }
 .platforms { display: flex; gap: 0.35rem; flex-wrap: wrap; }
-.plat {
-  display: flex; align-items: center; gap: 0.3rem;
-  font-size: 0.67rem; color: var(--muted);
-  background: var(--border); border-radius: 5px;
-  padding: 0.18rem 0.5rem; font-weight: 500;
-}
-.tool-tip {
-  font-size: 0.74rem; color: var(--muted); font-style: italic;
-  flex: 1; min-width: 180px; line-height: 1.45;
-}
+.plat { display: flex; align-items: center; gap: 0.3rem; font-size: 0.67rem; color: var(--muted); background: var(--border); border-radius: 5px; padding: 0.18rem 0.5rem; font-weight: 500; }
+.tool-tip { font-size: 0.74rem; color: var(--muted); font-style: italic; flex: 1; min-width: 180px; line-height: 1.45; }
 .visit-btn {
-  flex-shrink: 0;
-  display: inline-flex; align-items: center; gap: 0.4rem;
-  text-decoration: none;
-  border-radius: 8px; padding: 0.45rem 1rem;
-  font-family: 'Nunito Sans', sans-serif;
-  font-size: 0.76rem; font-weight: 700;
+  flex-shrink: 0; display: inline-flex; align-items: center; gap: 0.4rem;
+  text-decoration: none; border-radius: 8px; padding: 0.45rem 1rem;
+  font-family: 'Nunito Sans', sans-serif; font-size: 0.76rem; font-weight: 700;
   transition: all 0.18s; border: 1px solid var(--border2);
-  background: var(--surface2); color: var(--soft);
-  letter-spacing: 0.02em;
+  background: var(--surface2); color: var(--soft); letter-spacing: 0.02em;
 }
 .visit-btn:hover { transform: scale(1.04); color: var(--text); }
 
-/* ── Brand colors ── */
-/* Canva */      .bc-canva    { background: #00c4cc22; --card-accent:#00c4cc; } .bc-canva .tool-badge { background:#00c4cc22; color:#00c4cc; border:1px solid #00c4cc44; } .bc-canva .visit-btn:hover { background:#00c4cc; color:#000; border-color:#00c4cc; }
-/* AdobeExp */   .bc-adobe    { background: #ff000022; --card-accent:#ff5252; } .bc-adobe .tool-badge { background:#ff000022; color:#ff6b6b; border:1px solid #ff000044; } .bc-adobe .visit-btn:hover { background:#ff5252; color:#fff; border-color:#ff5252; }
-/* Photopea */   .bc-photopea { background: #18a49722; --card-accent:#18a497; } .bc-photopea .tool-badge { background:#18a49722; color:#18a497; border:1px solid #18a49744; } .bc-photopea .visit-btn:hover { background:#18a497; color:#fff; border-color:#18a497; }
-/* Remove.bg */  .bc-removebg { background: #7c3aed22; --card-accent:#a78bfa; } .bc-removebg .tool-badge { background:#7c3aed22; color:#a78bfa; border:1px solid #7c3aed44; } .bc-removebg .visit-btn:hover { background:#a78bfa; color:#000; border-color:#a78bfa; }
-/* CapCut */     .bc-capcut   { background: #ffffff10; --card-accent:#e8e8e8; } .bc-capcut .tool-badge { background:#ffffff10; color:#ccc; border:1px solid #ffffff22; } .bc-capcut .visit-btn:hover { background:#e8e8e8; color:#000; border-color:#e8e8e8; }
-/* InShot */     .bc-inshot   { background: #ff6b2222; --card-accent:#ff8c42; } .bc-inshot .tool-badge { background:#ff6b2222; color:#ff8c42; border:1px solid #ff6b2244; } .bc-inshot .visit-btn:hover { background:#ff8c42; color:#fff; border-color:#ff8c42; }
-/* Clipchamp */  .bc-clipchamp{ background: #0078d422; --card-accent:#60a5fa; } .bc-clipchamp .tool-badge { background:#0078d422; color:#60a5fa; border:1px solid #0078d444; } .bc-clipchamp .visit-btn:hover { background:#60a5fa; color:#000; border-color:#60a5fa; }
-/* Pinterest */  .bc-pinterest { background: #e6002322; --card-accent:#fb7185; } .bc-pinterest .tool-badge { background:#e6002322; color:#fb7185; border:1px solid #e6002344; } .bc-pinterest .visit-btn:hover { background:#fb7185; color:#fff; border-color:#fb7185; }
-/* Behance */    .bc-behance  { background: #1769ff22; --card-accent:#60a5fa; } .bc-behance .tool-badge { background:#1769ff22; color:#60a5fa; border:1px solid #1769ff44; } .bc-behance .visit-btn:hover { background:#1769ff; color:#fff; border-color:#1769ff; }
-/* Trends */     .bc-trends   { background: #34d39922; --card-accent:#6ee7b7; } .bc-trends .tool-badge { background:#34d39922; color:#6ee7b7; border:1px solid #34d39944; } .bc-trends .visit-btn:hover { background:#34d399; color:#000; border-color:#34d399; }
-/* Unsplash */   .bc-unsplash { background: #ffffff10; --card-accent:#d1d5db; } .bc-unsplash .tool-badge { background:#ffffff10; color:#d1d5db; border:1px solid #ffffff22; } .bc-unsplash .visit-btn:hover { background:#d1d5db; color:#000; border-color:#d1d5db; }
-/* Pexels */     .bc-pexels   { background: #05a08122; --card-accent:#2dd4bf; } .bc-pexels .tool-badge { background:#05a08122; color:#2dd4bf; border:1px solid #05a08144; } .bc-pexels .visit-btn:hover { background:#2dd4bf; color:#000; border-color:#2dd4bf; }
-/* Flaticon */   .bc-flaticon { background: #1fb2ff22; --card-accent:#67d7fa; } .bc-flaticon .tool-badge { background:#1fb2ff22; color:#67d7fa; border:1px solid #1fb2ff44; } .bc-flaticon .visit-btn:hover { background:#67d7fa; color:#000; border-color:#67d7fa; }
-/* QR */         .bc-qr       { background: #6366f122; --card-accent:#a5b4fc; } .bc-qr .tool-badge { background:#6366f122; color:#a5b4fc; border:1px solid #6366f144; } .bc-qr .visit-btn:hover { background:#a5b4fc; color:#000; border-color:#a5b4fc; }
-/* Meta */       .bc-meta     { background: #0082fb22; --card-accent:#60a5fa; } .bc-meta .tool-badge { background:#0082fb22; color:#60a5fa; border:1px solid #0082fb44; } .bc-meta .visit-btn:hover { background:#0082fb; color:#fff; border-color:#0082fb; }
-/* Google */     .bc-google   { background: #4285f422; --card-accent:#93c5fd; } .bc-google .tool-badge { background:#4285f422; color:#93c5fd; border:1px solid #4285f444; } .bc-google .visit-btn:hover { background:#4285f4; color:#fff; border-color:#4285f4; }
-/* Linktree */   .bc-linktree { background: #43e55e22; --card-accent:#6ee7b7; } .bc-linktree .tool-badge { background:#43e55e22; color:#6ee7b7; border:1px solid #43e55e44; } .bc-linktree .visit-btn:hover { background:#43e55e; color:#000; border-color:#43e55e; }
-/* Notion */     .bc-notion   { background: #ffffff10; --card-accent:#e5e7eb; } .bc-notion .tool-badge { background:#ffffff10; color:#e5e7eb; border:1px solid #ffffff22; } .bc-notion .visit-btn:hover { background:#e5e7eb; color:#000; border-color:#e5e7eb; }
-/* Claude */     .bc-claude   { background: #d4856a22; --card-accent:#f0b882; } .bc-claude .tool-badge { background:#d4856a22; color:#f0b882; border:1px solid #d4856a44; } .bc-claude .visit-btn:hover { background:#f0b882; color:#000; border-color:#f0b882; }
-/* ChatGPT */    .bc-openai   { background: #74aa9c22; --card-accent:#6ee7b7; } .bc-openai .tool-badge { background:#74aa9c22; color:#6ee7b7; border:1px solid #74aa9c44; } .bc-openai .visit-btn:hover { background:#74aa9c; color:#fff; border-color:#74aa9c; }
-/* Gemini */     .bc-gemini   { background: #4285f422; --card-accent:#93c5fd; } .bc-gemini .tool-badge { background:#4285f422; color:#93c5fd; border:1px solid #4285f444; } .bc-gemini .visit-btn:hover { background:#4285f4; color:#fff; border-color:#4285f4; }
+/* ── Favoritas ── */
+.fav-btn {
+  flex-shrink: 0; background: none; border: none;
+  color: var(--muted); font-size: 1rem; cursor: pointer;
+  padding: 0.2rem 0.45rem; border-radius: 6px;
+  transition: all 0.15s; line-height: 1;
+}
+.fav-btn:hover { color: #fbbf24; background: rgba(251,191,36,0.1); }
+.fav-btn.active { color: #fbbf24; }
 
-/* logo bg colors */
+/* ── Brand colors ── */
+.bc-canva    { background: #00c4cc22; --card-accent:#00c4cc; } .bc-canva .tool-badge { background:#00c4cc22; color:#00c4cc; border:1px solid #00c4cc44; } .bc-canva .visit-btn:hover { background:#00c4cc; color:#000; border-color:#00c4cc; }
+.bc-adobe    { background: #ff000022; --card-accent:#ff5252; } .bc-adobe .tool-badge { background:#ff000022; color:#ff6b6b; border:1px solid #ff000044; } .bc-adobe .visit-btn:hover { background:#ff5252; color:#fff; border-color:#ff5252; }
+.bc-photopea { background: #18a49722; --card-accent:#18a497; } .bc-photopea .tool-badge { background:#18a49722; color:#18a497; border:1px solid #18a49744; } .bc-photopea .visit-btn:hover { background:#18a497; color:#fff; border-color:#18a497; }
+.bc-removebg { background: #7c3aed22; --card-accent:#a78bfa; } .bc-removebg .tool-badge { background:#7c3aed22; color:#a78bfa; border:1px solid #7c3aed44; } .bc-removebg .visit-btn:hover { background:#a78bfa; color:#000; border-color:#a78bfa; }
+.bc-capcut   { background: #ffffff10; --card-accent:#e8e8e8; } .bc-capcut .tool-badge { background:#ffffff10; color:#ccc; border:1px solid #ffffff22; } .bc-capcut .visit-btn:hover { background:#e8e8e8; color:#000; border-color:#e8e8e8; }
+.bc-inshot   { background: #ff6b2222; --card-accent:#ff8c42; } .bc-inshot .tool-badge { background:#ff6b2222; color:#ff8c42; border:1px solid #ff6b2244; } .bc-inshot .visit-btn:hover { background:#ff8c42; color:#fff; border-color:#ff8c42; }
+.bc-edits    { background: #c1358422; --card-accent:#e879a0; } .bc-edits .tool-badge { background:#c1358422; color:#e879a0; border:1px solid #c1358444; } .bc-edits .visit-btn:hover { background:#c13584; color:#fff; border-color:#c13584; }
+.bc-clipchamp{ background: #0078d422; --card-accent:#60a5fa; } .bc-clipchamp .tool-badge { background:#0078d422; color:#60a5fa; border:1px solid #0078d444; } .bc-clipchamp .visit-btn:hover { background:#60a5fa; color:#000; border-color:#60a5fa; }
+.bc-pinterest { background: #e6002322; --card-accent:#fb7185; } .bc-pinterest .tool-badge { background:#e6002322; color:#fb7185; border:1px solid #e6002344; } .bc-pinterest .visit-btn:hover { background:#fb7185; color:#fff; border-color:#fb7185; }
+.bc-behance  { background: #1769ff22; --card-accent:#60a5fa; } .bc-behance .tool-badge { background:#1769ff22; color:#60a5fa; border:1px solid #1769ff44; } .bc-behance .visit-btn:hover { background:#1769ff; color:#fff; border-color:#1769ff; }
+.bc-unsplash { background: #ffffff10; --card-accent:#d1d5db; } .bc-unsplash .tool-badge { background:#ffffff10; color:#d1d5db; border:1px solid #ffffff22; } .bc-unsplash .visit-btn:hover { background:#d1d5db; color:#000; border-color:#d1d5db; }
+.bc-pexels   { background: #05a08122; --card-accent:#2dd4bf; } .bc-pexels .tool-badge { background:#05a08122; color:#2dd4bf; border:1px solid #05a08144; } .bc-pexels .visit-btn:hover { background:#2dd4bf; color:#000; border-color:#2dd4bf; }
+.bc-flaticon { background: #1fb2ff22; --card-accent:#67d7fa; } .bc-flaticon .tool-badge { background:#1fb2ff22; color:#67d7fa; border:1px solid #1fb2ff44; } .bc-flaticon .visit-btn:hover { background:#67d7fa; color:#000; border-color:#67d7fa; }
+.bc-qr       { background: #6366f122; --card-accent:#a5b4fc; } .bc-qr .tool-badge { background:#6366f122; color:#a5b4fc; border:1px solid #6366f144; } .bc-qr .visit-btn:hover { background:#a5b4fc; color:#000; border-color:#a5b4fc; }
+.bc-meta     { background: #0082fb22; --card-accent:#60a5fa; } .bc-meta .tool-badge { background:#0082fb22; color:#60a5fa; border:1px solid #0082fb44; } .bc-meta .visit-btn:hover { background:#0082fb; color:#fff; border-color:#0082fb; }
+.bc-whatsapp { background: #25d36622; --card-accent:#4ade80; } .bc-whatsapp .tool-badge { background:#25d36622; color:#4ade80; border:1px solid #25d36644; } .bc-whatsapp .visit-btn:hover { background:#25d366; color:#fff; border-color:#25d366; }
+.bc-google   { background: #4285f422; --card-accent:#93c5fd; } .bc-google .tool-badge { background:#4285f422; color:#93c5fd; border:1px solid #4285f444; } .bc-google .visit-btn:hover { background:#4285f4; color:#fff; border-color:#4285f4; }
+.bc-linktree { background: #43e55e22; --card-accent:#6ee7b7; } .bc-linktree .tool-badge { background:#43e55e22; color:#6ee7b7; border:1px solid #43e55e44; } .bc-linktree .visit-btn:hover { background:#43e55e; color:#000; border-color:#43e55e; }
+.bc-notion   { background: #ffffff10; --card-accent:#e5e7eb; } .bc-notion .tool-badge { background:#ffffff10; color:#e5e7eb; border:1px solid #ffffff22; } .bc-notion .visit-btn:hover { background:#e5e7eb; color:#000; border-color:#e5e7eb; }
+.bc-trends   { background: #34d39922; --card-accent:#6ee7b7; } .bc-trends .tool-badge { background:#34d39922; color:#6ee7b7; border:1px solid #34d39944; } .bc-trends .visit-btn:hover { background:#34d399; color:#000; border-color:#34d399; }
+.bc-tiendanube{ background: #1f40e622; --card-accent:#7b9ef8; } .bc-tiendanube .tool-badge { background:#1f40e622; color:#7b9ef8; border:1px solid #1f40e644; } .bc-tiendanube .visit-btn:hover { background:#1f40e6; color:#fff; border-color:#1f40e6; }
+.bc-meli     { background: #ffe60022; --card-accent:#fde047; } .bc-meli .tool-badge { background:#ffe60022; color:#fde047; border:1px solid #ffe60044; } .bc-meli .visit-btn:hover { background:#ffe600; color:#000; border-color:#ffe600; }
+.bc-mpago    { background: #009ee322; --card-accent:#38bdf8; } .bc-mpago .tool-badge { background:#009ee322; color:#38bdf8; border:1px solid #009ee344; } .bc-mpago .visit-btn:hover { background:#009ee3; color:#fff; border-color:#009ee3; }
+.bc-claude   { background: #d4856a22; --card-accent:#f0b882; } .bc-claude .tool-badge { background:#d4856a22; color:#f0b882; border:1px solid #d4856a44; } .bc-claude .visit-btn:hover { background:#f0b882; color:#000; border-color:#f0b882; }
+.bc-openai   { background: #74aa9c22; --card-accent:#6ee7b7; } .bc-openai .tool-badge { background:#74aa9c22; color:#6ee7b7; border:1px solid #74aa9c44; } .bc-openai .visit-btn:hover { background:#74aa9c; color:#fff; border-color:#74aa9c; }
+.bc-gemini   { background: #4285f422; --card-accent:#93c5fd; } .bc-gemini .tool-badge { background:#4285f422; color:#93c5fd; border:1px solid #4285f444; } .bc-gemini .visit-btn:hover { background:#4285f4; color:#fff; border-color:#4285f4; }
+
+/* logo backgrounds */
 .lb-canva    { background: #00c4cc; }
 .lb-adobe    { background: #ff0000; }
 .lb-photopea { background: #18a497; }
 .lb-removebg { background: #7c3aed; }
 .lb-capcut   { background: #111; border: 1px solid #333; }
 .lb-inshot   { background: #ff6b22; }
+.lb-edits    { background: linear-gradient(135deg, #833AB4, #FD1D1D, #FCAF45); }
 .lb-clipchamp{ background: #0078d4; }
 .lb-pinterest{ background: #e60023; }
 .lb-behance  { background: #1769ff; }
-.lb-trends   { background: #34a853; }
 .lb-unsplash { background: #111; border: 1px solid #333; }
 .lb-pexels   { background: #05a081; }
 .lb-flaticon { background: #1fb2ff; }
 .lb-qr       { background: #6366f1; }
 .lb-meta     { background: #0082fb; }
+.lb-whatsapp { background: #25d366; }
 .lb-google   { background: #4285f4; }
 .lb-linktree { background: #43e55e; }
 .lb-notion   { background: #111; border: 1px solid #333; }
+.lb-trends   { background: #34a853; }
+.lb-tiendanube{ background: #1f40e6; }
+.lb-meli     { background: #2d3277; }
+.lb-mpago    { background: #009ee3; }
 .lb-claude   { background: #d4856a; }
 .lb-openai   { background: #10a37f; }
 .lb-gemini   { background: #4285f4; }
 
 /* ── Footer ── */
 footer {
-  background: var(--bg2);
-  border-top: 1px solid var(--border);
-  text-align: center;
-  padding: 1.8rem;
-  font-size: 0.75rem;
-  color: var(--muted);
-  letter-spacing: 0.04em;
+  background: var(--bg2); border-top: 1px solid var(--border);
+  text-align: center; padding: 1.5rem 1.8rem;
+  font-size: 0.75rem; color: var(--muted); letter-spacing: 0.04em;
 }
 footer strong { color: var(--accent); font-weight: 600; }
+footer a { color: var(--muted); text-decoration: none; transition: color 0.2s; }
+footer a:hover { color: var(--accent); }
+.footer-links { margin-top: 0.6rem; display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap; }
 </style>
 </head>
 <body>
-<!-- ══ Botón volver al inicio ══ -->
+
 <a href="/" id="back-home-btn" title="Volver al inicio" aria-label="Volver al inicio">←</a>
-<style>
-  #back-home-btn {
-    position: fixed;
-    top: 14px;
-    left: 14px;
-    z-index: 9999;
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    background: rgba(255,255,255,0.92);
-    color: #2E3147;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.2rem;
-    font-family: 'DM Sans', sans-serif;
-    text-decoration: none;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.15);
-    border: 1px solid #E7E8F0;
-    transition: transform 0.15s, box-shadow 0.15s;
-  }
-  #back-home-btn:hover {
-    transform: scale(1.08);
-    box-shadow: 0 4px 14px rgba(0,0,0,0.2);
-  }
-</style>
 
 <header>
   <div class="header-glow glow-1"></div>
@@ -372,26 +355,39 @@ footer strong { color: var(--accent); font-weight: 600; }
     <h1>Herramientas Digitales<br>para tu <span>Emprendimiento</span></h1>
     <p>Las mejores herramientas gratuitas para diseñar, editar videos, buscar inspiración y gestionar tus redes — todas desde el celular o la computadora, sin gastar un peso.</p>
     <div class="header-meta">
-      <div class="meta-item"><div class="meta-num">21</div><div class="meta-label">herramientas</div></div>
-      <div class="meta-item"><div class="meta-num">6</div><div class="meta-label">categorías</div></div>
+      <div class="meta-item"><div class="meta-num" id="meta-total">26</div><div class="meta-label">herramientas</div></div>
+      <div class="meta-item"><div class="meta-num" id="meta-cats">7</div><div class="meta-label">categorías</div></div>
       <div class="meta-item"><div class="meta-num">$0</div><div class="meta-label">costo</div></div>
     </div>
   </div>
 </header>
 
 <div class="filter-bar">
-  <div class="filter-inner">
-    <button class="filter-btn active" onclick="filterCat('all',this)">Todas</button>
-    <button class="filter-btn" onclick="filterCat('diseno',this)">🎨 Diseño</button>
-    <button class="filter-btn" onclick="filterCat('video',this)">🎬 Video</button>
-    <button class="filter-btn" onclick="filterCat('inspiracion',this)">💡 Inspiración</button>
-    <button class="filter-btn" onclick="filterCat('imagenes',this)">🖼️ Imágenes</button>
-    <button class="filter-btn" onclick="filterCat('gestion',this)">📊 Gestión</button>
-    <button class="filter-btn" onclick="filterCat('ia',this)">🤖 IA</button>
+  <div class="filter-top">
+    <input type="search" id="search-input" class="search-input"
+      placeholder="🔍 Buscar herramienta..."
+      autocomplete="off" aria-label="Buscar herramienta"
+      oninput="onSearch(this.value)">
+    <button class="quiz-toggle-btn" id="quiz-btn" onclick="toggleQuiz()" aria-expanded="false">✨ ¿Por dónde empiezo?</button>
+  </div>
+  <div class="filter-tabs-wrap">
+    <div class="filter-inner">
+      <button class="filter-btn active" onclick="filterCat('all',this)">Todas</button>
+      <button class="filter-btn favs-btn" id="favs-filter-btn" onclick="filterCat('favs',this)">⭐ Favoritas</button>
+      <button class="filter-btn" onclick="filterCat('diseno',this)">🎨 Diseño</button>
+      <button class="filter-btn" onclick="filterCat('video',this)">🎬 Video</button>
+      <button class="filter-btn" onclick="filterCat('inspiracion',this)">💡 Inspiración</button>
+      <button class="filter-btn" onclick="filterCat('imagenes',this)">🖼️ Imágenes</button>
+      <button class="filter-btn" onclick="filterCat('gestion',this)">📊 Gestión</button>
+      <button class="filter-btn" onclick="filterCat('ventas',this)">🛒 Ventas Online</button>
+      <button class="filter-btn" onclick="filterCat('ia',this)">🤖 IA</button>
+    </div>
   </div>
 </div>
 
 <main>
+
+<div id="quiz-panel" class="quiz-panel" hidden></div>
 
 <div class="intro-box">
   <span class="intro-icon">💡</span>
@@ -407,9 +403,9 @@ footer strong { color: var(--accent); font-weight: 600; }
     <span class="cat-count">4</span>
   </div>
 
-  <div class="tool-card bc-canva">
+  <div class="tool-card bc-canva" data-key="canva">
     <div class="tool-main">
-      <div class="tool-logo lb-canva"><img src="https://cdn.simpleicons.org/canva/ffffff" alt="Canva"></div>
+      <div class="tool-logo lb-canva"><img src="https://cdn.simpleicons.org/canva/ffffff" alt="Canva" onerror="this.style.display='none'"></div>
       <div class="tool-info">
         <div class="tool-header"><span class="tool-name">Canva</span><span class="tool-badge">⭐ Imprescindible</span></div>
         <div class="tool-tagline">Diseñá publicaciones, flyers, logos y más sin saber diseño</div>
@@ -424,13 +420,13 @@ footer strong { color: var(--accent); font-weight: 600; }
     <div class="tool-footer">
       <div class="platforms"><span class="plat">🌐 Web</span><span class="plat">📱 iOS</span><span class="plat">🤖 Android</span></div>
       <span class="tool-tip">💡 Creá una "carpeta de marca" con tus colores y logo para que todo sea consistente.</span>
-      <a href="https://canva.com" target="_blank" class="visit-btn">Abrir →</a>
+      <a href="https://canva.com" target="_blank" rel="noopener noreferrer" class="visit-btn">Abrir →</a>
     </div>
   </div>
 
-  <div class="tool-card bc-adobe">
+  <div class="tool-card bc-adobe" data-key="adobe-express">
     <div class="tool-main">
-      <div class="tool-logo lb-adobe"><img src="https://cdn.simpleicons.org/adobe/ffffff" alt="Adobe Express"></div>
+      <div class="tool-logo lb-adobe"><img src="https://cdn.simpleicons.org/adobe/ffffff" alt="Adobe Express" onerror="this.style.display='none'"></div>
       <div class="tool-info">
         <div class="tool-header"><span class="tool-name">Adobe Express</span><span class="tool-badge">Alternativa</span></div>
         <div class="tool-tagline">Efectos y fuentes premium de Adobe, completamente gratis</div>
@@ -445,13 +441,13 @@ footer strong { color: var(--accent); font-weight: 600; }
     <div class="tool-footer">
       <div class="platforms"><span class="plat">🌐 Web</span><span class="plat">📱 iOS</span><span class="plat">🤖 Android</span></div>
       <span class="tool-tip">💡 Probalo si querés tipografías más originales que las de Canva.</span>
-      <a href="https://express.adobe.com" target="_blank" class="visit-btn">Abrir →</a>
+      <a href="https://express.adobe.com" target="_blank" rel="noopener noreferrer" class="visit-btn">Abrir →</a>
     </div>
   </div>
 
-  <div class="tool-card bc-photopea">
+  <div class="tool-card bc-photopea" data-key="photopea">
     <div class="tool-main">
-      <div class="tool-logo lb-photopea"><img src="https://cdn.simpleicons.org/photopea/ffffff" alt="Photopea"></div>
+      <div class="tool-logo lb-photopea"><img src="https://cdn.simpleicons.org/photopea/ffffff" alt="Photopea" onerror="this.style.display='none'"></div>
       <div class="tool-info">
         <div class="tool-header"><span class="tool-name">Photopea</span><span class="tool-badge">Avanzado</span></div>
         <div class="tool-tagline">Photoshop gratis que funciona directo en el navegador</div>
@@ -466,11 +462,11 @@ footer strong { color: var(--accent); font-weight: 600; }
     <div class="tool-footer">
       <div class="platforms"><span class="plat">🌐 Web</span></div>
       <span class="tool-tip">💡 Usalo cuando necesitás editar una foto de producto con más precisión que Canva.</span>
-      <a href="https://photopea.com" target="_blank" class="visit-btn">Abrir →</a>
+      <a href="https://photopea.com" target="_blank" rel="noopener noreferrer" class="visit-btn">Abrir →</a>
     </div>
   </div>
 
-  <div class="tool-card bc-removebg">
+  <div class="tool-card bc-removebg" data-key="remove-bg">
     <div class="tool-main">
       <div class="tool-logo lb-removebg"><span class="logo-emoji">✂️</span></div>
       <div class="tool-info">
@@ -487,7 +483,7 @@ footer strong { color: var(--accent); font-weight: 600; }
     <div class="tool-footer">
       <div class="platforms"><span class="plat">🌐 Web</span><span class="plat">📱 iOS</span><span class="plat">🤖 Android</span></div>
       <span class="tool-tip">💡 Combinalo con Canva: quitá el fondo acá y luego usá la imagen en tus diseños.</span>
-      <a href="https://remove.bg" target="_blank" class="visit-btn">Abrir →</a>
+      <a href="https://remove.bg" target="_blank" rel="noopener noreferrer" class="visit-btn">Abrir →</a>
     </div>
   </div>
 </div>
@@ -498,10 +494,31 @@ footer strong { color: var(--accent); font-weight: 600; }
     <span class="cat-label">02</span>
     <span class="cat-title">Edición de Video</span>
     <div class="cat-line"></div>
-    <span class="cat-count">3</span>
+    <span class="cat-count">4</span>
   </div>
 
-  <div class="tool-card bc-capcut">
+  <div class="tool-card bc-edits" data-key="edits">
+    <div class="tool-main">
+      <div class="tool-logo lb-edits"><img src="https://cdn.simpleicons.org/instagram/ffffff" alt="Edits by Instagram" onerror="this.style.display='none'"></div>
+      <div class="tool-info">
+        <div class="tool-header"><span class="tool-name">Edits by Instagram</span><span class="tool-badge">🆕 Nuevo</span></div>
+        <div class="tool-tagline">El editor de Reels oficial de Meta, diseñado para Instagram</div>
+        <div class="tool-desc">La apuesta de Meta para competirle a CapCut. Editor de video pensado 100% para Reels: acceso anticipado a audios en tendencia, animaciones y efectos dentro del ecosistema de Instagram. Al ser de Meta, los videos pueden tener mejor alcance orgánico.</div>
+        <div class="tool-features">
+          <div class="feat"><span class="feat-icon">→</span><span>Acceso anticipado a los audios que están siendo tendencia en Instagram</span></div>
+          <div class="feat"><span class="feat-icon">→</span><span>Funciona sin conexión — editás aunque no tengas señal</span></div>
+          <div class="feat"><span class="feat-icon">→</span><span>Videos editados acá pueden tener mejor rendimiento en el algoritmo de IG</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="tool-footer">
+      <div class="platforms"><span class="plat">📱 iOS</span><span class="plat">🤖 Android</span></div>
+      <span class="tool-tip">💡 Si publicás en Instagram, probá Edits antes que CapCut — el algoritmo premia los videos hechos con herramientas propias.</span>
+      <a href="https://www.instagram.com/edits/" target="_blank" rel="noopener noreferrer" class="visit-btn">Abrir →</a>
+    </div>
+  </div>
+
+  <div class="tool-card bc-capcut" data-key="capcut">
     <div class="tool-main">
       <div class="tool-logo lb-capcut"><span class="logo-emoji">🎬</span></div>
       <div class="tool-info">
@@ -518,13 +535,13 @@ footer strong { color: var(--accent); font-weight: 600; }
     <div class="tool-footer">
       <div class="platforms"><span class="plat">📱 iOS</span><span class="plat">🤖 Android</span><span class="plat">🌐 Web</span></div>
       <span class="tool-tip">💡 Activá los subtítulos automáticos — el 80% de la gente ve videos sin sonido.</span>
-      <a href="https://capcut.com" target="_blank" class="visit-btn">Abrir →</a>
+      <a href="https://capcut.com" target="_blank" rel="noopener noreferrer" class="visit-btn">Abrir →</a>
     </div>
   </div>
 
-  <div class="tool-card bc-inshot">
+  <div class="tool-card bc-inshot" data-key="inshot">
     <div class="tool-main">
-      <div class="tool-logo lb-inshot"><img src="https://cdn.simpleicons.org/inshot/ffffff" alt="InShot"></div>
+      <div class="tool-logo lb-inshot"><img src="https://cdn.simpleicons.org/inshot/ffffff" alt="InShot" onerror="this.style.display='none'"></div>
       <div class="tool-info">
         <div class="tool-header"><span class="tool-name">InShot</span><span class="tool-badge">Fácil</span></div>
         <div class="tool-tagline">Edición de video simple y rápida desde el celular</div>
@@ -539,13 +556,13 @@ footer strong { color: var(--accent); font-weight: 600; }
     <div class="tool-footer">
       <div class="platforms"><span class="plat">📱 iOS</span><span class="plat">🤖 Android</span></div>
       <span class="tool-tip">💡 Si CapCut te parece complicado, empezá con InShot — menos opciones, más intuitivo.</span>
-      <a href="https://inshot.com" target="_blank" class="visit-btn">Abrir →</a>
+      <a href="https://inshot.com" target="_blank" rel="noopener noreferrer" class="visit-btn">Abrir →</a>
     </div>
   </div>
 
-  <div class="tool-card bc-clipchamp">
+  <div class="tool-card bc-clipchamp" data-key="clipchamp">
     <div class="tool-main">
-      <div class="tool-logo lb-clipchamp"><img src="https://cdn.simpleicons.org/clipchamp/ffffff" alt="Clipchamp"></div>
+      <div class="tool-logo lb-clipchamp"><img src="https://cdn.simpleicons.org/clipchamp/ffffff" alt="Clipchamp" onerror="this.style.display='none'"></div>
       <div class="tool-info">
         <div class="tool-header"><span class="tool-name">Clipchamp</span><span class="tool-badge">Computadora</span></div>
         <div class="tool-tagline">Editor de video de Microsoft, gratis en Windows</div>
@@ -560,7 +577,7 @@ footer strong { color: var(--accent); font-weight: 600; }
     <div class="tool-footer">
       <div class="platforms"><span class="plat">🌐 Web</span><span class="plat">💻 Windows</span></div>
       <span class="tool-tip">💡 Buscalo en el menú Inicio de Windows si estás en una PC.</span>
-      <a href="https://clipchamp.com" target="_blank" class="visit-btn">Abrir →</a>
+      <a href="https://clipchamp.com" target="_blank" rel="noopener noreferrer" class="visit-btn">Abrir →</a>
     </div>
   </div>
 </div>
@@ -569,14 +586,14 @@ footer strong { color: var(--accent); font-weight: 600; }
 <div class="category" data-cat="inspiracion">
   <div class="cat-header">
     <span class="cat-label">03</span>
-    <span class="cat-title">Inspiración y Tendencias</span>
+    <span class="cat-title">Inspiración Visual</span>
     <div class="cat-line"></div>
-    <span class="cat-count">3</span>
+    <span class="cat-count">2</span>
   </div>
 
-  <div class="tool-card bc-pinterest">
+  <div class="tool-card bc-pinterest" data-key="pinterest">
     <div class="tool-main">
-      <div class="tool-logo lb-pinterest"><img src="https://cdn.simpleicons.org/pinterest/ffffff" alt="Pinterest"></div>
+      <div class="tool-logo lb-pinterest"><img src="https://cdn.simpleicons.org/pinterest/ffffff" alt="Pinterest" onerror="this.style.display='none'"></div>
       <div class="tool-info">
         <div class="tool-header"><span class="tool-name">Pinterest</span><span class="tool-badge">⭐ Imprescindible</span></div>
         <div class="tool-tagline">El mejor buscador visual de inspiración para tu marca</div>
@@ -591,13 +608,13 @@ footer strong { color: var(--accent); font-weight: 600; }
     <div class="tool-footer">
       <div class="platforms"><span class="plat">🌐 Web</span><span class="plat">📱 iOS</span><span class="plat">🤖 Android</span></div>
       <span class="tool-tip">💡 Buscá "moodboard [tu rubro]" para encontrar la estética exacta que querés.</span>
-      <a href="https://pinterest.com" target="_blank" class="visit-btn">Abrir →</a>
+      <a href="https://pinterest.com" target="_blank" rel="noopener noreferrer" class="visit-btn">Abrir →</a>
     </div>
   </div>
 
-  <div class="tool-card bc-behance">
+  <div class="tool-card bc-behance" data-key="behance">
     <div class="tool-main">
-      <div class="tool-logo lb-behance"><img src="https://cdn.simpleicons.org/behance/ffffff" alt="Behance"></div>
+      <div class="tool-logo lb-behance"><img src="https://cdn.simpleicons.org/behance/ffffff" alt="Behance" onerror="this.style.display='none'"></div>
       <div class="tool-info">
         <div class="tool-header"><span class="tool-name">Behance</span><span class="tool-badge">Diseño profesional</span></div>
         <div class="tool-tagline">Portafolios de diseñadores de todo el mundo</div>
@@ -612,28 +629,7 @@ footer strong { color: var(--accent); font-weight: 600; }
     <div class="tool-footer">
       <div class="platforms"><span class="plat">🌐 Web</span><span class="plat">📱 iOS</span></div>
       <span class="tool-tip">💡 Compartí links de Behance como referencias cuando le pedís algo a un diseñador.</span>
-      <a href="https://behance.net" target="_blank" class="visit-btn">Abrir →</a>
-    </div>
-  </div>
-
-  <div class="tool-card bc-trends">
-    <div class="tool-main">
-      <div class="tool-logo lb-trends"><img src="https://cdn.simpleicons.org/google/ffffff" alt="Google Trends"></div>
-      <div class="tool-info">
-        <div class="tool-header"><span class="tool-name">Google Trends</span><span class="tool-badge">Tendencias</span></div>
-        <div class="tool-tagline">Descubrí qué busca la gente en tu rubro y cuándo</div>
-        <div class="tool-desc">Te muestra qué palabras busca la gente en Google, en qué momento del año hay más demanda y qué temas están creciendo. Útil para planificar tus publicaciones y promociones.</div>
-        <div class="tool-features">
-          <div class="feat"><span class="feat-icon">→</span><span>Filtrá por Argentina para ver tendencias locales reales</span></div>
-          <div class="feat"><span class="feat-icon">→</span><span>Descubrí en qué meses hay más demanda de tu producto</span></div>
-          <div class="feat"><span class="feat-icon">→</span><span>Comparás términos para saber cuál usar en tus publicaciones</span></div>
-        </div>
-      </div>
-    </div>
-    <div class="tool-footer">
-      <div class="platforms"><span class="plat">🌐 Web</span></div>
-      <span class="tool-tip">💡 Buscá tu rubro + "Argentina" para ver la estacionalidad real de tu negocio.</span>
-      <a href="https://trends.google.com" target="_blank" class="visit-btn">Abrir →</a>
+      <a href="https://behance.net" target="_blank" rel="noopener noreferrer" class="visit-btn">Abrir →</a>
     </div>
   </div>
 </div>
@@ -647,9 +643,9 @@ footer strong { color: var(--accent); font-weight: 600; }
     <span class="cat-count">4</span>
   </div>
 
-  <div class="tool-card bc-unsplash">
+  <div class="tool-card bc-unsplash" data-key="unsplash">
     <div class="tool-main">
-      <div class="tool-logo lb-unsplash"><img src="https://cdn.simpleicons.org/unsplash/ffffff" alt="Unsplash"></div>
+      <div class="tool-logo lb-unsplash"><img src="https://cdn.simpleicons.org/unsplash/ffffff" alt="Unsplash" onerror="this.style.display='none'"></div>
       <div class="tool-info">
         <div class="tool-header"><span class="tool-name">Unsplash</span><span class="tool-badge">Fotos</span></div>
         <div class="tool-tagline">Fotos profesionales gratis, sin derechos de autor</div>
@@ -664,13 +660,13 @@ footer strong { color: var(--accent); font-weight: 600; }
     <div class="tool-footer">
       <div class="platforms"><span class="plat">🌐 Web</span></div>
       <span class="tool-tip">💡 Usá fotos de Unsplash como fondo cuando no tenés fotos propias de buena calidad.</span>
-      <a href="https://unsplash.com" target="_blank" class="visit-btn">Abrir →</a>
+      <a href="https://unsplash.com" target="_blank" rel="noopener noreferrer" class="visit-btn">Abrir →</a>
     </div>
   </div>
 
-  <div class="tool-card bc-pexels">
+  <div class="tool-card bc-pexels" data-key="pexels">
     <div class="tool-main">
-      <div class="tool-logo lb-pexels"><img src="https://cdn.simpleicons.org/pexels/ffffff" alt="Pexels"></div>
+      <div class="tool-logo lb-pexels"><img src="https://cdn.simpleicons.org/pexels/ffffff" alt="Pexels" onerror="this.style.display='none'"></div>
       <div class="tool-info">
         <div class="tool-header"><span class="tool-name">Pexels</span><span class="tool-badge">Fotos y video</span></div>
         <div class="tool-tagline">Fotos y videos cortos gratuitos para tus publicaciones</div>
@@ -685,11 +681,11 @@ footer strong { color: var(--accent); font-weight: 600; }
     <div class="tool-footer">
       <div class="platforms"><span class="plat">🌐 Web</span><span class="plat">📱 iOS</span><span class="plat">🤖 Android</span></div>
       <span class="tool-tip">💡 Bajá un video de fondo de tu rubro y usalo en Reels con texto encima — ahorra mucho tiempo.</span>
-      <a href="https://pexels.com" target="_blank" class="visit-btn">Abrir →</a>
+      <a href="https://pexels.com" target="_blank" rel="noopener noreferrer" class="visit-btn">Abrir →</a>
     </div>
   </div>
 
-  <div class="tool-card bc-flaticon">
+  <div class="tool-card bc-flaticon" data-key="flaticon">
     <div class="tool-main">
       <div class="tool-logo lb-flaticon"><span class="logo-emoji">⭐</span></div>
       <div class="tool-info">
@@ -706,11 +702,11 @@ footer strong { color: var(--accent); font-weight: 600; }
     <div class="tool-footer">
       <div class="platforms"><span class="plat">🌐 Web</span></div>
       <span class="tool-tip">💡 En el plan gratuito hay que dar crédito al autor. Canva ya los incluye si querés evitar eso.</span>
-      <a href="https://flaticon.com" target="_blank" class="visit-btn">Abrir →</a>
+      <a href="https://flaticon.com" target="_blank" rel="noopener noreferrer" class="visit-btn">Abrir →</a>
     </div>
   </div>
 
-  <div class="tool-card bc-qr">
+  <div class="tool-card bc-qr" data-key="qr-code">
     <div class="tool-main">
       <div class="tool-logo lb-qr"><span class="logo-emoji">⬛</span></div>
       <div class="tool-info">
@@ -727,7 +723,7 @@ footer strong { color: var(--accent); font-weight: 600; }
     <div class="tool-footer">
       <div class="platforms"><span class="plat">🌐 Web</span></div>
       <span class="tool-tip">💡 Creá un QR que abra directo un chat de WhatsApp con tu número y ponelo en tus flyers.</span>
-      <a href="https://qr-code-generator.com" target="_blank" class="visit-btn">Abrir →</a>
+      <a href="https://qr-code-generator.com" target="_blank" rel="noopener noreferrer" class="visit-btn">Abrir →</a>
     </div>
   </div>
 </div>
@@ -738,12 +734,12 @@ footer strong { color: var(--accent); font-weight: 600; }
     <span class="cat-label">05</span>
     <span class="cat-title">Gestión de Redes y Negocio</span>
     <div class="cat-line"></div>
-    <span class="cat-count">4</span>
+    <span class="cat-count">6</span>
   </div>
 
-  <div class="tool-card bc-meta">
+  <div class="tool-card bc-meta" data-key="meta-bs">
     <div class="tool-main">
-      <div class="tool-logo lb-meta"><img src="https://cdn.simpleicons.org/meta/ffffff" alt="Meta Business Suite"></div>
+      <div class="tool-logo lb-meta"><img src="https://cdn.simpleicons.org/meta/ffffff" alt="Meta Business Suite" onerror="this.style.display='none'"></div>
       <div class="tool-info">
         <div class="tool-header"><span class="tool-name">Meta Business Suite</span><span class="tool-badge">⭐ Imprescindible</span></div>
         <div class="tool-tagline">Gestioná Facebook e Instagram desde un solo lugar</div>
@@ -758,13 +754,34 @@ footer strong { color: var(--accent); font-weight: 600; }
     <div class="tool-footer">
       <div class="platforms"><span class="plat">🌐 Web</span><span class="plat">📱 iOS</span><span class="plat">🤖 Android</span></div>
       <span class="tool-tip">💡 Programá toda la semana el lunes — Meta las publica solas y vos te despreocupás.</span>
-      <a href="https://business.facebook.com" target="_blank" class="visit-btn">Abrir →</a>
+      <a href="https://business.facebook.com" target="_blank" rel="noopener noreferrer" class="visit-btn">Abrir →</a>
     </div>
   </div>
 
-  <div class="tool-card bc-google">
+  <div class="tool-card bc-whatsapp" data-key="whatsapp-business">
     <div class="tool-main">
-      <div class="tool-logo lb-google"><img src="https://cdn.simpleicons.org/google/ffffff" alt="Google Business Profile"></div>
+      <div class="tool-logo lb-whatsapp"><img src="https://cdn.simpleicons.org/whatsapp/ffffff" alt="WhatsApp Business" onerror="this.style.display='none'"></div>
+      <div class="tool-info">
+        <div class="tool-header"><span class="tool-name">WhatsApp Business</span><span class="tool-badge">⭐ Imprescindible</span></div>
+        <div class="tool-tagline">El canal de ventas y atención al cliente más usado en Argentina</div>
+        <div class="tool-desc">Una app separada de tu WhatsApp personal que convierte tu número en un perfil de negocio. Catálogo de productos, respuestas automáticas, etiquetas para organizar clientes y estadísticas de mensajes. Completamente gratis.</div>
+        <div class="tool-features">
+          <div class="feat"><span class="feat-icon">→</span><span>Perfil de empresa con horario, dirección, web y descripción</span></div>
+          <div class="feat"><span class="feat-icon">→</span><span>Catálogo de productos con foto, precio y descripción</span></div>
+          <div class="feat"><span class="feat-icon">→</span><span>Respuestas automáticas de bienvenida y ausencia</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="tool-footer">
+      <div class="platforms"><span class="plat">📱 iOS</span><span class="plat">🤖 Android</span></div>
+      <span class="tool-tip">💡 Activá el catálogo — los clientes pueden ver y pedir productos sin que vos estés disponible.</span>
+      <a href="https://business.whatsapp.com" target="_blank" rel="noopener noreferrer" class="visit-btn">Abrir →</a>
+    </div>
+  </div>
+
+  <div class="tool-card bc-google" data-key="google-business">
+    <div class="tool-main">
+      <div class="tool-logo lb-google"><img src="https://cdn.simpleicons.org/google/ffffff" alt="Google Business Profile" onerror="this.style.display='none'"></div>
       <div class="tool-info">
         <div class="tool-header"><span class="tool-name">Google Business Profile</span><span class="tool-badge">⭐ Esencial</span></div>
         <div class="tool-tagline">Tu negocio en Google Maps y búsquedas de Google</div>
@@ -779,13 +796,13 @@ footer strong { color: var(--accent); font-weight: 600; }
     <div class="tool-footer">
       <div class="platforms"><span class="plat">🌐 Web</span><span class="plat">📱 iOS</span><span class="plat">🤖 Android</span></div>
       <span class="tool-tip">💡 Si no estás en Google Maps perdés clientes. Darse de alta es gratis y toma 10 minutos.</span>
-      <a href="https://business.google.com" target="_blank" class="visit-btn">Abrir →</a>
+      <a href="https://business.google.com" target="_blank" rel="noopener noreferrer" class="visit-btn">Abrir →</a>
     </div>
   </div>
 
-  <div class="tool-card bc-linktree">
+  <div class="tool-card bc-linktree" data-key="linktree">
     <div class="tool-main">
-      <div class="tool-logo lb-linktree"><img src="https://cdn.simpleicons.org/linktree/ffffff" alt="Linktree"></div>
+      <div class="tool-logo lb-linktree"><img src="https://cdn.simpleicons.org/linktree/ffffff" alt="Linktree" onerror="this.style.display='none'"></div>
       <div class="tool-info">
         <div class="tool-header"><span class="tool-name">Linktree</span><span class="tool-badge">Bio de Instagram</span></div>
         <div class="tool-tagline">Un solo link en tu bio que lleva a todos tus canales</div>
@@ -800,13 +817,13 @@ footer strong { color: var(--accent); font-weight: 600; }
     <div class="tool-footer">
       <div class="platforms"><span class="plat">🌐 Web</span><span class="plat">📱 iOS</span><span class="plat">🤖 Android</span></div>
       <span class="tool-tip">💡 Ponelo en tu bio y en stories con "link en bio" para dirigir tráfico a WhatsApp o tu tienda.</span>
-      <a href="https://linktr.ee" target="_blank" class="visit-btn">Abrir →</a>
+      <a href="https://linktr.ee" target="_blank" rel="noopener noreferrer" class="visit-btn">Abrir →</a>
     </div>
   </div>
 
-  <div class="tool-card bc-notion">
+  <div class="tool-card bc-notion" data-key="notion">
     <div class="tool-main">
-      <div class="tool-logo lb-notion"><img src="https://cdn.simpleicons.org/notion/ffffff" alt="Notion"></div>
+      <div class="tool-logo lb-notion"><img src="https://cdn.simpleicons.org/notion/ffffff" alt="Notion" onerror="this.style.display='none'"></div>
       <div class="tool-info">
         <div class="tool-header"><span class="tool-name">Notion</span><span class="tool-badge">Organización</span></div>
         <div class="tool-tagline">Tu calendario de contenidos y notas del negocio</div>
@@ -821,7 +838,101 @@ footer strong { color: var(--accent); font-weight: 600; }
     <div class="tool-footer">
       <div class="platforms"><span class="plat">🌐 Web</span><span class="plat">📱 iOS</span><span class="plat">🤖 Android</span></div>
       <span class="tool-tip">💡 Una tabla simple con Día / Red / Tema / Estado ya organiza todo tu contenido.</span>
-      <a href="https://notion.so" target="_blank" class="visit-btn">Abrir →</a>
+      <a href="https://notion.so" target="_blank" rel="noopener noreferrer" class="visit-btn">Abrir →</a>
+    </div>
+  </div>
+
+  <div class="tool-card bc-trends" data-key="google-trends">
+    <div class="tool-main">
+      <div class="tool-logo lb-trends"><img src="https://cdn.simpleicons.org/google/ffffff" alt="Google Trends" onerror="this.style.display='none'"></div>
+      <div class="tool-info">
+        <div class="tool-header"><span class="tool-name">Google Trends</span><span class="tool-badge">Investigación</span></div>
+        <div class="tool-tagline">Descubrí qué busca la gente en tu rubro y cuándo</div>
+        <div class="tool-desc">Te muestra qué palabras busca la gente en Google, en qué momento del año hay más demanda y qué temas están creciendo. Útil para planificar tus publicaciones, promociones y estrategia de negocio.</div>
+        <div class="tool-features">
+          <div class="feat"><span class="feat-icon">→</span><span>Filtrá por Argentina para ver tendencias locales reales</span></div>
+          <div class="feat"><span class="feat-icon">→</span><span>Descubrí en qué meses hay más demanda de tu producto</span></div>
+          <div class="feat"><span class="feat-icon">→</span><span>Comparás términos para saber cuál usar en tus publicaciones</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="tool-footer">
+      <div class="platforms"><span class="plat">🌐 Web</span></div>
+      <span class="tool-tip">💡 Buscá tu rubro + "Argentina" para ver la estacionalidad real de tu negocio.</span>
+      <a href="https://trends.google.com" target="_blank" rel="noopener noreferrer" class="visit-btn">Abrir →</a>
+    </div>
+  </div>
+</div>
+
+<!-- ══ VENTAS ONLINE ══ -->
+<div class="category" data-cat="ventas">
+  <div class="cat-header">
+    <span class="cat-label">06</span>
+    <span class="cat-title">Tienda Online y Ventas</span>
+    <div class="cat-line"></div>
+    <span class="cat-count">3</span>
+  </div>
+
+  <div class="tool-card bc-tiendanube" data-key="tiendanube">
+    <div class="tool-main">
+      <div class="tool-logo lb-tiendanube"><span class="logo-emoji">☁️</span></div>
+      <div class="tool-info">
+        <div class="tool-header"><span class="tool-name">Tiendanube</span><span class="tool-badge">⭐ Líder Argentina</span></div>
+        <div class="tool-tagline">Tu propia tienda online en minutos, sin saber programar</div>
+        <div class="tool-desc">La plataforma de e-commerce más usada en Argentina. Plan gratuito para empezar: subís tus productos, configurás métodos de pago (MercadoPago, transferencia) y compartís el link. Sin comisión por venta en el plan inicial.</div>
+        <div class="tool-features">
+          <div class="feat"><span class="feat-icon">→</span><span>Tienda completa con carrito, pagos y envíos configurables</span></div>
+          <div class="feat"><span class="feat-icon">→</span><span>Integración nativa con MercadoPago, Andreani y OCA</span></div>
+          <div class="feat"><span class="feat-icon">→</span><span>Link de tienda propio para compartir por WhatsApp e Instagram</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="tool-footer">
+      <div class="platforms"><span class="plat">🌐 Web</span><span class="plat">📱 iOS</span><span class="plat">🤖 Android</span></div>
+      <span class="tool-tip">💡 El plan gratuito no cobra comisión — solo pagás cuando escales a más funciones.</span>
+      <a href="https://www.tiendanube.com" target="_blank" rel="noopener noreferrer" class="visit-btn">Abrir →</a>
+    </div>
+  </div>
+
+  <div class="tool-card bc-meli" data-key="mercadoshops">
+    <div class="tool-main">
+      <div class="tool-logo lb-meli"><span class="logo-emoji">🏪</span></div>
+      <div class="tool-info">
+        <div class="tool-header"><span class="tool-name">MercadoShops</span><span class="tool-badge">Sin comisión</span></div>
+        <div class="tool-tagline">Tu tienda propia integrada con MercadoLibre y MercadoPago</div>
+        <div class="tool-desc">Creás una tienda online gratis vinculada a tu cuenta de MercadoLibre. Los mismos productos que vendés en ML aparecen en tu tienda propia, con el beneficio de no pagar comisión adicional por las ventas que lleguen desde ahí.</div>
+        <div class="tool-features">
+          <div class="feat"><span class="feat-icon">→</span><span>Sin comisión por ventas que vengan de tu tienda propia</span></div>
+          <div class="feat"><span class="feat-icon">→</span><span>MercadoPago integrado de forma nativa y automática</span></div>
+          <div class="feat"><span class="feat-icon">→</span><span>Sincronización automática con tu stock de MercadoLibre</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="tool-footer">
+      <div class="platforms"><span class="plat">🌐 Web</span></div>
+      <span class="tool-tip">💡 Si ya vendés en MercadoLibre, activar MercadoShops te lleva 10 minutos y ahorrás comisiones.</span>
+      <a href="https://www.mercadoshops.com.ar" target="_blank" rel="noopener noreferrer" class="visit-btn">Abrir →</a>
+    </div>
+  </div>
+
+  <div class="tool-card bc-mpago" data-key="mercadopago">
+    <div class="tool-main">
+      <div class="tool-logo lb-mpago"><span class="logo-emoji">💳</span></div>
+      <div class="tool-info">
+        <div class="tool-header"><span class="tool-name">MercadoPago</span><span class="tool-badge">⭐ Esencial Argentina</span></div>
+        <div class="tool-tagline">Cobrá con QR, link de pago o en cuotas sin tener local</div>
+        <div class="tool-desc">La billetera digital más usada en Argentina. Gratis para emprendedores: generás un QR para cobrar en el momento, creás links de pago para compartir por WhatsApp y tus clientes pueden pagar en cuotas con tarjeta. El dinero está disponible el mismo día.</div>
+        <div class="tool-features">
+          <div class="feat"><span class="feat-icon">→</span><span>QR gratis para cobrar en ferias, mercados o en tu local</span></div>
+          <div class="feat"><span class="feat-icon">→</span><span>Link de pago para cobrar por WhatsApp sin que el cliente salga de la app</span></div>
+          <div class="feat"><span class="feat-icon">→</span><span>Tus clientes pueden pagar en cuotas con cualquier tarjeta</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="tool-footer">
+      <div class="platforms"><span class="plat">📱 iOS</span><span class="plat">🤖 Android</span><span class="plat">🌐 Web</span></div>
+      <span class="tool-tip">💡 Generá un link de pago con el monto exacto y mandáselo al cliente — te paga en 30 segundos sin salir de WhatsApp.</span>
+      <a href="https://www.mercadopago.com.ar" target="_blank" rel="noopener noreferrer" class="visit-btn">Abrir →</a>
     </div>
   </div>
 </div>
@@ -829,15 +940,15 @@ footer strong { color: var(--accent); font-weight: 600; }
 <!-- ══ IA ══ -->
 <div class="category" data-cat="ia">
   <div class="cat-header">
-    <span class="cat-label">06</span>
+    <span class="cat-label">07</span>
     <span class="cat-title">Inteligencia Artificial</span>
     <div class="cat-line"></div>
     <span class="cat-count">3</span>
   </div>
 
-  <div class="tool-card bc-claude">
+  <div class="tool-card bc-claude" data-key="claude">
     <div class="tool-main">
-      <div class="tool-logo lb-claude"><img src="https://cdn.simpleicons.org/claude/ffffff" alt="Claude"></div>
+      <div class="tool-logo lb-claude"><img src="https://cdn.simpleicons.org/claude/ffffff" alt="Claude" onerror="this.style.display='none'"></div>
       <div class="tool-info">
         <div class="tool-header"><span class="tool-name">Claude</span><span class="tool-badge">⭐ Recomendado</span></div>
         <div class="tool-tagline">La IA que mejor entiende contexto y genera textos naturales</div>
@@ -852,13 +963,13 @@ footer strong { color: var(--accent); font-weight: 600; }
     <div class="tool-footer">
       <div class="platforms"><span class="plat">🌐 Web</span><span class="plat">📱 iOS</span><span class="plat">🤖 Android</span></div>
       <span class="tool-tip">💡 Usá los prompts de la Guía de Prompts con Claude para resultados óptimos desde el primer intento.</span>
-      <a href="https://claude.ai" target="_blank" class="visit-btn">Abrir →</a>
+      <a href="https://claude.ai" target="_blank" rel="noopener noreferrer" class="visit-btn">Abrir →</a>
     </div>
   </div>
 
-  <div class="tool-card bc-openai">
+  <div class="tool-card bc-openai" data-key="chatgpt">
     <div class="tool-main">
-      <div class="tool-logo lb-openai"><img src="https://cdn.simpleicons.org/openai/ffffff" alt="ChatGPT"></div>
+      <div class="tool-logo lb-openai"><img src="https://cdn.simpleicons.org/openai/ffffff" alt="ChatGPT" onerror="this.style.display='none'"></div>
       <div class="tool-info">
         <div class="tool-header"><span class="tool-name">ChatGPT</span><span class="tool-badge">Popular</span></div>
         <div class="tool-tagline">La IA más conocida del mundo</div>
@@ -873,13 +984,13 @@ footer strong { color: var(--accent); font-weight: 600; }
     <div class="tool-footer">
       <div class="platforms"><span class="plat">🌐 Web</span><span class="plat">📱 iOS</span><span class="plat">🤖 Android</span></div>
       <span class="tool-tip">💡 Los prompts de nuestra Guía funcionan exactamente igual en ChatGPT. Usá el que prefieras.</span>
-      <a href="https://chat.openai.com" target="_blank" class="visit-btn">Abrir →</a>
+      <a href="https://chat.openai.com" target="_blank" rel="noopener noreferrer" class="visit-btn">Abrir →</a>
     </div>
   </div>
 
-  <div class="tool-card bc-gemini">
+  <div class="tool-card bc-gemini" data-key="gemini">
     <div class="tool-main">
-      <div class="tool-logo lb-gemini"><img src="https://cdn.simpleicons.org/googlegemini/ffffff" alt="Gemini"></div>
+      <div class="tool-logo lb-gemini"><img src="https://cdn.simpleicons.org/googlegemini/ffffff" alt="Gemini" onerror="this.style.display='none'"></div>
       <div class="tool-info">
         <div class="tool-header"><span class="tool-name">Gemini</span><span class="tool-badge">Integrado con Google</span></div>
         <div class="tool-tagline">La IA de Google con acceso a búsqueda en tiempo real</div>
@@ -894,33 +1005,234 @@ footer strong { color: var(--accent); font-weight: 600; }
     <div class="tool-footer">
       <div class="platforms"><span class="plat">🌐 Web</span><span class="plat">📱 iOS</span><span class="plat">🤖 Android</span></div>
       <span class="tool-tip">💡 Si ya usás Gmail en tu negocio, Gemini se integra naturalmente con todo lo que tenés.</span>
-      <a href="https://gemini.google.com" target="_blank" class="visit-btn">Abrir →</a>
+      <a href="https://gemini.google.com" target="_blank" rel="noopener noreferrer" class="visit-btn">Abrir →</a>
     </div>
   </div>
+</div>
+
+<div id="no-results" style="display:none">
+  <strong>Sin resultados</strong>
+  Probá con otro término o explorá las categorías del menú.
 </div>
 
 </main>
 
 <footer>
   Herramientas Gratuitas para Marketing Digital · Creado por <strong>Leandro Sacha Melchiori</strong>
-  <a href="https://www.linkedin.com/in/leandromelchiori-developer/" target="_blank" rel="noopener"
-    style="display:inline-flex;align-items:center;gap:5px;margin-left:8px;color:var(--muted);text-decoration:none;vertical-align:middle;transition:color 0.2s;"
-    onmouseover="this.style.color='#0A66C2'" onmouseout="this.style.color=''">
-    <img src="https://cdn.simpleicons.org/linkedin/aaaaaa" alt="LinkedIn" width="14" height="14"
-      onerror="this.replaceWith('🔗')"
-      style="vertical-align:middle;">
-    LinkedIn
-  </a>
+  <div class="footer-links">
+    <a href="https://www.linkedin.com/in/leandromelchiori-developer/" target="_blank" rel="noopener noreferrer">
+      <img src="https://cdn.simpleicons.org/linkedin/aaaaaa" alt="LinkedIn" width="13" height="13" onerror="this.replaceWith('🔗')" style="vertical-align:middle;margin-right:4px;">LinkedIn
+    </a>
+    <a href="/privacidad.html">Política de privacidad</a>
+  </div>
 </footer>
 
 <script>
+// ── LocalStorage ──
+var FAVS_KEY = 'hd_favs';
+function getFavs() { try { return JSON.parse(localStorage.getItem(FAVS_KEY)) || []; } catch(e) { return []; } }
+function setFavs(arr) { try { localStorage.setItem(FAVS_KEY, JSON.stringify(arr)); } catch(e) {} }
+function isFav(key) { return getFavs().includes(key); }
+function toggleFav(key) {
+  var favs = getFavs();
+  favs = favs.includes(key) ? favs.filter(function(k){ return k !== key; }) : favs.concat([key]);
+  setFavs(favs);
+  refreshStars();
+  if (activeCat === 'favs') applyFilters();
+}
+
+// ── Stars ──
+function refreshStars() {
+  document.querySelectorAll('.fav-btn').forEach(function(btn) {
+    var on = isFav(btn.dataset.key);
+    btn.textContent = on ? '★' : '☆';
+    btn.title = on ? 'Quitar de favoritas' : 'Guardar en favoritas';
+    btn.classList.toggle('active', on);
+  });
+  var count = getFavs().length;
+  var favBtn = document.getElementById('favs-filter-btn');
+  if (favBtn) favBtn.textContent = count > 0 ? ('⭐ Favoritas (' + count + ')') : '⭐ Favoritas';
+}
+
+// ── Filter state ──
+var activeCat = 'all';
+var searchTerm = '';
+
 function filterCat(cat, btn) {
-  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-  document.querySelectorAll('.category').forEach(s => {
-    s.style.display = (cat === 'all' || s.dataset.cat === cat) ? '' : 'none';
+  activeCat = cat;
+  document.querySelectorAll('.filter-btn').forEach(function(b){ b.classList.remove('active'); });
+  if (btn) btn.classList.add('active');
+  applyFilters();
+}
+
+function onSearch(val) {
+  searchTerm = val;
+  applyFilters();
+}
+
+function applyFilters() {
+  var term = searchTerm.toLowerCase().trim();
+  var visibleCount = 0;
+  document.querySelectorAll('.tool-card').forEach(function(card) {
+    var key = card.dataset.key || '';
+    var cat = (card.closest('.category') || {}).dataset;
+    var catKey = cat ? cat.cat : '';
+    var catMatch = activeCat === 'all' || activeCat === catKey || (activeCat === 'favs' && isFav(key));
+    var searchable = [
+      (card.querySelector('.tool-name') || {}).textContent,
+      (card.querySelector('.tool-tagline') || {}).textContent,
+      (card.querySelector('.tool-desc') || {}).textContent,
+    ].join(' ').toLowerCase();
+    var searchMatch = !term || searchable.includes(term);
+    var visible = catMatch && searchMatch;
+    card.style.display = visible ? '' : 'none';
+    if (visible) visibleCount++;
+  });
+  // Show/hide category sections
+  document.querySelectorAll('.category').forEach(function(cat) {
+    var hasVisible = Array.from(cat.querySelectorAll('.tool-card')).some(function(c){ return c.style.display !== 'none'; });
+    cat.style.display = hasVisible ? '' : 'none';
+  });
+  // No results
+  var nr = document.getElementById('no-results');
+  if (nr) nr.style.display = visibleCount === 0 ? '' : 'none';
+}
+
+// ── Dynamic counters ──
+function updateCounters() {
+  var total = document.querySelectorAll('.tool-card').length;
+  var cats  = document.querySelectorAll('.category').length;
+  var t = document.getElementById('meta-total');
+  var c = document.getElementById('meta-cats');
+  if (t) t.textContent = total;
+  if (c) c.textContent = cats;
+}
+
+// ── Quiz ──
+var quizAnswers = {};
+var QUIZ_RECS = {
+  diseno:  { mobile: ['canva','remove-bg','adobe-express','flaticon'],       desktop: ['canva','photopea','remove-bg','adobe-express'],          both: ['canva','remove-bg','photopea','adobe-express'] },
+  video:   { mobile: ['edits','capcut','inshot','pexels'],                   desktop: ['clipchamp','capcut','pexels','canva'],                    both: ['edits','capcut','clipchamp','pexels'] },
+  ventas:  { mobile: ['whatsapp-business','mercadopago','tiendanube','linktree'], desktop: ['tiendanube','mercadoshops','mercadopago','google-business'], both: ['whatsapp-business','mercadopago','tiendanube','mercadoshops'] },
+  gestion: { mobile: ['meta-bs','whatsapp-business','notion','linktree'],    desktop: ['meta-bs','notion','google-business','google-trends'],     both: ['meta-bs','notion','google-business','linktree'] },
+  ia:      { mobile: ['claude','chatgpt','gemini','canva'],                  desktop: ['claude','chatgpt','gemini','notion'],                     both: ['claude','chatgpt','gemini','canva'] }
+};
+
+function toggleQuiz() {
+  var panel = document.getElementById('quiz-panel');
+  var btn   = document.getElementById('quiz-btn');
+  panel.hidden = !panel.hidden;
+  btn.classList.toggle('open', !panel.hidden);
+  btn.setAttribute('aria-expanded', String(!panel.hidden));
+  if (!panel.hidden) {
+    renderQuizStep(1);
+    panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  } else {
+    resetQuizHighlight();
+  }
+}
+
+function renderQuizStep(step) {
+  var panel = document.getElementById('quiz-panel');
+  var q1opts = [
+    { key:'diseno',  label:'🎨 Diseñar materiales' },
+    { key:'video',   label:'🎬 Crear videos y Reels' },
+    { key:'ventas',  label:'🛒 Vender por internet' },
+    { key:'gestion', label:'📊 Organizar mi negocio' },
+    { key:'ia',      label:'🤖 Empezar a usar IA' }
+  ];
+  var q2opts = [
+    { key:'mobile',  label:'📱 Solo el celular' },
+    { key:'desktop', label:'💻 La computadora' },
+    { key:'both',    label:'📱💻 Los dos' }
+  ];
+  var opts = step === 1 ? q1opts : q2opts;
+  var label = step === 1 ? '¿Cuál es tu mayor desafío ahora?' : '¿Desde dónde trabajás más?';
+  var html = '<div class="quiz-q">' + step + '/2 — ' + label + '</div><div class="quiz-opts">';
+  opts.forEach(function(o) {
+    html += '<button class="quiz-opt" onclick="selectQuizOpt(' + step + ',\'' + o.key + '\',this)">' + o.label + '</button>';
+  });
+  html += '</div>';
+  if (step === 2) html += '<button class="quiz-back" onclick="renderQuizStep(1)">← Volver</button>';
+  panel.innerHTML = html;
+}
+
+function selectQuizOpt(step, key, btn) {
+  btn.closest('.quiz-opts').querySelectorAll('.quiz-opt').forEach(function(b){ b.classList.remove('selected'); });
+  btn.classList.add('selected');
+  quizAnswers['q' + step] = key;
+  if (step === 1) { setTimeout(function(){ renderQuizStep(2); }, 220); }
+  else { setTimeout(showQuizResults, 220); }
+}
+
+function showQuizResults() {
+  var recs = (QUIZ_RECS[quizAnswers.q1] || {})[quizAnswers.q2] || [];
+  // Show all cards, reset filters
+  activeCat = 'all'; searchTerm = '';
+  document.getElementById('search-input').value = '';
+  document.querySelectorAll('.filter-btn').forEach(function(b){ b.classList.remove('active'); });
+  document.querySelector('.filter-btn').classList.add('active');
+  document.querySelectorAll('.category').forEach(function(c){ c.style.display = ''; });
+  document.querySelectorAll('.tool-card').forEach(function(c){ c.style.display = ''; });
+  document.getElementById('no-results').style.display = 'none';
+  // Highlight
+  document.querySelectorAll('.tool-card').forEach(function(card) {
+    var isRec = recs.includes(card.dataset.key);
+    card.classList.toggle('quiz-recommended', isRec);
+    card.classList.toggle('quiz-dimmed', !isRec);
+  });
+  var panel = document.getElementById('quiz-panel');
+  panel.innerHTML = '<div class="quiz-results">'
+    + '<div class="quiz-results-title">✨ Estas son tus herramientas recomendadas</div>'
+    + '<div class="quiz-results-sub">Las demás herramientas siguen disponibles abajo.</div>'
+    + '<button class="quiz-reset" onclick="resetQuiz()">Ver todas sin resaltar</button>'
+    + '</div>';
+  var first = document.querySelector('.tool-card.quiz-recommended');
+  if (first) setTimeout(function(){ first.scrollIntoView({ behavior:'smooth', block:'center' }); }, 100);
+}
+
+function resetQuizHighlight() {
+  document.querySelectorAll('.tool-card').forEach(function(card) {
+    card.classList.remove('quiz-recommended', 'quiz-dimmed');
   });
 }
+
+function resetQuiz() {
+  resetQuizHighlight();
+  var panel = document.getElementById('quiz-panel');
+  panel.hidden = true;
+  document.getElementById('quiz-btn').classList.remove('open');
+  document.getElementById('quiz-btn').setAttribute('aria-expanded', 'false');
+  quizAnswers = {};
+}
+
+// ── Init ──
+function init() {
+  // Add star buttons to all cards
+  document.querySelectorAll('.tool-card').forEach(function(card) {
+    var key = card.dataset.key;
+    if (!key) return;
+    var footer = card.querySelector('.tool-footer');
+    if (!footer) return;
+    var btn = document.createElement('button');
+    btn.className = 'fav-btn';
+    btn.dataset.key = key;
+    btn.setAttribute('aria-label', 'Guardar en favoritas');
+    btn.textContent = '☆';
+    btn.addEventListener('click', function(e) {
+      e.preventDefault();
+      e.stopPropagation();
+      toggleFav(key);
+      if (window.trackEvent) window.trackEvent('Favorita herramienta', { nombre: key });
+    });
+    var visitBtn = footer.querySelector('.visit-btn');
+    footer.insertBefore(btn, visitBtn);
+  });
+  refreshStars();
+  updateCounters();
+}
+
+document.addEventListener('DOMContentLoaded', init);
 </script>
 </body>
 </html>
