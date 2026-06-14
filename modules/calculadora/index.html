@@ -204,8 +204,8 @@
 
   /* ── Cards de resultado ── */
   .resultado-card { border-radius: 14px; padding: 18px; margin-bottom: 14px; }
-  .resultado-card.verde { background: var(--naranja); color: white; }
-  .resultado-card.amarillo { background: var(--azul); color: white; }
+  .resultado-card.naranja { background: var(--naranja); color: white; }
+  .resultado-card.azul { background: var(--azul); color: white; }
   .resultado-card.palido { background: var(--naranja-palido); border: 1px solid #F5C4A0; }
   .resultado-card .res-label { font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; opacity: 0.75; margin-bottom: 4px; }
   .resultado-card .res-valor { font-family: 'DM Serif Display', serif; font-size: 2rem; font-weight: 400; line-height: 1.1; }
@@ -604,6 +604,111 @@
   /* ── Toggle modo precio / margen ── */
   .btn-modo { flex:1; padding:9px 6px; border:none; font-family:'DM Sans',sans-serif; font-size:0.8rem; font-weight:600; cursor:pointer; transition:all 0.2s; background:var(--gris); color:var(--gris-texto); }
   .btn-modo.active { background:var(--naranja); color:white; }
+
+  /* ── Botón "solo servicios" en la sección de insumos ── */
+  .btn-solo-servicios {
+    width: 100%;
+    padding: 11px;
+    background: none;
+    border: 1.5px solid var(--azul);
+    border-radius: 8px;
+    color: var(--azul);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 6px;
+    margin-bottom: 2px;
+    transition: all 0.15s;
+  }
+  .btn-solo-servicios:hover { background: var(--azul-palido); }
+
+  /* ── Checkmark de progreso en tabs ── */
+  .nav-tab.con-datos .tab-num::after { content: ' ✓'; font-size: 0.7rem; opacity: 0.8; }
+  .nav-tab.visitada { opacity: 1; }
+
+  /* ── Panel precio de venta (reemplaza inline styles) ── */
+  .precio-venta-box { text-align: right; }
+  .precio-venta-label { font-size: 0.78rem; color: var(--naranja-claro); }
+  .precio-venta-num { font-size: 1.3rem; font-weight: 600; color: var(--naranja-claro); }
+
+  /* ── Toggle IVA ── */
+  .iva-toggle-wrap {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 10px;
+    font-size: 0.82rem;
+    color: var(--gris-texto);
+  }
+  .iva-toggle-wrap input[type=checkbox] { accent-color: var(--naranja); width: 16px; height: 16px; cursor: pointer; }
+  .iva-toggle-wrap label { cursor: pointer; }
+  .precio-con-iva {
+    font-size: 0.82rem;
+    color: var(--naranja);
+    font-weight: 600;
+    margin-top: 6px;
+    min-height: 1.2em;
+  }
+
+  /* ── Campo meta de ingresos ── */
+  .meta-ingresos-label {
+    font-size: 0.75rem;
+    color: var(--azul);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 6px;
+  }
+
+  /* ── Desglose de costos ── */
+  .desglose-titulo {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--gris-texto);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 8px;
+  }
+  .desglose-barra {
+    display: flex;
+    height: 10px;
+    border-radius: 6px;
+    overflow: hidden;
+    background: var(--borde);
+    margin-bottom: 8px;
+  }
+  .desglose-seg.mat { background: var(--naranja); transition: width 0.4s; }
+  .desglose-seg.srv { background: var(--azul); transition: width 0.4s; }
+  .desglose-leyenda { display: flex; align-items: center; font-size: 0.78rem; color: var(--gris-texto); }
+  .desglose-dot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 4px; }
+  .desglose-dot.mat { background: var(--naranja); }
+  .desglose-dot.srv { background: var(--azul); }
+
+  /* ── Resumen de contenido (reemplaza inline style) ── */
+  .resumen-contenido { font-size: 0.88rem; line-height: 1.8; color: #444; }
+
+  /* ── Botón compartir (variante azul, reemplaza inline style) ── */
+  .btn-compartir {
+    width: 100%;
+    padding: 13px;
+    background: var(--azul);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin-bottom: 10px;
+  }
+  .btn-compartir:hover { background: #1a4f8a; }
+
 </style>
 </head>
 <body>
@@ -655,7 +760,6 @@
 <!-- ══ PÁGINA 1: INSUMOS ══ -->
 <div class="page active" id="page-0">
   <div class="nombre-prod">
-    <span class="emoji">🏠</span>
     <input type="text" id="nombre-producto" placeholder="¿Qué producís?" oninput="actualizar()">
   </div>
 
@@ -685,6 +789,8 @@
     </div>
   </div>
 
+  <button class="btn-solo-servicios" onclick="saltarInsumos()">No uso materiales → Solo servicios</button>
+
   <div class="nav-steps">
     <button class="btn-step next" onclick="goTo(1)">Servicios →</button>
   </div>
@@ -709,7 +815,7 @@
     </div>
   </div>
 
-  <div class="resultado-card verde">
+  <div class="resultado-card naranja">
     <div class="res-label">Costo por unidad</div>
     <div class="res-valor" id="costo-unitario-display">$0</div>
     <div class="res-desc">(insumos + servicios) ÷ unidades</div>
@@ -740,9 +846,9 @@
           <div class="pct" id="margen-pct">50%</div>
           <div class="desc">de ganancia sobre el costo</div>
         </div>
-        <div style="text-align:right">
-          <div style="font-size:0.78rem;color:#7a4f1d">Precio de venta:</div>
-          <div style="font-size:1.3rem;font-weight:600;color:#c77a2c" id="precio-venta-display">$0</div>
+        <div class="precio-venta-box">
+          <div class="precio-venta-label">Precio de venta:</div>
+          <div class="precio-venta-num" id="precio-venta-display">$0</div>
         </div>
       </div>
       <div class="slider-container">
@@ -783,7 +889,7 @@
     </div>
   </div>
 
-  <div class="resultado-card amarillo">
+  <div class="resultado-card azul">
     <div class="res-label">Ganancia neta por unidad</div>
     <div class="res-valor" id="ganancia-unitaria-display">$0</div>
     <div class="res-desc">lo que te queda después de cubrir costos</div>
@@ -810,6 +916,10 @@
       <label>Días que trabajás por mes</label>
       <input type="number" id="dias-laborales" value="24" min="1" max="31" oninput="actualizar()">
     </div>
+    <div class="field-group">
+      <p class="meta-ingresos-label">¿Cuánto querés ganar por mes? (opcional)</p>
+      <input type="number" id="meta-ingresos" placeholder="Ej: 150000" min="0" oninput="actualizar()">
+    </div>
   </div>
 
   <div class="equilibrio-grid">
@@ -825,12 +935,19 @@
     </div>
   </div>
 
-  <div class="card" id="resumen-final">
-    <div class="card-title">Resumen de tu emprendimiento</div>
-    <div id="resumen-contenido" style="font-size:0.88rem;line-height:1.8;color:#444"></div>
+  <div class="resultado-card palido" id="resultado-meta" style="display:none;">
+    <div class="res-label">Para tu meta de ingresos</div>
+    <div class="res-valor" id="meta-unidades" style="font-size:1.5rem;">-</div>
+    <div class="res-desc">unidades/mes (<span id="meta-unidades-dia">-</span> por día)</div>
   </div>
 
-  <button class="btn-pdf" id="btn-pdf" onclick="descargarPDF()">
+  <div class="card" id="resumen-final">
+    <div class="card-title">Resumen de tu emprendimiento</div>
+    <div id="resumen-contenido" class="resumen-contenido"></div>
+    <div id="desglose-costos" style="display:none;margin-top:14px;padding-top:12px;border-top:1.5px solid var(--borde);"></div>
+  </div>
+
+  <button class="btn-pdf" id="btn-pdf" onclick="descargarPDF()" disabled>
     <span>⬇</span> Descargar resumen en PDF
   </button>
 
@@ -850,7 +967,7 @@
       Guardá el cálculo que estás haciendo con un nombre para encontrarlo después.
     </div>
     <button class="btn-guardar" onclick="abrirModalGuardar()">💾 Guardar proyecto actual</button>
-    <button class="btn-guardar" style="background:var(--azul);margin-bottom:10px;" onclick="compartirPorLink()">🔗 Compartir por link</button>
+    <button class="btn-compartir" onclick="compartirPorLink()">🔗 Compartir por link</button>
     <div style="display:flex;gap:8px;margin-top:4px;">
       <button class="btn-secundario" onclick="exportarJSON()">⬇ Exportar (.json)</button>
       <label class="btn-secundario" style="cursor:pointer;">
@@ -903,35 +1020,54 @@
 <script>
 /* ============================================================
    calculadora/index.html — Lógica principal
-   Cálculo de costos, margen, punto de equilibrio,
-   proyectos en localStorage y exportación PDF.
    ============================================================ */
 
 const MAX_FILAS    = 10;
 const AUTOSAVE_KEY = 'calculadora_autosave';
 const DB_KEY       = 'calculadora_proyectos';
 
-/* Estado mutable: listas dinámicas + configuración de modo */
 const estado = {
-  insumos:   [],      // [{nombre, cantidad, precio}]
-  servicios: [],      // [{nombre, horas, precio}]
-  margen:    50,      // % activo en modo slider
-  modo:      'slider' // 'slider' | 'precio'
+  insumos:       [],
+  servicios:     [],
+  margen:        50,
+  modo:          'slider', // 'slider' | 'precio'
+  soloServicios: false,    // emprendedores que no usan materiales
+  ivaActivo:     false,    // mostrar precio con IVA incluido
 };
 
-/* ── Inicio: cargar datos guardados o desde URL ── */
+/* ── Inicio ── */
 document.addEventListener('DOMContentLoaded', () => {
   if (!cargarDesdeURL()) cargarAutosave();
   renderizarFilas();
   setModo(estado.modo);
   actualizar();
+  /* Alerta antes de cerrar si hay datos sin guardar en un proyecto */
+  window.addEventListener('beforeunload', e => {
+    const d = leerEstadoCompleto();
+    if (d.insumos.length || d.servicios.length || d.nombreProducto) {
+      e.preventDefault();
+      e.returnValue = '';
+    }
+  });
 });
 
 /* ── Navegación entre pasos ── */
 function goTo(idx) {
   document.querySelectorAll('.page').forEach((p, i) => p.classList.toggle('active', i === idx));
-  document.querySelectorAll('.nav-tab').forEach((t, i) => t.classList.toggle('active', i === idx));
+  document.querySelectorAll('.nav-tab').forEach((t, i) => {
+    t.classList.toggle('active', i === idx);
+    if (i === idx) t.classList.add('visitada');
+  });
   if (idx === 4) renderizarProyectos();
+}
+
+/* Salta la sección de materiales para emprendedores de servicios puros */
+function saltarInsumos() {
+  estado.insumos = [];
+  estado.soloServicios = true;
+  renderizarFilas();
+  actualizar();
+  goTo(1);
 }
 
 /* ══ INSUMOS Y SERVICIOS ══ */
@@ -1040,28 +1176,46 @@ function calcular() {
     margenReal  = costoUnitario > 0 ? ((precioVenta - costoUnitario) / costoUnitario) * 100 : 0;
   }
 
+  const precioConIva    = precioVenta * 1.21;
   const gananciaNeta    = precioVenta - costoUnitario;
   const gastosMensuales = parseFloat(document.getElementById('gastos-mensuales').value) || 0;
   const diasLaborales   = Math.max(1, parseFloat(document.getElementById('dias-laborales').value) || 24);
+  const metaIngresos    = parseFloat(document.getElementById('meta-ingresos').value) || 0;
 
-  /* Break-even solo tiene sentido si hay ganancia por unidad */
   const ventasMensuales = gananciaNeta > 0 ? Math.ceil(gastosMensuales / gananciaNeta) : null;
   const ventasDiarias   = ventasMensuales !== null ? Math.ceil(ventasMensuales / diasLaborales) : null;
 
-  return { totalInsumos, totalServicios, costoUnitario, precioVenta, margenReal,
-           gananciaNeta, gastosMensuales, diasLaborales, ventasMensuales, ventasDiarias, unidades };
+  /* Unidades necesarias para cubrir costos fijos + meta de ingresos */
+  const unidadesMeta = (gananciaNeta > 0 && metaIngresos > 0)
+    ? Math.ceil((gastosMensuales + metaIngresos) / gananciaNeta)
+    : null;
+
+  /* Desglose proporcional materiales vs servicios */
+  const pctInsumos   = costoUnitario > 0 ? Math.round((totalInsumos / unidades / costoUnitario) * 100) : 0;
+  const pctServicios = costoUnitario > 0 ? 100 - pctInsumos : 0;
+
+  return {
+    totalInsumos, totalServicios, costoUnitario, precioVenta, precioConIva,
+    margenReal, gananciaNeta, gastosMensuales, diasLaborales,
+    ventasMensuales, ventasDiarias, metaIngresos, unidadesMeta,
+    pctInsumos, pctServicios, unidades
+  };
 }
 
 /* Actualiza todos los elementos de la UI y dispara autosave */
 function actualizar() {
   const c = calcular();
 
-  document.getElementById('total-insumos').textContent          = fmt(c.totalInsumos);
-  document.getElementById('total-servicios').textContent        = fmt(c.totalServicios);
-  document.getElementById('costo-unitario-display').textContent = fmt(c.costoUnitario);
+  document.getElementById('total-insumos').textContent             = fmt(c.totalInsumos);
+  document.getElementById('total-servicios').textContent           = fmt(c.totalServicios);
+  document.getElementById('costo-unitario-display').textContent    = fmt(c.costoUnitario);
   document.getElementById('ganancia-unitaria-display').textContent = fmt(c.gananciaNeta);
-  document.getElementById('margen-pct').textContent             = `${Math.round(c.margenReal)}%`;
-  document.getElementById('precio-venta-display').textContent   = fmt(c.precioVenta);
+  document.getElementById('margen-pct').textContent                = `${Math.round(c.margenReal)}%`;
+  document.getElementById('precio-venta-display').textContent      = fmt(c.precioVenta);
+
+  /* Precio con IVA debajo del precio principal */
+  document.getElementById('precio-con-iva').textContent =
+    estado.ivaActivo ? `Con IVA (21%): ${fmt(c.precioConIva)}` : '';
 
   renderizarTabla(c.costoUnitario, c.margenReal);
 
@@ -1092,16 +1246,50 @@ function actualizar() {
   document.getElementById('ventas-mensuales').textContent = c.ventasMensuales !== null ? c.ventasMensuales : '-';
   document.getElementById('ventas-diarias').textContent   = c.ventasDiarias   !== null ? c.ventasDiarias   : '-';
 
+  /* Meta de ingresos */
+  const metaBox = document.getElementById('resultado-meta');
+  if (c.unidadesMeta !== null && c.metaIngresos > 0) {
+    metaBox.style.display = 'block';
+    document.getElementById('meta-unidades').textContent    = c.unidadesMeta;
+    document.getElementById('meta-unidades-dia').textContent = Math.ceil(c.unidadesMeta / c.diasLaborales);
+  } else {
+    metaBox.style.display = 'none';
+  }
+
+  /* Habilitar PDF solo cuando hay datos cargados */
+  const hayDatos = estado.insumos.length > 0 || estado.servicios.length > 0;
+  document.getElementById('btn-pdf').disabled = !hayDatos;
+
+  /* Título de la pestaña del navegador */
+  const nombre = document.getElementById('nombre-producto').value;
+  document.title = nombre ? `${nombre} — Calculadora de Costos` : 'Calculadora de Costos';
+
+  actualizarProgresoTabs(c);
   renderizarResumen(c);
   autosave();
 }
 
-/* Tabla comparativa con el margen actual resaltado */
+/* Checkmarks en tabs según si cada paso tiene datos */
+function actualizarProgresoTabs(c) {
+  const tabs = document.querySelectorAll('.nav-tab');
+  tabs[0].classList.toggle('con-datos', estado.insumos.length > 0 || estado.soloServicios);
+  tabs[1].classList.toggle('con-datos', estado.servicios.length > 0);
+  tabs[2].classList.toggle('con-datos', c.precioVenta > 0);
+  tabs[3].classList.toggle('con-datos', c.gastosMensuales > 0);
+}
+
+/* Tabla comparativa — incluye el margen exacto si no está en los valores base */
 function renderizarTabla(costoUnitario, margenActual) {
-  const filas = [10, 25, 50, 75, 100, 150, 200].map(m => {
+  let margenes = [10, 25, 50, 75, 100, 150, 200];
+  const mr = Math.round(margenActual);
+  if (!margenes.includes(mr) && mr >= 5) {
+    margenes.push(mr);
+    margenes.sort((a, b) => a - b);
+  }
+  const filas = margenes.map(m => {
     const precio   = costoUnitario * (1 + m / 100);
     const ganancia = precio - costoUnitario;
-    const activo   = Math.abs(m - margenActual) < 3;
+    const activo   = Math.abs(m - margenActual) < 2;
     return `<tr class="${activo ? 'highlight' : ''}">
       <td>${m}%</td><td>${fmt(precio)}</td><td>${fmt(ganancia)}</td>
     </tr>`;
@@ -1124,6 +1312,32 @@ function renderizarResumen(c) {
     lineas.push(`Punto de equilibrio: <strong>${c.ventasMensuales} unidades/mes</strong> (${c.ventasDiarias} por día)`);
   }
   document.getElementById('resumen-contenido').innerHTML = lineas.join('<br>');
+
+  /* Desglose visual de la composición del costo */
+  const desglose = document.getElementById('desglose-costos');
+  if (c.costoUnitario > 0) {
+    desglose.style.display = 'block';
+    desglose.innerHTML = `
+      <div class="desglose-titulo">Composición del costo</div>
+      <div class="desglose-barra">
+        <div class="desglose-seg mat" style="width:${c.pctInsumos}%"></div>
+        <div class="desglose-seg srv" style="width:${c.pctServicios}%"></div>
+      </div>
+      <div class="desglose-leyenda">
+        <span class="desglose-dot mat"></span> Materiales: <strong>${c.pctInsumos}%</strong>
+        &nbsp;&nbsp;
+        <span class="desglose-dot srv"></span> Tiempo y servicios: <strong>${c.pctServicios}%</strong>
+      </div>`;
+  } else {
+    desglose.style.display = 'none';
+  }
+}
+
+/* ══ IVA ══ */
+
+function toggleIva() {
+  estado.ivaActivo = document.getElementById('iva-toggle').checked;
+  actualizar();
 }
 
 /* ══ MODO PRECIO / SLIDER ══ */
@@ -1158,7 +1372,6 @@ function fmt(valor) {
 
 /* ══ PERSISTENCIA ══ */
 
-/* Lee todo el estado necesario para guardar o compartir */
 function leerEstadoCompleto() {
   return {
     nombreProducto:  document.getElementById('nombre-producto').value,
@@ -1167,13 +1380,15 @@ function leerEstadoCompleto() {
     servicios:       estado.servicios,
     margen:          estado.margen,
     modo:            estado.modo,
+    soloServicios:   estado.soloServicios,
+    ivaActivo:       estado.ivaActivo,
     precioManual:    parseFloat(document.getElementById('precio-manual').value) || 0,
     gastosMensuales: parseFloat(document.getElementById('gastos-mensuales').value) || 0,
     diasLaborales:   parseFloat(document.getElementById('dias-laborales').value) || 24,
+    metaIngresos:    parseFloat(document.getElementById('meta-ingresos').value) || 0,
   };
 }
 
-/* Aplica un objeto de estado guardado al DOM y a la variable estado */
 function aplicarEstado(datos) {
   document.getElementById('nombre-producto').value  = datos.nombreProducto || '';
   document.getElementById('unidades').value         = datos.unidades || 1;
@@ -1181,13 +1396,17 @@ function aplicarEstado(datos) {
   document.getElementById('dias-laborales').value   = datos.diasLaborales || 24;
   document.getElementById('precio-manual').value    = datos.precioManual || '';
   document.getElementById('margen-slider').value    = datos.margen || 50;
-  estado.insumos   = datos.insumos   || [];
-  estado.servicios = datos.servicios || [];
-  estado.margen    = datos.margen    || 50;
-  estado.modo      = datos.modo      || 'slider';
+  document.getElementById('meta-ingresos').value    = datos.metaIngresos || '';
+  const ivaEl = document.getElementById('iva-toggle');
+  if (ivaEl) ivaEl.checked = datos.ivaActivo || false;
+  estado.insumos       = datos.insumos       || [];
+  estado.servicios     = datos.servicios     || [];
+  estado.margen        = datos.margen        || 50;
+  estado.modo          = datos.modo          || 'slider';
+  estado.soloServicios = datos.soloServicios || false;
+  estado.ivaActivo     = datos.ivaActivo     || false;
 }
 
-/* Autosave con debounce para no saturar localStorage en cada tecla */
 let autosaveTimer;
 function autosave() {
   clearTimeout(autosaveTimer);
@@ -1195,7 +1414,7 @@ function autosave() {
     try {
       localStorage.setItem(AUTOSAVE_KEY, JSON.stringify(leerEstadoCompleto()));
       mostrarIndicadorAutosave();
-    } catch (_) { /* localStorage lleno o bloqueado */ }
+    } catch (_) {}
   }, 500);
 }
 
@@ -1215,10 +1434,8 @@ function cargarAutosave() {
 
 /* ══ COMPARTIR POR URL ══ */
 
-/* Codifica el estado como base64 en la URL para compartir el cálculo */
 function compartirPorLink() {
-  const datos   = leerEstadoCompleto();
-  const encoded = btoa(unescape(encodeURIComponent(JSON.stringify(datos))));
+  const encoded = btoa(unescape(encodeURIComponent(JSON.stringify(leerEstadoCompleto()))));
   document.getElementById('share-url-text').textContent =
     `${location.origin}${location.pathname}?d=${encoded}`;
   abrirModal('modal-compartir');
@@ -1239,16 +1456,14 @@ function cargarDesdeURL() {
   } catch (_) { return false; }
 }
 
-/* ══ PROYECTOS EN LOCALSTORAGE ══ */
+/* ══ PROYECTOS ══ */
 
 function obtenerProyectos() {
   try { return JSON.parse(localStorage.getItem(DB_KEY)) || []; }
   catch (_) { return []; }
 }
 
-function guardarProyectos(lista) {
-  localStorage.setItem(DB_KEY, JSON.stringify(lista));
-}
+function guardarProyectos(lista) { localStorage.setItem(DB_KEY, JSON.stringify(lista)); }
 
 function abrirModalGuardar() {
   document.getElementById('input-nombre-proyecto').value =
@@ -1322,7 +1537,7 @@ function renderizarProyectos() {
     </div>`).join('');
 }
 
-/* ══ EXPORT / IMPORT JSON ══ */
+/* ══ EXPORT / IMPORT ══ */
 
 function exportarJSON() {
   const blob = new Blob(
@@ -1366,7 +1581,6 @@ function descargarPDF() {
   const colAzul    = [43, 108, 176];
   const colGris    = [100, 100, 100];
 
-  /* Encabezado */
   doc.setFillColor(...colNaranja);
   doc.rect(0, 0, 210, 32, 'F');
   doc.setTextColor(255, 255, 255);
@@ -1377,11 +1591,9 @@ function descargarPDF() {
   doc.text(new Date().toLocaleDateString('es-AR'), 105, 28, { align: 'center' });
 
   let y = 42;
-
   doc.setTextColor(...colNaranja); doc.setFontSize(14); doc.setFont('helvetica', 'bold');
   doc.text(nombre, 14, y); y += 10;
 
-  /* Helper para encabezados de sección */
   const seccion = (titulo) => {
     doc.setFillColor(253, 240, 232);
     doc.rect(14, y - 5, 182, 8, 'F');
@@ -1418,12 +1630,14 @@ function descargarPDF() {
   }
 
   seccion('Resultados');
-  [
+  const resultados = [
     ['Costo por unidad',         fmt(c.costoUnitario)],
     ['Precio de venta',          fmt(c.precioVenta)],
     ['Margen de ganancia',       `${Math.round(c.margenReal)}%`],
     ['Ganancia neta por unidad', fmt(c.gananciaNeta)],
-  ].forEach(([label, val]) => {
+  ];
+  if (estado.ivaActivo) resultados.push(['Precio con IVA (21%)', fmt(c.precioConIva)]);
+  resultados.forEach(([label, val]) => {
     doc.setFont('helvetica', 'normal'); doc.setFontSize(10); doc.setTextColor(...colGris);
     doc.text(label, 16, y);
     doc.setFont('helvetica', 'bold'); doc.setTextColor(...colNaranja);
@@ -1436,6 +1650,11 @@ function descargarPDF() {
     doc.text(`Gastos fijos mensuales: ${fmt(c.gastosMensuales)}`, 16, y); y += 6;
     doc.setFont('helvetica', 'bold'); doc.setTextColor(...colAzul); doc.setFontSize(11);
     doc.text(`Necesitás vender ${c.ventasMensuales} unidades/mes (${c.ventasDiarias} por día)`, 16, y); y += 10;
+  }
+
+  if (c.unidadesMeta !== null) {
+    doc.setFont('helvetica', 'normal'); doc.setFontSize(9); doc.setTextColor(...colGris);
+    doc.text(`Para ganar ${fmt(c.metaIngresos)}/mes → ${c.unidadesMeta} unidades/mes`, 16, y); y += 8;
   }
 
   doc.setDrawColor(200, 200, 200);
@@ -1463,7 +1682,6 @@ function mostrarToast(msg) {
   toastTimer = setTimeout(() => el.classList.remove('show'), 2500);
 }
 
-/* Escapa caracteres HTML para evitar XSS en contenido generado dinámicamente */
 function escHtml(str) {
   return String(str)
     .replace(/&/g, '&amp;').replace(/</g, '&lt;')
