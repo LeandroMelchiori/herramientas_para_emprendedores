@@ -1030,9 +1030,14 @@ const MAX_FILAS    = 10;
 const AUTOSAVE_KEY = 'calculadora_autosave';
 const DB_KEY       = 'calculadora_proyectos';
 
+/* 5 filas vacías para que el emprendedor pueda empezar a llenar de inmediato */
+const filaInsumoVacia  = () => ({ nombre: '', cantidad: 1, precio: 0 });
+const filaServicioVacia = () => ({ nombre: '', horas: 1, precio: 0 });
+const FILAS_INICIALES  = 5;
+
 const estado = {
-  insumos:       [],
-  servicios:     [],
+  insumos:       Array.from({ length: FILAS_INICIALES }, filaInsumoVacia),
+  servicios:     Array.from({ length: FILAS_INICIALES }, filaServicioVacia),
   margen:        50,
   modo:          'slider', // 'slider' | 'precio'
   soloServicios: false,    // emprendedores que no usan materiales
@@ -1283,8 +1288,10 @@ function actualizar() {
 /* Checkmarks en tabs según si cada paso tiene datos */
 function actualizarProgresoTabs(c) {
   const tabs = document.querySelectorAll('.nav-tab');
-  tabs[0].classList.toggle('con-datos', estado.insumos.length > 0 || estado.soloServicios);
-  tabs[1].classList.toggle('con-datos', estado.servicios.length > 0);
+  tabs[0].classList.toggle('con-datos', estado.soloServicios ||
+    estado.insumos.some(i => i.nombre.trim() || i.precio > 0));
+  tabs[1].classList.toggle('con-datos',
+    estado.servicios.some(s => s.nombre.trim() || s.precio > 0));
   tabs[2].classList.toggle('con-datos', c.precioVenta > 0);
   tabs[3].classList.toggle('con-datos', c.gastosMensuales > 0);
 }
