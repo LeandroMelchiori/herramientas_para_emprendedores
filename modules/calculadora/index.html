@@ -604,23 +604,48 @@
   .btn-modo { flex:1; padding:9px 6px; border:none; font-family:'DM Sans',sans-serif; font-size:0.8rem; font-weight:600; cursor:pointer; transition:all 0.2s; background:var(--gris); color:var(--gris-texto); }
   .btn-modo.active { background:var(--naranja); color:white; }
 
-  /* ── Botón "solo servicios" en la sección de insumos ── */
-  .btn-solo-servicios {
-    width: 100%;
-    padding: 11px;
-    background: none;
-    border: 1.5px solid var(--azul);
-    border-radius: 8px;
-    color: var(--azul);
-    font-family: 'DM Sans', sans-serif;
-    font-size: 0.85rem;
-    font-weight: 600;
-    cursor: pointer;
-    margin-top: 6px;
-    margin-bottom: 2px;
-    transition: all 0.15s;
+  /* ── Toggle insumos (estilo Google) ── */
+  .card-title-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 10px;
   }
-  .btn-solo-servicios:hover { background: var(--azul-palido); }
+  .card-title-row .card-title { margin-bottom: 0; }
+  .switch { position: relative; width: 46px; height: 26px; flex-shrink: 0; }
+  .switch input { opacity: 0; width: 0; height: 0; position: absolute; }
+  .switch .slider {
+    position: absolute;
+    inset: 0;
+    background: #ccc;
+    border-radius: 26px;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  .switch input:checked + .slider { background: var(--naranja); }
+  .switch .slider::before {
+    content: '';
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    left: 3px;
+    top: 3px;
+    background: white;
+    border-radius: 50%;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.25);
+    transition: transform 0.2s;
+  }
+  .switch input:checked + .slider::before { transform: translateX(20px); }
+
+  /* Label que aparece cuando los insumos están desactivados */
+  .solo-servicios-aviso {
+    font-size: 0.82rem;
+    color: var(--gris-texto);
+    background: var(--gris);
+    border-radius: 8px;
+    padding: 10px 12px;
+    margin-top: 4px;
+  }
 
   /* ── Checkmark de progreso en tabs ── */
   .nav-tab.con-datos .tab-num::after { content: ' ✓'; font-size: 0.7rem; opacity: 0.8; }
@@ -763,20 +788,31 @@
   </div>
 
   <div class="card">
-    <div class="card-title">Materiales e insumos</div>
-    <div class="info-box">
-      Anotá cada material o ingrediente que usás para hacer <strong>una tanda</strong> de tu producto.
+    <div class="card-title-row">
+      <div class="card-title">Materiales e insumos</div>
+      <label class="switch" title="Activar o desactivar materiales">
+        <input type="checkbox" id="toggle-insumos" checked onchange="toggleInsumos(this.checked)">
+        <span class="slider"></span>
+      </label>
     </div>
-    <div class="col-labels">
-      <span>Material</span><span>Cant.</span><span>$ c/u</span>
+    <div id="seccion-insumos">
+      <div class="info-box">
+        Anotá cada material o ingrediente que usás para hacer <strong>una tanda</strong> de tu producto.
+      </div>
+      <div class="col-labels">
+        <span>Material</span><span>Cant.</span><span>$ c/u</span>
+      </div>
+      <div id="lista-insumos"></div>
+      <div class="limite-badge" id="limite-insumos"></div>
+      <button class="btn-agregar" id="btn-agregar-insumo" onclick="agregarInsumo()">+ Agregar material</button>
+      <div class="total-row">
+        <span class="label">Total insumos:</span>
+        <span class="valor" id="total-insumos">$0</span>
+      </div>
     </div>
-    <div id="lista-insumos"></div>
-    <div class="limite-badge" id="limite-insumos"></div>
-    <button class="btn-agregar" id="btn-agregar-insumo" onclick="agregarInsumo()">+ Agregar material</button>
-    <div class="total-row">
-      <span class="label">Total insumos:</span>
-      <span class="valor" id="total-insumos">$0</span>
-    </div>
+    <p class="solo-servicios-aviso" id="solo-servicios-aviso" style="display:none">
+      Desactivaste los materiales — este producto solo tiene costos de tiempo y servicios.
+    </p>
   </div>
 
   <div class="card">
@@ -787,8 +823,6 @@
       <span>unidades por tanda</span>
     </div>
   </div>
-
-  <button class="btn-solo-servicios" onclick="saltarInsumos()">No uso materiales → Solo servicios</button>
 
   <div class="nav-steps">
     <button class="btn-step next" onclick="goTo(1)">Servicios →</button>
@@ -1017,6 +1051,20 @@
   </div>
 </div>
 
+<!-- ══ MODAL: Guardar antes de ir a Proyectos ══ -->
+<div class="modal-overlay" id="modal-guardar-antes" role="dialog" aria-modal="true" aria-labelledby="modal-antes-titulo">
+  <div class="modal">
+    <h3 id="modal-antes-titulo">Tenés cambios sin guardar</h3>
+    <p style="font-size:0.88rem;color:var(--gris-texto);margin-bottom:16px;">
+      ¿Querés guardar este cálculo como proyecto antes de continuar?
+    </p>
+    <div class="modal-btns">
+      <button class="btn-cancelar" onclick="irAProyectosSinGuardar()">Ver proyectos igual</button>
+      <button class="btn-guardar" style="flex:1.5" onclick="guardarYluego()">💾 Guardar primero</button>
+    </div>
+  </div>
+</div>
+
 <!-- Toast de notificaciones -->
 <div class="toast" id="toast"></div>
 
@@ -1030,6 +1078,10 @@ const MAX_FILAS      = 10;
 const AUTOSAVE_KEY   = 'calculadora_autosave';
 const DB_KEY         = 'calculadora_proyectos';
 const AUTOSAVE_SCHEMA = 2;  // incrementar si cambia la estructura del autosave
+
+/* true después de guardar un proyecto en esta sesión; se usa para la advertencia de salida */
+let proyectoGuardadoEnSesion = false;
+let destPendienteTrasSave    = null;  // tab al que ir después de guardar desde el modal
 
 /* 5 filas vacías para que el emprendedor pueda empezar a llenar de inmediato */
 const filaInsumoVacia  = () => ({ nombre: '', cantidad: 1, precio: 0 });
@@ -1053,6 +1105,7 @@ document.addEventListener('DOMContentLoaded', () => {
     history.replaceState(null, '', location.pathname);
   }
   if (!cargarDesdeURL()) cargarAutosave();
+  sincronizarUIToggle();
   renderizarFilas();
   setModo(estado.modo);
   actualizar();
@@ -1065,15 +1118,22 @@ document.addEventListener('DOMContentLoaded', () => {
     clearTimeout(autosaveTimer);
     try { localStorage.setItem(AUTOSAVE_KEY, JSON.stringify(leerEstadoCompleto())); } catch (_) {}
   };
-  window.addEventListener('beforeunload', flushAutosave);
   window.addEventListener('pagehide', flushAutosave);
   document.addEventListener('visibilitychange', () => {
     if (document.visibilityState === 'hidden') flushAutosave();
   });
+  /* Advertir al usuario si intenta recargar/cerrar con datos sin guardar como proyecto */
+  window.addEventListener('beforeunload', (e) => {
+    flushAutosave();
+    if (hayDatosSinGuardar()) {
+      e.preventDefault();
+      e.returnValue = '';
+    }
+  });
 });
 
 /* ── Navegación entre pasos ── */
-function goTo(idx) {
+function goTo(idx, forzar = false) {
   /* Bloquear avance a Precio y Ventas si no hay ningún precio cargado */
   if (idx === 2 || idx === 3) {
     const tienePrecios =
@@ -1084,6 +1144,12 @@ function goTo(idx) {
       return;
     }
   }
+  /* Al ir a Proyectos con datos sin guardar, preguntar antes */
+  if (idx === 4 && !forzar && hayDatosSinGuardar()) {
+    destPendienteTrasSave = 4;
+    abrirModal('modal-guardar-antes');
+    return;
+  }
   document.querySelectorAll('.page').forEach((p, i) => p.classList.toggle('active', i === idx));
   document.querySelectorAll('.nav-tab').forEach((t, i) => {
     t.classList.toggle('active', i === idx);
@@ -1092,13 +1158,44 @@ function goTo(idx) {
   if (idx === 4) renderizarProyectos();
 }
 
-/* Salta la sección de materiales para emprendedores de servicios puros */
-function saltarInsumos() {
-  estado.insumos = [];
-  estado.soloServicios = true;
+function hayDatosSinGuardar() {
+  const nombre = document.getElementById('nombre-producto').value.trim();
+  const tieneData = nombre ||
+    estado.insumos.some(i => i.nombre.trim() || i.precio > 0) ||
+    estado.servicios.some(s => s.nombre.trim() || s.precio > 0);
+  return tieneData && !proyectoGuardadoEnSesion;
+}
+
+function irAProyectosSinGuardar() {
+  cerrarModal('modal-guardar-antes');
+  destPendienteTrasSave = null;
+  goTo(4, true);
+}
+
+function guardarYluego() {
+  cerrarModal('modal-guardar-antes');
+  abrirModalGuardar();
+}
+
+/* Activa o desactiva la sección de materiales con el toggle */
+function toggleInsumos(activo) {
+  estado.soloServicios = !activo;
+  if (!activo) {
+    estado.insumos = [];
+  } else if (estado.insumos.length === 0) {
+    estado.insumos = Array.from({ length: FILAS_INICIALES }, filaInsumoVacia);
+  }
+  sincronizarUIToggle();
   renderizarFilas();
   actualizar();
-  goTo(1);
+}
+
+function sincronizarUIToggle() {
+  const activo = !estado.soloServicios;
+  const toggleEl = document.getElementById('toggle-insumos');
+  if (toggleEl) toggleEl.checked = activo;
+  document.getElementById('seccion-insumos').style.display    = activo ? '' : 'none';
+  document.getElementById('solo-servicios-aviso').style.display = activo ? 'none' : '';
 }
 
 /* ══ INSUMOS Y SERVICIOS ══ */
@@ -1459,12 +1556,14 @@ function aplicarEstado(datos) {
     while (rows.length < FILAS_INICIALES) rows.push(factory());
     return rows;
   };
-  estado.insumos   = datos.soloServicios ? [] : padRows(datos.insumos, filaInsumoVacia);
-  estado.servicios = padRows(datos.servicios, filaServicioVacia);
-  estado.margen        = datos.margen        || 50;
-  estado.modo          = datos.modo          || 'slider';
   estado.soloServicios = datos.soloServicios || false;
-  estado.ivaActivo     = datos.ivaActivo     || false;
+  estado.insumos   = estado.soloServicios ? [] : padRows(datos.insumos, filaInsumoVacia);
+  estado.servicios = padRows(datos.servicios, filaServicioVacia);
+  estado.margen    = datos.margen  || 50;
+  estado.modo      = datos.modo    || 'slider';
+  estado.ivaActivo = datos.ivaActivo || false;
+  /* Sincronizar el toggle visual con el estado cargado */
+  sincronizarUIToggle();
 }
 
 let autosaveTimer;
@@ -1555,10 +1654,18 @@ function confirmarGuardar() {
   const lista = obtenerProyectos();
   lista.unshift({ id: Date.now(), nombre, fecha: new Date().toLocaleDateString('es-AR'), datos: leerEstadoCompleto() });
   guardarProyectos(lista);
+  proyectoGuardadoEnSesion = true;
   cerrarModal('modal-guardar');
-  renderizarProyectos();
   mostrarToast('Proyecto guardado ✓');
   if (typeof trackEvent === 'function') trackEvent('guardar_proyecto');
+  /* Si venía de "Guardar y luego ir a Proyectos", navegar ahora */
+  if (destPendienteTrasSave !== null) {
+    const dest = destPendienteTrasSave;
+    destPendienteTrasSave = null;
+    goTo(dest, true);
+  } else {
+    renderizarProyectos();
+  }
 }
 
 function cargarProyecto(id) {
