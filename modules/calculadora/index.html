@@ -1054,10 +1054,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
 /* ── Navegación entre pasos ── */
 function goTo(idx) {
-  /* Bloquear avance a Precio/Ventas/Proyectos si no hay ningún costo cargado */
-  if (idx >= 2 && !estado.insumos.length && !estado.servicios.length) {
-    mostrarToast('Primero agregá al menos un material o servicio');
-    return;
+  /* Bloquear avance a Precio/Ventas/Proyectos si no hay ningún precio cargado */
+  if (idx >= 2) {
+    const tienePrecios =
+      estado.insumos.some(i => i.precio > 0) ||
+      estado.servicios.some(s => s.precio > 0);
+    if (!tienePrecios) {
+      mostrarToast('Ingresá al menos un precio antes de continuar');
+      return;
+    }
   }
   document.querySelectorAll('.page').forEach((p, i) => p.classList.toggle('active', i === idx));
   document.querySelectorAll('.nav-tab').forEach((t, i) => {
