@@ -1142,7 +1142,7 @@ function renderizarFilas() {
     wrap.className = 'row-insumo-wrap';
     wrap.innerHTML = `
       <div class="row-insumo">
-        <input type="text" placeholder="Servicio" value="${escHtml(srv.nombre)}"
+        <input type="text" placeholder="${i === 0 ? 'Mano de obra' : 'Servicio'}" value="${escHtml(srv.nombre)}"
           oninput="estado.servicios[${i}].nombre=this.value;autosave()">
         <input type="number" min="0" step="any" value="${srv.horas}"
           oninput="estado.servicios[${i}].horas=parseFloat(this.value)||0;actualizar()">
@@ -1417,13 +1417,14 @@ function aplicarEstado(datos) {
   document.getElementById('meta-ingresos').value    = datos.metaIngresos || '';
   const ivaEl = document.getElementById('iva-toggle');
   if (ivaEl) ivaEl.checked = datos.ivaActivo || false;
-  /* Si el estado guardado trae arrays vacíos, mantener las 5 filas por defecto */
-  estado.insumos   = datos.insumos?.length
-    ? datos.insumos
-    : (datos.soloServicios ? [] : Array.from({ length: FILAS_INICIALES }, filaInsumoVacia));
-  estado.servicios = datos.servicios?.length
-    ? datos.servicios
-    : Array.from({ length: FILAS_INICIALES }, filaServicioVacia);
+  /* Siempre mostrar al menos FILAS_INICIALES filas; completa con vacías si hacen falta */
+  const padRows = (arr, factory) => {
+    const rows = arr ? [...arr] : [];
+    while (rows.length < FILAS_INICIALES) rows.push(factory());
+    return rows;
+  };
+  estado.insumos   = datos.soloServicios ? [] : padRows(datos.insumos, filaInsumoVacia);
+  estado.servicios = padRows(datos.servicios, filaServicioVacia);
   estado.margen        = datos.margen        || 50;
   estado.modo          = datos.modo          || 'slider';
   estado.soloServicios = datos.soloServicios || false;
