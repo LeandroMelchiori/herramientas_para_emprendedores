@@ -1417,8 +1417,13 @@ function aplicarEstado(datos) {
   document.getElementById('meta-ingresos').value    = datos.metaIngresos || '';
   const ivaEl = document.getElementById('iva-toggle');
   if (ivaEl) ivaEl.checked = datos.ivaActivo || false;
-  estado.insumos       = datos.insumos       || [];
-  estado.servicios     = datos.servicios     || [];
+  /* Si el estado guardado trae arrays vacíos, mantener las 5 filas por defecto */
+  estado.insumos   = datos.insumos?.length
+    ? datos.insumos
+    : (datos.soloServicios ? [] : Array.from({ length: FILAS_INICIALES }, filaInsumoVacia));
+  estado.servicios = datos.servicios?.length
+    ? datos.servicios
+    : Array.from({ length: FILAS_INICIALES }, filaServicioVacia);
   estado.margen        = datos.margen        || 50;
   estado.modo          = datos.modo          || 'slider';
   estado.soloServicios = datos.soloServicios || false;
