@@ -9,7 +9,7 @@
    ============================================================ */
 
 // Subí este número en cada deploy para invalidar las caches viejas.
-const VERSION   = 'v1.1.2';
+const VERSION   = 'v1.1.3';
 const APP_CACHE = `app-${VERSION}`;       // Núcleo: HTML + iconos + assets propios
 const RUNTIME   = `runtime-${VERSION}`;   // Externos: Google Fonts, CDNs, etc.
 
@@ -50,6 +50,9 @@ self.addEventListener('activate', (event) => {
       keys.filter((k) => k !== APP_CACHE && k !== RUNTIME).map((k) => caches.delete(k))
     );
     await self.clients.claim();   // Toma control de las páginas ya abiertas.
+    /* Notifica a todas las pestañas abiertas para que recarguen con el código nuevo */
+    const allClients = await self.clients.matchAll({ type: 'window' });
+    allClients.forEach((client) => client.postMessage({ type: 'SW_UPDATED' }));
   })());
 });
 
