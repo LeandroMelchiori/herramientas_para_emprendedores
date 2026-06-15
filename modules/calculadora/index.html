@@ -463,7 +463,6 @@
     font-size: 0.82rem;
     cursor: pointer;
     transition: all 0.15s;
-    title: "Duplicar";
   }
   .btn-proyecto-duplicar:hover { background: var(--azul-palido); border-color: var(--azul); color: var(--azul); }
   .btn-proyecto-eliminar {
@@ -990,9 +989,9 @@
 </div>
 
 <!-- ══ MODAL: Guardar proyecto ══ -->
-<div class="modal-overlay" id="modal-guardar">
+<div class="modal-overlay" id="modal-guardar" role="dialog" aria-modal="true" aria-labelledby="modal-guardar-titulo">
   <div class="modal">
-    <h3>Nombrar proyecto</h3>
+    <h3 id="modal-guardar-titulo">Nombrar proyecto</h3>
     <input type="text" id="input-nombre-proyecto" placeholder="Ej: Pan casero, Torta de cumpleaños..." maxlength="60">
     <div class="modal-btns">
       <button class="btn-cancelar" onclick="cerrarModal('modal-guardar')">Cancelar</button>
@@ -1002,9 +1001,9 @@
 </div>
 
 <!-- ══ MODAL: Compartir por link ══ -->
-<div class="modal-overlay" id="modal-compartir">
+<div class="modal-overlay" id="modal-compartir" role="dialog" aria-modal="true" aria-labelledby="modal-compartir-titulo">
   <div class="modal">
-    <h3>🔗 Compartir por link</h3>
+    <h3 id="modal-compartir-titulo">🔗 Compartir por link</h3>
     <p style="font-size:0.82rem;color:var(--gris-texto);margin-bottom:12px;">
       Este link contiene todos los datos actuales. Quien lo abra verá exactamente el mismo cálculo.
     </p>
@@ -1046,18 +1045,20 @@ document.addEventListener('DOMContentLoaded', () => {
   renderizarFilas();
   setModo(estado.modo);
   actualizar();
-  /* Alerta antes de cerrar si hay datos sin guardar en un proyecto */
-  window.addEventListener('beforeunload', e => {
-    const d = leerEstadoCompleto();
-    if (d.insumos.length || d.servicios.length || d.nombreProducto) {
-      e.preventDefault();
-      e.returnValue = '';
-    }
+  /* Antes de cerrar: flush del autosave (evita perder cambios del debounce) */
+  window.addEventListener('beforeunload', () => {
+    clearTimeout(autosaveTimer);
+    try { localStorage.setItem(AUTOSAVE_KEY, JSON.stringify(leerEstadoCompleto())); } catch (_) {}
   });
 });
 
 /* ── Navegación entre pasos ── */
 function goTo(idx) {
+  /* Bloquear avance a Precio/Ventas/Proyectos si no hay ningún costo cargado */
+  if (idx >= 2 && !estado.insumos.length && !estado.servicios.length) {
+    mostrarToast('Primero agregá al menos un material o servicio');
+    return;
+  }
   document.querySelectorAll('.page').forEach((p, i) => p.classList.toggle('active', i === idx));
   document.querySelectorAll('.nav-tab').forEach((t, i) => {
     t.classList.toggle('active', i === idx);
@@ -1177,7 +1178,7 @@ function calcular() {
     margenReal  = estado.margen;
     precioVenta = costoUnitario * (1 + margenReal / 100);
   } else {
-    precioVenta = parseFloat(document.getElementById('precio-manual').value) || 0;
+    precioVenta = Math.max(0, parseFloat(document.getElementById('precio-manual').value) || 0);
     margenReal  = costoUnitario > 0 ? ((precioVenta - costoUnitario) / costoUnitario) * 100 : 0;
   }
 
@@ -1481,6 +1482,12 @@ function confirmarGuardar() {
   const nombre = document.getElementById('input-nombre-proyecto').value.trim();
   if (!nombre) {
     document.getElementById('input-nombre-proyecto').classList.add('input-error');
+    return;
+  }
+  const d = leerEstadoCompleto();
+  if (!d.insumos.length && !d.servicios.length) {
+    mostrarToast('Agregá al menos un costo antes de guardar');
+    cerrarModal('modal-guardar');
     return;
   }
   const lista = obtenerProyectos();
