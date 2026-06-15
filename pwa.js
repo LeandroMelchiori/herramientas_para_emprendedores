@@ -12,6 +12,13 @@ if ('serviceWorker' in navigator) {
       .register('/sw.js')
       .catch((err) => console.warn('[PWA] No se pudo registrar el Service Worker:', err));
   });
+
+  /* Cuando un nuevo SW toma el control (nueva versión deployada), recargamos la
+     página automáticamente para que todos los usuarios reciban el código nuevo
+     sin tener que saber qué es un Service Worker. */
+  navigator.serviceWorker.addEventListener('controllerchange', () => {
+    window.location.reload();
+  });
 }
 
 // ── 2) Botón de instalación personalizado ──
