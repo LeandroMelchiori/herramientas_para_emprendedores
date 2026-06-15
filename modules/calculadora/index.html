@@ -1054,8 +1054,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
 /* ── Navegación entre pasos ── */
 function goTo(idx) {
-  /* Bloquear avance a Precio/Ventas/Proyectos si no hay ningún precio cargado */
-  if (idx >= 2) {
+  /* Bloquear avance a Precio y Ventas si no hay ningún precio cargado */
+  if (idx === 2 || idx === 3) {
     const tienePrecios =
       estado.insumos.some(i => i.precio > 0) ||
       estado.servicios.some(s => s.precio > 0);
