@@ -19,6 +19,12 @@ if ('serviceWorker' in navigator) {
   navigator.serviceWorker.addEventListener('controllerchange', () => {
     window.location.reload();
   });
+
+  /* El SW también manda un mensaje SW_UPDATED al activarse — esto cubre el caso
+     en que el usuario tiene el pwa.js viejo sin el listener de controllerchange. */
+  navigator.serviceWorker.addEventListener('message', (e) => {
+    if (e.data?.type === 'SW_UPDATED') window.location.reload();
+  });
 }
 
 // ── 2) Botón de instalación personalizado ──
