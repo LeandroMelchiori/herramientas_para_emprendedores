@@ -1143,20 +1143,6 @@
   </div>
 </div>
 
-<!-- ══ MODAL: Guardar antes de ir a Proyectos ══ -->
-<div class="modal-overlay" id="modal-guardar-antes" role="dialog" aria-modal="true" aria-labelledby="modal-antes-titulo">
-  <div class="modal">
-    <h3 id="modal-antes-titulo">Tenés cambios sin guardar</h3>
-    <p style="font-size:0.88rem;color:var(--gris-texto);margin-bottom:16px;">
-      ¿Querés guardar este cálculo como proyecto antes de continuar?
-    </p>
-    <div class="modal-btns">
-      <button class="btn-cancelar" onclick="irAProyectosSinGuardar()">Ver proyectos igual</button>
-      <button class="btn-guardar" style="flex:1.5" onclick="guardarYluego()">💾 Guardar primero</button>
-    </div>
-  </div>
-</div>
-
 <!-- Toast de notificaciones -->
 <div class="toast" id="toast"></div>
 
@@ -1173,7 +1159,6 @@ const AUTOSAVE_SCHEMA = 2;  // incrementar si cambia la estructura del autosave
 
 /* true después de guardar un proyecto en esta sesión; se usa para la advertencia de salida */
 let proyectoGuardadoEnSesion = false;
-let destPendienteTrasSave    = null;  // tab al que ir después de guardar desde el modal
 let proyectoActivoId         = null;  // id del proyecto cargado (null = cálculo nuevo)
 let proyectoActivoNombre     = '';    // nombre del proyecto activo para el modal
 
@@ -1228,7 +1213,7 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 /* ── Navegación entre pasos ── */
-function goTo(idx, forzar = false) {
+function goTo(idx) {
   /* Bloquear avance a Precio y Ventas si no hay ningún precio cargado */
   if (idx === 2 || idx === 3) {
     const tienePrecios =
@@ -1238,12 +1223,6 @@ function goTo(idx, forzar = false) {
       mostrarToast('Ingresá al menos un precio antes de continuar');
       return;
     }
-  }
-  /* Al ir a Proyectos con datos sin guardar, preguntar antes */
-  if (idx === 4 && !forzar && hayDatosSinGuardar()) {
-    destPendienteTrasSave = 4;
-    abrirModal('modal-guardar-antes');
-    return;
   }
   document.querySelectorAll('.page').forEach((p, i) => p.classList.toggle('active', i === idx));
   document.querySelectorAll('.nav-tab').forEach((t, i) => {
@@ -1259,17 +1238,6 @@ function hayDatosSinGuardar() {
     estado.insumos.some(i => i.nombre.trim() || i.precio > 0) ||
     estado.servicios.some(s => s.nombre.trim() || s.precio > 0);
   return tieneData && !proyectoGuardadoEnSesion;
-}
-
-function irAProyectosSinGuardar() {
-  cerrarModal('modal-guardar-antes');
-  destPendienteTrasSave = null;
-  goTo(4, true);
-}
-
-function guardarYluego() {
-  cerrarModal('modal-guardar-antes');
-  abrirModalGuardar();
 }
 
 /* Activa o desactiva la sección de materiales con el toggle */
@@ -1795,15 +1763,9 @@ function confirmarGuardar(comoNuevo = false) {
   proyectoGuardadoEnSesion = true;
   sincronizarBarraActivo();
   cerrarModal('modal-guardar');
+  renderizarProyectos();
   mostrarToast(toastMsg);
   if (typeof trackEvent === 'function') trackEvent('guardar_proyecto');
-  if (destPendienteTrasSave !== null) {
-    const dest = destPendienteTrasSave;
-    destPendienteTrasSave = null;
-    goTo(dest, true);
-  } else {
-    renderizarProyectos();
-  }
 }
 
 function cargarProyecto(id) {
