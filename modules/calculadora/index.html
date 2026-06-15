@@ -1050,10 +1050,19 @@ document.addEventListener('DOMContentLoaded', () => {
   renderizarFilas();
   setModo(estado.modo);
   actualizar();
-  /* Antes de cerrar: flush del autosave (evita perder cambios del debounce) */
-  window.addEventListener('beforeunload', () => {
+  /* Flush del autosave al salir de la página.
+     Se usan tres eventos porque en iOS 'beforeunload' no es confiable:
+     - beforeunload: desktop
+     - pagehide: estándar recomendado (cubre iOS)
+     - visibilitychange → hidden: captura el "ir al home" en mobile */
+  const flushAutosave = () => {
     clearTimeout(autosaveTimer);
     try { localStorage.setItem(AUTOSAVE_KEY, JSON.stringify(leerEstadoCompleto())); } catch (_) {}
+  };
+  window.addEventListener('beforeunload', flushAutosave);
+  window.addEventListener('pagehide', flushAutosave);
+  document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'hidden') flushAutosave();
   });
 });
 
@@ -1390,7 +1399,27 @@ function fmt(valor) {
 
 /* ══ PERSISTENCIA ══ */
 
+/* Lee los valores actuales del DOM y los vuelca a estado.insumos / estado.servicios.
+   Garantiza que cualquier valor escrito pero cuyo oninput no haya disparado quede guardado. */
+function sincronizarEstadoDesdeDOM() {
+  document.querySelectorAll('#lista-insumos .row-insumo-wrap').forEach((wrap, i) => {
+    if (!estado.insumos[i]) return;
+    const [nombreI, cantI, precioI] = wrap.querySelectorAll('input');
+    if (nombreI)  estado.insumos[i].nombre   = nombreI.value;
+    if (cantI)    estado.insumos[i].cantidad  = parseFloat(cantI.value)  || 0;
+    if (precioI)  estado.insumos[i].precio    = parseFloat(precioI.value) || 0;
+  });
+  document.querySelectorAll('#lista-servicios .row-insumo-wrap').forEach((wrap, i) => {
+    if (!estado.servicios[i]) return;
+    const [nombreI, horasI, precioI] = wrap.querySelectorAll('input');
+    if (nombreI)  estado.servicios[i].nombre  = nombreI.value;
+    if (horasI)   estado.servicios[i].horas   = parseFloat(horasI.value)  || 0;
+    if (precioI)  estado.servicios[i].precio  = parseFloat(precioI.value) || 0;
+  });
+}
+
 function leerEstadoCompleto() {
+  sincronizarEstadoDesdeDOM();
   return {
     nombreProducto:  document.getElementById('nombre-producto').value,
     unidades:        parseFloat(document.getElementById('unidades').value) || 1,
