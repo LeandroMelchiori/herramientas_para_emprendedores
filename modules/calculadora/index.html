@@ -647,7 +647,60 @@
     margin-top: 4px;
   }
 
-  /* ── Checkmark de progreso en tabs ── */
+  /* ── Barra de proyecto activo ── */
+  .proyecto-activo-bar {
+    display: none;
+    background: var(--azul-palido);
+    border-bottom: 1px solid #c8def7;
+    color: var(--azul);
+    font-size: 0.78rem;
+    padding: 5px 16px;
+    text-align: center;
+  }
+  .proyecto-activo-bar strong { font-weight: 600; }
+  .proyecto-activo-bar .btn-limpiar-barra {
+    background: none;
+    border: none;
+    color: var(--azul);
+    font-size: 0.78rem;
+    cursor: pointer;
+    text-decoration: underline;
+    padding: 0 0 0 10px;
+    font-family: 'DM Sans', sans-serif;
+  }
+
+  /* ── Botón secundario en modal (Guardar como nuevo) ── */
+  .btn-guardar-secundario {
+    padding: 10px 12px;
+    border: 1.5px solid var(--naranja);
+    border-radius: 8px;
+    background: none;
+    color: var(--naranja);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: background 0.15s;
+  }
+  .btn-guardar-secundario:hover { background: var(--naranja-palido); }
+
+  /* ── Botón "Nuevo cálculo" ── */
+  .btn-nuevo-calculo {
+    width: 100%;
+    padding: 12px;
+    margin-top: 8px;
+    background: none;
+    border: 1.5px solid var(--borde);
+    border-radius: 10px;
+    color: var(--gris-texto);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: border-color 0.15s, color 0.15s;
+  }
+  .btn-nuevo-calculo:hover { border-color: var(--error); color: var(--error); }
   .nav-tab.con-datos .tab-num::after { content: ' ✓'; font-size: 0.7rem; opacity: 0.8; }
   .nav-tab.visitada { opacity: 1; }
 
@@ -771,6 +824,12 @@
 
 <!-- Indicador de autoguardado -->
 <div class="autosave-indicator" id="autosave-indicator"></div>
+
+<!-- Barra de proyecto activo -->
+<div class="proyecto-activo-bar" id="proyecto-activo-bar">
+  Editando: <strong id="proyecto-activo-nombre"></strong>
+  <button class="btn-limpiar-barra" onclick="limpiarTodo()">Nuevo cálculo</button>
+</div>
 
 <!-- Tabs de navegación -->
 <div class="nav-tabs">
@@ -1000,11 +1059,12 @@
 
   <!-- Guardar y compartir -->
   <div class="card">
-    <div class="card-title">Guardar proyecto actual</div>
-    <div class="info-box">
+    <div class="card-title" id="titulo-guardar-card">Guardar proyecto actual</div>
+    <div class="info-box" id="info-guardar-card">
       Guardá el cálculo que estás haciendo con un nombre para encontrarlo después.
     </div>
-    <button class="btn-guardar" onclick="abrirModalGuardar()">💾 Guardar proyecto actual</button>
+    <button class="btn-guardar" id="btn-guardar-principal" onclick="abrirModalGuardar()">💾 Guardar proyecto actual</button>
+    <button class="btn-nuevo-calculo" onclick="limpiarTodo()">✕ Nuevo cálculo (limpiar todo)</button>
     <button class="btn-compartir" onclick="compartirPorLink()">🔗 Compartir por link</button>
     <div style="display:flex;gap:8px;margin-top:4px;">
       <button class="btn-secundario" onclick="exportarJSON()">⬇ Exportar (.json)</button>
@@ -1029,7 +1089,8 @@
     <input type="text" id="input-nombre-proyecto" placeholder="Ej: Pan casero, Torta de cumpleaños..." maxlength="60">
     <div class="modal-btns">
       <button class="btn-cancelar" onclick="cerrarModal('modal-guardar')">Cancelar</button>
-      <button class="btn-guardar" style="flex:1.5" onclick="confirmarGuardar()">💾 Guardar</button>
+      <button id="btn-guardar-nuevo" class="btn-guardar-secundario" style="display:none" onclick="confirmarGuardar(true)">+ Guardar copia</button>
+      <button id="btn-guardar-confirm" class="btn-guardar" style="flex:1.5" onclick="confirmarGuardar()">💾 Guardar</button>
     </div>
   </div>
 </div>
@@ -1082,6 +1143,8 @@ const AUTOSAVE_SCHEMA = 2;  // incrementar si cambia la estructura del autosave
 /* true después de guardar un proyecto en esta sesión; se usa para la advertencia de salida */
 let proyectoGuardadoEnSesion = false;
 let destPendienteTrasSave    = null;  // tab al que ir después de guardar desde el modal
+let proyectoActivoId         = null;  // id del proyecto cargado (null = cálculo nuevo)
+let proyectoActivoNombre     = '';    // nombre del proyecto activo para el modal
 
 /* 5 filas vacías para que el emprendedor pueda empezar a llenar de inmediato */
 const filaInsumoVacia  = () => ({ nombre: '', cantidad: 1, precio: 0 });
@@ -1109,6 +1172,7 @@ document.addEventListener('DOMContentLoaded', () => {
   renderizarFilas();
   setModo(estado.modo);
   actualizar();
+  sincronizarBarraActivo();
   /* Flush del autosave al salir de la página.
      Se usan tres eventos porque en iOS 'beforeunload' no es confiable:
      - beforeunload: desktop
@@ -1633,13 +1697,18 @@ function obtenerProyectos() {
 function guardarProyectos(lista) { localStorage.setItem(DB_KEY, JSON.stringify(lista)); }
 
 function abrirModalGuardar() {
+  const editando = proyectoActivoId !== null;
+  document.getElementById('modal-guardar-titulo').textContent =
+    editando ? 'Actualizar proyecto' : 'Nombrar proyecto';
   document.getElementById('input-nombre-proyecto').value =
-    document.getElementById('nombre-producto').value || '';
+    editando ? proyectoActivoNombre : (document.getElementById('nombre-producto').value || '');
+  document.getElementById('btn-guardar-nuevo').style.display   = editando ? '' : 'none';
+  document.getElementById('btn-guardar-confirm').textContent   = editando ? '✓ Actualizar' : '💾 Guardar';
   abrirModal('modal-guardar');
   setTimeout(() => document.getElementById('input-nombre-proyecto').focus(), 100);
 }
 
-function confirmarGuardar() {
+function confirmarGuardar(comoNuevo = false) {
   const nombre = document.getElementById('input-nombre-proyecto').value.trim();
   if (!nombre) {
     document.getElementById('input-nombre-proyecto').classList.add('input-error');
@@ -1651,14 +1720,38 @@ function confirmarGuardar() {
     cerrarModal('modal-guardar');
     return;
   }
-  const lista = obtenerProyectos();
-  lista.unshift({ id: Date.now(), nombre, fecha: new Date().toLocaleDateString('es-AR'), datos: leerEstadoCompleto() });
+  const lista  = obtenerProyectos();
+  const hoy    = new Date().toLocaleDateString('es-AR');
+  let toastMsg;
+
+  if (proyectoActivoId !== null && !comoNuevo) {
+    /* Actualizar el proyecto existente en su posición */
+    const idx = lista.findIndex(x => x.id === proyectoActivoId);
+    if (idx !== -1) {
+      lista[idx] = { id: proyectoActivoId, nombre, fecha: hoy, datos: d };
+    } else {
+      /* El proyecto fue eliminado mientras tanto — guardar como nuevo */
+      const nuevo = { id: Date.now(), nombre, fecha: hoy, datos: d };
+      lista.unshift(nuevo);
+      proyectoActivoId = nuevo.id;
+    }
+    proyectoActivoNombre = nombre;
+    toastMsg = 'Proyecto actualizado ✓';
+  } else {
+    /* Proyecto nuevo (o copia) */
+    const nuevo = { id: Date.now(), nombre, fecha: hoy, datos: d };
+    lista.unshift(nuevo);
+    proyectoActivoId     = nuevo.id;
+    proyectoActivoNombre = nombre;
+    toastMsg = comoNuevo ? 'Guardado como nuevo proyecto ✓' : 'Proyecto guardado ✓';
+  }
+
   guardarProyectos(lista);
   proyectoGuardadoEnSesion = true;
+  sincronizarBarraActivo();
   cerrarModal('modal-guardar');
-  mostrarToast('Proyecto guardado ✓');
+  mostrarToast(toastMsg);
   if (typeof trackEvent === 'function') trackEvent('guardar_proyecto');
-  /* Si venía de "Guardar y luego ir a Proyectos", navegar ahora */
   if (destPendienteTrasSave !== null) {
     const dest = destPendienteTrasSave;
     destPendienteTrasSave = null;
@@ -1671,11 +1764,64 @@ function confirmarGuardar() {
 function cargarProyecto(id) {
   const p = obtenerProyectos().find(x => x.id === id);
   if (!p) return;
+  proyectoActivoId         = p.id;
+  proyectoActivoNombre     = p.nombre;
+  proyectoGuardadoEnSesion = true;
   aplicarEstado(p.datos);
   renderizarFilas();
   setModo(p.datos.modo || 'slider');
-  goTo(0);
+  actualizar();
+  sincronizarBarraActivo();
+  goTo(0, true);
   mostrarToast(`"${p.nombre}" cargado`);
+}
+
+function sincronizarBarraActivo() {
+  const barra    = document.getElementById('proyecto-activo-bar');
+  const nombreEl = document.getElementById('proyecto-activo-nombre');
+  const editando = proyectoActivoId !== null;
+  barra.style.display = editando ? 'block' : 'none';
+  if (editando) nombreEl.textContent = proyectoActivoNombre;
+
+  /* Actualizar textos en la card de Proyectos */
+  const titulo    = document.getElementById('titulo-guardar-card');
+  const info      = document.getElementById('info-guardar-card');
+  const btnPrinc  = document.getElementById('btn-guardar-principal');
+  if (titulo) titulo.textContent = editando ? 'Actualizar proyecto' : 'Guardar proyecto actual';
+  if (info)   info.textContent   = editando
+    ? `Guardás los cambios sobre "${proyectoActivoNombre}".`
+    : 'Guardá el cálculo que estás haciendo con un nombre para encontrarlo después.';
+  if (btnPrinc) btnPrinc.textContent = editando ? '✓ Actualizar proyecto' : '💾 Guardar proyecto actual';
+}
+
+function limpiarTodo() {
+  if (!confirm('¿Limpiar todos los campos y empezar un cálculo nuevo?')) return;
+  proyectoActivoId         = null;
+  proyectoActivoNombre     = '';
+  proyectoGuardadoEnSesion = false;
+  Object.assign(estado, {
+    insumos:       Array.from({ length: FILAS_INICIALES }, filaInsumoVacia),
+    servicios:     Array.from({ length: FILAS_INICIALES }, filaServicioVacia),
+    margen:        50,
+    modo:          'slider',
+    soloServicios: false,
+    ivaActivo:     false,
+  });
+  ['nombre-producto', 'gastos-mensuales', 'precio-manual', 'meta-ingresos']
+    .forEach(id => { document.getElementById(id).value = ''; });
+  document.getElementById('unidades').value      = 1;
+  document.getElementById('margen-slider').value = 50;
+  document.getElementById('dias-laborales').value = 24;
+  const ivaEl = document.getElementById('iva-toggle');
+  if (ivaEl) ivaEl.checked = false;
+  sincronizarUIToggle();
+  renderizarFilas();
+  setModo('slider');
+  actualizar();
+  sincronizarBarraActivo();
+  localStorage.removeItem(AUTOSAVE_KEY);
+  goTo(0, true);
+  mostrarToast('Campos limpiados — nuevo cálculo listo');
 }
 
 function duplicarProyecto(id) {
