@@ -1026,9 +1026,10 @@
    calculadora/index.html — Lógica principal
    ============================================================ */
 
-const MAX_FILAS    = 10;
-const AUTOSAVE_KEY = 'calculadora_autosave';
-const DB_KEY       = 'calculadora_proyectos';
+const MAX_FILAS      = 10;
+const AUTOSAVE_KEY   = 'calculadora_autosave';
+const DB_KEY         = 'calculadora_proyectos';
+const AUTOSAVE_SCHEMA = 2;  // incrementar si cambia la estructura del autosave
 
 /* 5 filas vacías para que el emprendedor pueda empezar a llenar de inmediato */
 const filaInsumoVacia  = () => ({ nombre: '', cantidad: 1, precio: 0 });
@@ -1046,6 +1047,11 @@ const estado = {
 
 /* ── Inicio ── */
 document.addEventListener('DOMContentLoaded', () => {
+  /* ?reset en la URL limpia el autosave (útil para usuarios con datos corruptos) */
+  if (location.search.includes('reset')) {
+    localStorage.removeItem(AUTOSAVE_KEY);
+    history.replaceState(null, '', location.pathname);
+  }
   if (!cargarDesdeURL()) cargarAutosave();
   renderizarFilas();
   setModo(estado.modo);
@@ -1421,6 +1427,7 @@ function sincronizarEstadoDesdeDOM() {
 function leerEstadoCompleto() {
   sincronizarEstadoDesdeDOM();
   return {
+    _schema:         AUTOSAVE_SCHEMA,
     nombreProducto:  document.getElementById('nombre-producto').value,
     unidades:        parseFloat(document.getElementById('unidades').value) || 1,
     insumos:         estado.insumos,
@@ -1481,7 +1488,15 @@ function mostrarIndicadorAutosave() {
 function cargarAutosave() {
   try {
     const raw = localStorage.getItem(AUTOSAVE_KEY);
-    if (raw) aplicarEstado(JSON.parse(raw));
+    if (!raw) return;
+    const datos = JSON.parse(raw);
+    /* Si el esquema es viejo (o está ausente), descartamos el autosave para
+       evitar datos corruptos de versiones anteriores (bug soloServicios). */
+    if ((datos._schema || 0) < AUTOSAVE_SCHEMA) {
+      localStorage.removeItem(AUTOSAVE_KEY);
+      return;
+    }
+    aplicarEstado(datos);
   } catch (_) {}
 }
 
