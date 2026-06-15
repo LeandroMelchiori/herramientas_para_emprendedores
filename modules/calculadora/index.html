@@ -704,6 +704,23 @@
   .nav-tab.con-datos .tab-num::after { content: ' ✓'; font-size: 0.7rem; opacity: 0.8; }
   .nav-tab.visitada { opacity: 1; }
 
+  /* ── Botón vaciar por sección ── */
+  .btn-vaciar-seccion {
+    background: none;
+    border: none;
+    color: var(--gris-texto);
+    font-size: 0.72rem;
+    font-family: 'DM Sans', sans-serif;
+    cursor: pointer;
+    padding: 4px 6px;
+    border-radius: 6px;
+    opacity: 0.6;
+    white-space: nowrap;
+    flex-shrink: 0;
+    transition: opacity 0.15s, color 0.15s;
+  }
+  .btn-vaciar-seccion:hover { opacity: 1; color: var(--error); }
+
   /* ── Panel precio de venta (reemplaza inline styles) ── */
   .precio-venta-box { text-align: right; }
   .precio-venta-label { font-size: 0.78rem; color: var(--naranja-claro); }
@@ -849,6 +866,7 @@
   <div class="card">
     <div class="card-title-row">
       <div class="card-title">Materiales e insumos</div>
+      <button class="btn-vaciar-seccion" onclick="vaciarInsumos()">Vaciar</button>
       <label class="switch" title="Activar o desactivar materiales">
         <input type="checkbox" id="toggle-insumos" checked onchange="toggleInsumos(this.checked)">
         <span class="slider"></span>
@@ -891,7 +909,10 @@
 <!-- ══ PÁGINA 2: SERVICIOS Y MANO DE OBRA ══ -->
 <div class="page" id="page-1">
   <div class="card">
-    <div class="card-title">Servicios y mano de obra</div>
+    <div class="card-title-row">
+      <div class="card-title">Servicios y mano de obra</div>
+      <button class="btn-vaciar-seccion" onclick="vaciarServicios()">Vaciar</button>
+    </div>
     <div class="info-box">
       Incluí la luz, gas, tu tiempo (¡cobrarte a vos misma/o!), y cualquier servicio que uses.
     </div>
@@ -922,7 +943,10 @@
 <!-- ══ PÁGINA 3: PRECIO Y MARGEN ══ -->
 <div class="page" id="page-2">
   <div class="card">
-    <div class="card-title">Tu margen de ganancia</div>
+    <div class="card-title-row">
+      <div class="card-title">Tu margen de ganancia</div>
+      <button class="btn-vaciar-seccion" onclick="vaciarPrecio()">Vaciar</button>
+    </div>
 
     <!-- Toggle modo slider / precio manual -->
     <div style="display:flex;gap:0;margin-bottom:14px;border-radius:8px;overflow:hidden;border:1.5px solid var(--borde);">
@@ -1001,7 +1025,10 @@
 <!-- ══ PÁGINA 4: PUNTO DE EQUILIBRIO ══ -->
 <div class="page" id="page-3">
   <div class="card">
-    <div class="card-title">¿Cuánto necesitás vender?</div>
+    <div class="card-title-row">
+      <div class="card-title">¿Cuánto necesitás vender?</div>
+      <button class="btn-vaciar-seccion" onclick="vaciarVentas()">Vaciar</button>
+    </div>
     <div class="info-box">
       Anotá cuánto gastás por mes (alquiler, servicios fijos, etc.) y calculamos cuántas unidades tenés que vender para cubrir todo.
     </div>
@@ -1822,6 +1849,39 @@ function limpiarTodo() {
   localStorage.removeItem(AUTOSAVE_KEY);
   goTo(0, true);
   mostrarToast('Campos limpiados — nuevo cálculo listo');
+}
+
+/* ══ VACIAR POR SECCIÓN ══ */
+
+function vaciarInsumos() {
+  estado.insumos = Array.from({ length: FILAS_INICIALES }, filaInsumoVacia);
+  renderizarFilas();
+  actualizar();
+}
+
+function vaciarServicios() {
+  estado.servicios = Array.from({ length: FILAS_INICIALES }, filaServicioVacia);
+  renderizarFilas();
+  actualizar();
+}
+
+function vaciarPrecio() {
+  estado.margen    = 50;
+  estado.modo      = 'slider';
+  estado.ivaActivo = false;
+  document.getElementById('margen-slider').value = 50;
+  document.getElementById('precio-manual').value = '';
+  const ivaEl = document.getElementById('iva-toggle');
+  if (ivaEl) ivaEl.checked = false;
+  setModo('slider');
+  actualizar();
+}
+
+function vaciarVentas() {
+  document.getElementById('gastos-mensuales').value = '';
+  document.getElementById('dias-laborales').value   = 24;
+  document.getElementById('meta-ingresos').value    = '';
+  actualizar();
 }
 
 function duplicarProyecto(id) {
