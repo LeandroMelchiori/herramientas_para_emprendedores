@@ -774,10 +774,14 @@
   }
   .desglose-seg.mat { background: var(--naranja); transition: width 0.4s; }
   .desglose-seg.srv { background: var(--azul); transition: width 0.4s; }
+  .desglose-seg.costo    { background: #b0b8c1; transition: width 0.4s; }
+  .desglose-seg.ganancia { background: #27ae60; transition: width 0.4s; }
   .desglose-leyenda { display: flex; align-items: center; font-size: 0.78rem; color: var(--gris-texto); }
   .desglose-dot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 4px; }
-  .desglose-dot.mat { background: var(--naranja); }
-  .desglose-dot.srv { background: var(--azul); }
+  .desglose-dot.mat      { background: var(--naranja); }
+  .desglose-dot.srv      { background: var(--azul); }
+  .desglose-dot.costo    { background: #b0b8c1; }
+  .desglose-dot.ganancia { background: #27ae60; }
 
   /* ── Resumen de contenido (reemplaza inline style) ── */
   .resumen-contenido { font-size: 0.88rem; line-height: 1.8; color: #444; }
@@ -1534,12 +1538,13 @@ function renderizarResumen(c) {
   }
   document.getElementById('resumen-contenido').innerHTML = lineas.join('<br>');
 
-  /* Desglose visual de la composición del costo */
+  /* Desglose visual de la composición del costo y del precio */
   const desglose = document.getElementById('desglose-costos');
-  if (c.costoUnitario > 0) {
-    desglose.style.display = 'block';
-    desglose.innerHTML = `
-      <div class="desglose-titulo">Composición del costo</div>
+  if (c.precioVenta > 0) {
+    const pctCosto    = Math.round(c.costoUnitario / c.precioVenta * 100);
+    const pctGanancia = 100 - pctCosto;
+    const barCosto    = c.costoUnitario > 0 ? `
+      <div class="desglose-titulo" style="margin-top:14px;padding-top:12px;border-top:1px solid var(--borde);">Composición del costo</div>
       <div class="desglose-barra">
         <div class="desglose-seg mat" style="width:${c.pctInsumos}%"></div>
         <div class="desglose-seg srv" style="width:${c.pctServicios}%"></div>
@@ -1548,7 +1553,20 @@ function renderizarResumen(c) {
         <span class="desglose-dot mat"></span> Materiales: <strong>${c.pctInsumos}%</strong>
         &nbsp;&nbsp;
         <span class="desglose-dot srv"></span> Tiempo y servicios: <strong>${c.pctServicios}%</strong>
-      </div>`;
+      </div>` : '';
+    desglose.style.display = 'block';
+    desglose.innerHTML = `
+      <div class="desglose-titulo">Composición del precio de venta</div>
+      <div class="desglose-barra">
+        <div class="desglose-seg costo"    style="width:${pctCosto}%"></div>
+        <div class="desglose-seg ganancia" style="width:${pctGanancia}%"></div>
+      </div>
+      <div class="desglose-leyenda">
+        <span class="desglose-dot costo"></span> Costo: <strong>${pctCosto}%</strong>
+        &nbsp;&nbsp;
+        <span class="desglose-dot ganancia"></span> Ganancia: <strong>${pctGanancia}%</strong>
+      </div>
+      ${barCosto}`;
   } else {
     desglose.style.display = 'none';
   }
