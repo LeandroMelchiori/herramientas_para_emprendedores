@@ -14,6 +14,7 @@
 <meta name="apple-mobile-web-app-title" content="Herramientas">
 <meta name="mobile-web-app-capable" content="yes">
 <script src="/pwa.js" defer></script>
+<script src="/backup.js" defer></script>
 <script src="/analytics.js" defer></script>
 
 <style>
@@ -1120,6 +1121,10 @@
         <input type="file" accept=".json" onchange="importarJSON(event)" style="display:none;">
       </label>
     </div>
+    <button class="btn-secundario" onclick="exportarBackupCompleto()"
+      style="margin-top:6px;width:100%;background:var(--naranja-palido);color:var(--naranja);border-color:var(--naranja-claro);">
+      🔒 Hacer backup completo (proyectos + ventas)
+    </button>
   </div>
 
   <!-- Lista de proyectos guardados -->

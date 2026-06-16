@@ -15,6 +15,7 @@
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <script src="/analytics.js" defer></script>
 <script src="/pwa.js" defer></script>
+<script src="/backup.js" defer></script>
 <style>
 :root {
   --naranja:       #E85D3A;
@@ -540,6 +541,11 @@ body {
 
 <!-- ══ PÁGINA 1: HISTORIAL ══ -->
 <div class="page" id="page-1">
+
+  <button onclick="exportarBackupCompleto()"
+    style="width:100%;background:var(--naranja-palido);color:var(--naranja);border:1.5px solid var(--naranja-claro);border-radius:10px;font-family:'DM Sans',sans-serif;font-size:0.85rem;font-weight:700;padding:10px;cursor:pointer;margin-bottom:14px;">
+    🔒 Hacer backup completo (proyectos + ventas)
+  </button>
 
   <div class="filtros-periodo">
     <button class="btn-filtro active" onclick="setFiltro('hoy', this)">Hoy</button>
