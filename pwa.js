@@ -15,15 +15,17 @@ if ('serviceWorker' in navigator) {
 
   /* Cuando un nuevo SW toma el control (nueva versión deployada), recargamos la
      página automáticamente para que todos los usuarios reciban el código nuevo
-     sin tener que saber qué es un Service Worker. */
-  navigator.serviceWorker.addEventListener('controllerchange', () => {
-    window.location.reload();
-  });
+     sin tener que saber qué es un Service Worker.
+     El flag evita recargas dobles si controllerchange y SW_UPDATED disparan juntos. */
+  let swReloading = false;
+  const recargarPorSW = () => { if (!swReloading) { swReloading = true; window.location.reload(); } };
+
+  navigator.serviceWorker.addEventListener('controllerchange', recargarPorSW);
 
   /* El SW también manda un mensaje SW_UPDATED al activarse — esto cubre el caso
      en que el usuario tiene el pwa.js viejo sin el listener de controllerchange. */
   navigator.serviceWorker.addEventListener('message', (e) => {
-    if (e.data?.type === 'SW_UPDATED') window.location.reload();
+    if (e.data?.type === 'SW_UPDATED') recargarPorSW();
   });
 }
 

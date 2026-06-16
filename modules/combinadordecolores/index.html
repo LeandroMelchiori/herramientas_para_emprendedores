@@ -652,7 +652,11 @@ function applyState(st){
 // Prioridad al cargar: parámetros de la URL > último estado guardado > valor por defecto.
 function loadInitialState(){
   const p=new URLSearchParams(location.search);
-  if(p.has("h")||p.has("s")||p.has("l")){applyState({h:+p.get("h"),s:+p.get("s"),l:+p.get("l"),arm:p.get("arm")});return;}
+  if(p.has("h")||p.has("s")||p.has("l")){
+    const clamp=(v,min,max)=>Math.max(min,Math.min(max,v));
+    applyState({h:clamp(+p.get("h"),0,359),s:clamp(+p.get("s"),0,100),l:clamp(+p.get("l"),5,95),arm:p.get("arm")});
+    return;
+  }
   try{const saved=JSON.parse(localStorage.getItem("cc_last")||"null");if(saved)applyState(saved);}catch(e){}
 }
 let saveT=null;
