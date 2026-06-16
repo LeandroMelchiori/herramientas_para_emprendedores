@@ -21,6 +21,7 @@ const PRECACHE = [
   '/modules/guiadeprompts/',
   '/modules/combinadordecolores/',
   '/modules/herramientasdigitales/',
+  '/modules/registrodeventas/',
   '/manifest.json',
   '/favicon.ico',
   '/pwa.js',
