@@ -720,6 +720,18 @@
     transition: opacity 0.15s, color 0.15s;
   }
   .btn-vaciar-seccion:hover { opacity: 1; color: var(--error); }
+  .btn-vaciar-seccion.confirmando { opacity: 1; color: var(--error); border: 1px solid var(--error); border-radius: 6px; }
+
+  /* ── Input numérico de margen ── */
+  .margen-num-input { width: 58px; font-size: 1.5rem; font-weight: 600; color: var(--azul); text-align: right; border: 1.5px solid var(--borde); border-radius: 8px; padding: 4px 4px; background: var(--azul-palido); font-family: 'DM Sans', sans-serif; -moz-appearance: textfield; }
+  .margen-num-input::-webkit-inner-spin-button, .margen-num-input::-webkit-outer-spin-button { -webkit-appearance: none; }
+
+  /* ── Búsqueda + paginación de proyectos ── */
+  .buscar-proyectos { width: 100%; box-sizing: border-box; padding: 8px 12px; border: 1.5px solid var(--borde); border-radius: 8px; font-size: 0.9rem; font-family: 'DM Sans', sans-serif; margin-bottom: 10px; background: var(--fondo); color: var(--texto); }
+  .paginacion-proyectos { justify-content: center; align-items: center; gap: 12px; padding-top: 10px; }
+  .btn-pag { background: none; border: 1.5px solid var(--borde); border-radius: 6px; padding: 5px 14px; cursor: pointer; font-size: 0.85rem; font-family: 'DM Sans', sans-serif; color: var(--azul); }
+  .btn-pag:disabled { opacity: 0.35; cursor: default; }
+  .pag-info { font-size: 0.82rem; color: var(--gris-texto); min-width: 70px; text-align: center; }
 
   /* ── Panel precio de venta (reemplaza inline styles) ── */
   .precio-venta-box { text-align: right; }
@@ -870,7 +882,7 @@
   <div class="card">
     <div class="card-title-row">
       <div class="card-title">Materiales e insumos</div>
-      <button class="btn-vaciar-seccion" onclick="vaciarInsumos()">Vaciar</button>
+      <button class="btn-vaciar-seccion" onclick="confirmarVaciar(vaciarInsumos, this)">Vaciar</button>
       <label class="switch" title="Activar o desactivar materiales">
         <input type="checkbox" id="toggle-insumos" checked onchange="toggleInsumos(this.checked)">
         <span class="slider"></span>
@@ -915,7 +927,7 @@
   <div class="card">
     <div class="card-title-row">
       <div class="card-title">Servicios y mano de obra</div>
-      <button class="btn-vaciar-seccion" onclick="vaciarServicios()">Vaciar</button>
+      <button class="btn-vaciar-seccion" onclick="confirmarVaciar(vaciarServicios, this)">Vaciar</button>
     </div>
     <div class="info-box">
       Incluí la luz, gas, tu tiempo (¡cobrarte a vos misma/o!), y cualquier servicio que uses.
@@ -949,7 +961,7 @@
   <div class="card">
     <div class="card-title-row">
       <div class="card-title">Tu margen de ganancia</div>
-      <button class="btn-vaciar-seccion" onclick="vaciarPrecio()">Vaciar</button>
+      <button class="btn-vaciar-seccion" onclick="confirmarVaciar(vaciarPrecio, this)">Vaciar</button>
     </div>
 
     <!-- Toggle modo slider / precio manual -->
@@ -963,7 +975,11 @@
       <div class="info-box">Mové el deslizador para elegir cuánto querés ganar encima de tu costo.</div>
       <div class="margen-display">
         <div>
-          <div class="pct" id="margen-pct">50%</div>
+          <div style="display:flex;align-items:baseline;gap:2px;">
+            <input type="number" id="margen-input" class="margen-num-input" min="10" max="200" value="50" oninput="actualizarMargenManual(this.value)">
+            <span class="pct">%</span>
+          </div>
+          <div id="margen-pct" style="display:none">50%</div>
           <div class="desc">de ganancia sobre el costo</div>
         </div>
         <div class="precio-venta-box">
@@ -1031,7 +1047,7 @@
   <div class="card">
     <div class="card-title-row">
       <div class="card-title">¿Cuánto necesitás vender?</div>
-      <button class="btn-vaciar-seccion" onclick="vaciarVentas()">Vaciar</button>
+      <button class="btn-vaciar-seccion" onclick="confirmarVaciar(vaciarVentas, this)">Vaciar</button>
     </div>
     <div class="info-box">
       Anotá cuánto gastás por mes (alquiler, servicios fijos, etc.) y calculamos cuántas unidades tenés que vender para cubrir todo.
@@ -1109,7 +1125,13 @@
   <!-- Lista de proyectos guardados -->
   <div class="card">
     <div class="card-title">Proyectos guardados</div>
+    <input type="search" id="buscar-proyectos" class="buscar-proyectos" placeholder="Buscar proyecto..." oninput="filtrarProyectos(this.value)">
     <div id="lista-proyectos"></div>
+    <div id="paginacion-proyectos" class="paginacion-proyectos" style="display:none">
+      <button class="btn-pag" id="pag-prev" onclick="cambiarPaginaProyectos(-1)">← Ant.</button>
+      <span class="pag-info" id="pag-info"></span>
+      <button class="btn-pag" id="pag-next" onclick="cambiarPaginaProyectos(1)">Sig. →</button>
+    </div>
   </div>
 </div>
 
@@ -1159,6 +1181,8 @@ const AUTOSAVE_SCHEMA = 2;  // incrementar si cambia la estructura del autosave
 
 /* true después de guardar un proyecto en esta sesión; se usa para la advertencia de salida */
 let proyectoGuardadoEnSesion = false;
+let _pagProyectos = 1;
+let _filtroProyectos = '';
 let proyectoActivoId         = null;  // id del proyecto cargado (null = cálculo nuevo)
 let proyectoActivoNombre     = '';    // nombre del proyecto activo para el modal
 
@@ -1214,14 +1238,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
 /* ── Navegación entre pasos ── */
 function goTo(idx) {
-  /* Bloquear avance a Precio y Ventas si no hay ningún precio cargado */
+  /* Sugerir que carguen costos antes de ir a Precio/Ventas, pero sin bloquear */
   if (idx === 2 || idx === 3) {
     const tienePrecios =
       estado.insumos.some(i => i.precio > 0) ||
       estado.servicios.some(s => s.precio > 0);
     if (!tienePrecios) {
-      mostrarToast('Ingresá al menos un precio antes de continuar');
-      return;
+      mostrarToast('Todavía no ingresaste ningún costo');
     }
   }
   document.querySelectorAll('.page').forEach((p, i) => p.classList.toggle('active', i === idx));
@@ -1402,6 +1425,7 @@ function actualizar() {
   document.getElementById('costo-unitario-display').textContent    = fmt(c.costoUnitario);
   document.getElementById('ganancia-unitaria-display').textContent = fmt(c.gananciaNeta);
   document.getElementById('margen-pct').textContent                = `${Math.round(c.margenReal)}%`;
+  { const mi = document.getElementById('margen-input'); if (mi && document.activeElement !== mi) mi.value = Math.round(c.margenReal); }
   document.getElementById('precio-venta-display').textContent      = fmt(c.precioVenta);
 
   /* Precio con IVA debajo del precio principal */
@@ -1563,6 +1587,13 @@ function actualizarMargen(val) {
   actualizar();
 }
 
+function actualizarMargenManual(val) {
+  const v = Math.max(10, Math.min(200, parseInt(val) || 10));
+  estado.margen = v;
+  document.getElementById('margen-slider').value = v;
+  actualizar();
+}
+
 function actualizarPrecioManual() {
   actualizar();
 }
@@ -1624,6 +1655,7 @@ function aplicarEstado(datos) {
   document.getElementById('dias-laborales').value   = datos.diasLaborales || 24;
   document.getElementById('precio-manual').value    = datos.precioManual || '';
   document.getElementById('margen-slider').value    = datos.margen || 50;
+  { const mi = document.getElementById('margen-input'); if (mi) mi.value = datos.margen || 50; }
   document.getElementById('meta-ingresos').value    = datos.metaIngresos || '';
   const ivaEl = document.getElementById('iva-toggle');
   if (ivaEl) ivaEl.checked = datos.ivaActivo || false;
@@ -1818,6 +1850,7 @@ function limpiarTodo() {
     .forEach(id => { document.getElementById(id).value = ''; });
   document.getElementById('unidades').value      = 1;
   document.getElementById('margen-slider').value = 50;
+  { const mi = document.getElementById('margen-input'); if (mi) mi.value = 50; }
   document.getElementById('dias-laborales').value = 24;
   const ivaEl = document.getElementById('iva-toggle');
   if (ivaEl) ivaEl.checked = false;
@@ -1832,6 +1865,26 @@ function limpiarTodo() {
 }
 
 /* ══ VACIAR POR SECCIÓN ══ */
+
+/* Doble confirmación inline: primer clic avisa, segundo clic dentro de 2.5s ejecuta. */
+function confirmarVaciar(fn, btn) {
+  if (btn.dataset.pendiente) {
+    clearTimeout(parseInt(btn.dataset.pendiente));
+    delete btn.dataset.pendiente;
+    btn.textContent = 'Vaciar';
+    btn.classList.remove('confirmando');
+    fn();
+    return;
+  }
+  btn.classList.add('confirmando');
+  btn.textContent = '¿Confirmás?';
+  const t = setTimeout(() => {
+    delete btn.dataset.pendiente;
+    btn.textContent = 'Vaciar';
+    btn.classList.remove('confirmando');
+  }, 2500);
+  btn.dataset.pendiente = t;
+}
 
 function vaciarInsumos() {
   estado.insumos = Array.from({ length: FILAS_INICIALES }, filaInsumoVacia);
@@ -1850,6 +1903,7 @@ function vaciarPrecio() {
   estado.modo      = 'slider';
   estado.ivaActivo = false;
   document.getElementById('margen-slider').value = 50;
+  { const mi = document.getElementById('margen-input'); if (mi) mi.value = 50; }
   document.getElementById('precio-manual').value = '';
   const ivaEl = document.getElementById('iva-toggle');
   if (ivaEl) ivaEl.checked = false;
@@ -1880,17 +1934,41 @@ function eliminarProyecto(id) {
   mostrarToast('Proyecto eliminado');
 }
 
+function filtrarProyectos(val) {
+  _filtroProyectos = val.trim().toLowerCase();
+  _pagProyectos = 1;
+  renderizarProyectos();
+}
+
+function cambiarPaginaProyectos(delta) {
+  _pagProyectos += delta;
+  renderizarProyectos();
+}
+
 function renderizarProyectos() {
   const lista = document.getElementById('lista-proyectos');
-  const proyectos = obtenerProyectos();
+  const paginacion = document.getElementById('paginacion-proyectos');
+  let proyectos = obtenerProyectos();
+
+  if (_filtroProyectos) {
+    proyectos = proyectos.filter(p => p.nombre.toLowerCase().includes(_filtroProyectos));
+  }
+
   if (!proyectos.length) {
-    lista.innerHTML = `<div class="empty-state">
-      <div class="empty-icon">📂</div>
-      <p>Todavía no guardaste ningún proyecto.<br>Guardá tu cálculo actual para encontrarlo después.</p>
-    </div>`;
+    lista.innerHTML = _filtroProyectos
+      ? `<p style="text-align:center;color:var(--gris-texto);padding:20px 0;font-size:0.88rem;">Sin resultados para "<b>${escHtml(_filtroProyectos)}</b>"</p>`
+      : `<div class="empty-state"><div class="empty-icon">📂</div><p>Todavía no guardaste ningún proyecto.<br>Guardá tu cálculo actual para encontrarlo después.</p></div>`;
+    if (paginacion) paginacion.style.display = 'none';
     return;
   }
-  lista.innerHTML = proyectos.map(p => `
+
+  const POR_PAG = 10;
+  const total = proyectos.length;
+  const totalPags = Math.ceil(total / POR_PAG);
+  _pagProyectos = Math.max(1, Math.min(_pagProyectos, totalPags));
+  const ini = (_pagProyectos - 1) * POR_PAG;
+
+  lista.innerHTML = proyectos.slice(ini, ini + POR_PAG).map(p => `
     <div class="proyecto-item">
       <div class="proyecto-info">
         <div class="proyecto-nombre">${escHtml(p.nombre)}</div>
@@ -1902,6 +1980,17 @@ function renderizarProyectos() {
         <button class="btn-proyecto-eliminar" onclick="eliminarProyecto(${p.id})" title="Eliminar">✕</button>
       </div>
     </div>`).join('');
+
+  if (paginacion) {
+    if (total > POR_PAG) {
+      paginacion.style.display = 'flex';
+      document.getElementById('pag-info').textContent = `Pág. ${_pagProyectos} / ${totalPags}`;
+      document.getElementById('pag-prev').disabled = _pagProyectos === 1;
+      document.getElementById('pag-next').disabled = _pagProyectos === totalPags;
+    } else {
+      paginacion.style.display = 'none';
+    }
+  }
 }
 
 /* ══ EXPORT / IMPORT ══ */
