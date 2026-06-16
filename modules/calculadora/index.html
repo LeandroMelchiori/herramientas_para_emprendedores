@@ -1115,16 +1115,15 @@
     <button class="btn-nuevo-calculo" onclick="limpiarTodo()">✕ Nuevo cálculo (limpiar todo)</button>
     <button class="btn-compartir" onclick="compartirPorLink()">🔗 Compartir por link</button>
     <div style="display:flex;gap:8px;margin-top:4px;">
-      <button class="btn-secundario" onclick="exportarJSON()">⬇ Exportar (.json)</button>
+      <button class="btn-secundario" onclick="exportarBackupCompleto()"
+        style="flex:1;background:var(--naranja-palido);color:var(--naranja);border-color:var(--naranja-claro);">
+        🔒 Hacer backup
+      </button>
       <label class="btn-secundario" style="cursor:pointer;">
-        ⬆ Importar
+        ⬆ Restaurar
         <input type="file" accept=".json" onchange="importarJSON(event)" style="display:none;">
       </label>
     </div>
-    <button class="btn-secundario" onclick="exportarBackupCompleto()"
-      style="margin-top:6px;width:100%;background:var(--naranja-palido);color:var(--naranja);border-color:var(--naranja-claro);">
-      🔒 Hacer backup completo (proyectos + ventas)
-    </button>
   </div>
 
   <!-- Lista de proyectos guardados -->
@@ -2019,10 +2018,16 @@ function importarJSON(event) {
   reader.onload = e => {
     try {
       const datos = JSON.parse(e.target.result);
-      if (datos.proyectos) guardarProyectos(datos.proyectos);
-      if (datos.actual) { aplicarEstado(datos.actual); renderizarFilas(); setModo(datos.actual.modo || 'slider'); }
+      /* Formato backup completo: { calculadora_proyectos, ventas_historial, ... } */
+      /* Formato legado:          { proyectos, actual }                           */
+      const proyectos = datos.calculadora_proyectos || datos.proyectos;
+      const estadoActual = datos.calculadora_autosave || datos.actual;
+      if (proyectos) guardarProyectos(proyectos);
+      if (estadoActual) { aplicarEstado(estadoActual); renderizarFilas(); setModo(estadoActual.modo || 'slider'); }
+      if (datos.ventas_historial) localStorage.setItem('ventas_historial', JSON.stringify(datos.ventas_historial));
       renderizarProyectos();
-      mostrarToast('Importación exitosa ✓');
+      const detalle = datos.ventas_historial ? ' (proyectos + ventas)' : '';
+      mostrarToast(`Restauración exitosa${detalle} ✓`);
       if (typeof trackEvent === 'function') trackEvent('importar_json');
     } catch (_) { mostrarToast('El archivo no es válido'); }
   };
