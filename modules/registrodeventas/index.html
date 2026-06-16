@@ -542,10 +542,17 @@ body {
 <!-- ══ PÁGINA 1: HISTORIAL ══ -->
 <div class="page" id="page-1">
 
-  <button onclick="exportarBackupCompleto()"
-    style="width:100%;background:var(--naranja-palido);color:var(--naranja);border:1.5px solid var(--naranja-claro);border-radius:10px;font-family:'DM Sans',sans-serif;font-size:0.85rem;font-weight:700;padding:10px;cursor:pointer;margin-bottom:14px;">
-    🔒 Hacer backup completo (proyectos + ventas)
-  </button>
+  <div style="display:flex;gap:8px;margin-bottom:14px;">
+    <button onclick="exportarBackupCompleto()"
+      style="flex:1;background:var(--naranja-palido);color:var(--naranja);border:1.5px solid var(--naranja-claro);border-radius:10px;font-family:'DM Sans',sans-serif;font-size:0.85rem;font-weight:700;padding:10px;cursor:pointer;">
+      🔒 Hacer backup
+    </button>
+    <label
+      style="flex:1;background:var(--gris);color:var(--gris-texto);border:1.5px solid var(--borde);border-radius:10px;font-family:'DM Sans',sans-serif;font-size:0.85rem;font-weight:700;padding:10px;cursor:pointer;text-align:center;">
+      ⬆ Restaurar
+      <input type="file" accept=".json" onchange="restaurarBackup(event)" style="display:none;">
+    </label>
+  </div>
 
   <div class="filtros-periodo">
     <button class="btn-filtro active" onclick="setFiltro('hoy', this)">Hoy</button>
@@ -968,6 +975,31 @@ function goTo(idx) {
   document.querySelectorAll('.nav-tab').forEach((t, i) => t.classList.toggle('active', i === idx));
   if (idx === 0) cargarProductos();     // recargar por si el usuario cargó proyectos nuevos
   if (idx === 1) renderizarHistorial();
+}
+
+/* ══ RESTAURAR BACKUP ══ */
+function restaurarBackup(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    try {
+      const datos = JSON.parse(e.target.result);
+      const ventas    = datos.ventas_historial      || null;
+      const proyectos = datos.calculadora_proyectos || datos.proyectos || null;
+      const autosave  = datos.calculadora_autosave  || datos.actual    || null;
+      if (!ventas && !proyectos) { mostrarToast('El archivo no es válido'); return; }
+      if (ventas)    localStorage.setItem('ventas_historial',      JSON.stringify(ventas));
+      if (proyectos) localStorage.setItem('calculadora_proyectos', JSON.stringify(proyectos));
+      if (autosave)  localStorage.setItem('calculadora_autosave',  JSON.stringify(autosave));
+      renderizarHistorial();
+      const partes = [ventas && 'ventas', proyectos && 'proyectos'].filter(Boolean).join(' + ');
+      mostrarToast(`Restauración exitosa (${partes}) ✓`);
+      if (typeof trackEvent === 'function') trackEvent('ventas_restaurar_backup');
+    } catch (_) { mostrarToast('El archivo no es válido'); }
+  };
+  reader.readAsText(file);
+  event.target.value = '';
 }
 
 /* ══ TOAST ══ */
