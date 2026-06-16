@@ -555,10 +555,16 @@ body {
     </label>
   </div>
 
-  <button onclick="generarPDFVentas()" id="btn-pdf-ventas"
-    style="width:100%;background:var(--azul-palido);color:var(--azul);border:1.5px solid #BFDBFE;border-radius:10px;font-family:'DM Sans',sans-serif;font-size:0.85rem;font-weight:700;padding:10px;cursor:pointer;margin-bottom:14px;">
-    📄 Exportar resumen PDF
-  </button>
+  <div style="display:flex;gap:8px;margin-bottom:14px;">
+    <select id="select-mes-pdf"
+      style="flex:1;padding:10px 12px;border:1.5px solid var(--borde);border-radius:10px;font-size:0.85rem;font-family:'DM Sans',sans-serif;background:var(--fondo);color:var(--texto);">
+      <option value="todo">Todo el historial</option>
+    </select>
+    <button onclick="generarPDFVentas()"
+      style="background:var(--azul-palido);color:var(--azul);border:1.5px solid #BFDBFE;border-radius:10px;font-family:'DM Sans',sans-serif;font-size:0.85rem;font-weight:700;padding:10px 16px;cursor:pointer;white-space:nowrap;">
+      📄 PDF
+    </button>
+  </div>
 
   <div class="filtros-periodo">
     <button class="btn-filtro active" onclick="setFiltro('hoy', this)">Hoy</button>
@@ -889,6 +895,7 @@ function renderizarHistorial() {
     </div>`;
 
   const lista = document.getElementById('lista-historial');
+  actualizarSelectMes();
 
   if (!ventas.length) {
     lista.innerHTML = `<div class="empty-state">
@@ -964,6 +971,30 @@ function renderizarHistorial() {
   }).join('');
 }
 
+/* Puebla el selector de mes para el PDF con los meses que tienen ventas */
+function actualizarSelectMes() {
+  const sel = document.getElementById('select-mes-pdf');
+  if (!sel) return;
+  const ventas = obtenerVentas();
+  const meses = new Set();
+  ventas.forEach(v => {
+    const d = new Date(v.fecha);
+    meses.add(`${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`);
+  });
+  const ahora = new Date();
+  meses.add(`${ahora.getFullYear()}-${String(ahora.getMonth() + 1).padStart(2, '0')}`);
+  const sorted = Array.from(meses).sort((a, b) => b.localeCompare(a));
+  const prev = sel.value;
+  sel.innerHTML = '<option value="todo">Todo el historial</option>' +
+    sorted.map(m => {
+      const [yr, mo] = m.split('-');
+      const label = new Date(parseInt(yr), parseInt(mo) - 1, 1)
+        .toLocaleDateString('es-AR', { month: 'long', year: 'numeric' });
+      return `<option value="${m}">${label.charAt(0).toUpperCase() + label.slice(1)}</option>`;
+    }).join('');
+  if (prev && sel.querySelector(`option[value="${prev}"]`)) sel.value = prev;
+}
+
 function toggleVenta(id) {
   document.getElementById(`venta-${id}`).classList.toggle('expandida');
 }
@@ -988,7 +1019,21 @@ function generarPDFVentas() {
   if (!window.jspdf) { mostrarToast('PDF todavía cargando, intentá de nuevo'); return; }
   const { jsPDF } = window.jspdf;
 
-  const ventas = filtrarPorPeriodo(obtenerVentas());
+  const mesSel = document.getElementById('select-mes-pdf')?.value || 'todo';
+  const todasVentas = obtenerVentas();
+  let ventas, periodoLabelBase;
+  if (mesSel === 'todo') {
+    ventas = todasVentas;
+    periodoLabelBase = 'Historial completo';
+  } else {
+    const [yr, mo] = mesSel.split('-').map(Number);
+    ventas = todasVentas.filter(v => {
+      const d = new Date(v.fecha);
+      return d.getFullYear() === yr && d.getMonth() + 1 === mo;
+    });
+    const label = new Date(yr, mo - 1, 1).toLocaleDateString('es-AR', { month: 'long', year: 'numeric' });
+    periodoLabelBase = label.charAt(0).toUpperCase() + label.slice(1);
+  }
   if (!ventas.length) { mostrarToast('No hay ventas en este período'); return; }
 
   const doc = new jsPDF({ unit: 'mm', format: 'a4' });
@@ -1031,12 +1076,7 @@ function generarPDFVentas() {
   doc.setFont('helvetica', 'bold'); doc.setFontSize(17); doc.setTextColor(...C.blanco);
   doc.text('Resumen de ventas', mx, 13);
 
-  const periodoLabel = {
-    hoy:    'Hoy — ' + new Date().toLocaleDateString('es-AR', { day: '2-digit', month: 'long', year: 'numeric' }),
-    semana: 'Esta semana',
-    mes:    new Date().toLocaleDateString('es-AR', { month: 'long', year: 'numeric' }),
-    todo:   'Historial completo',
-  }[filtroActivo] || filtroActivo;
+  const periodoLabel = periodoLabelBase;
 
   doc.setFont('helvetica', 'normal'); doc.setFontSize(9);
   doc.text(periodoLabel, mx, 21);
@@ -1149,7 +1189,7 @@ function generarPDFVentas() {
 
   /* ── GUARDAR ── */
   const fecha = new Date().toISOString().slice(0, 10);
-  doc.save(`ventas-${filtroActivo}-${fecha}.pdf`);
+  doc.save(`ventas-${mesSel === 'todo' ? 'completo' : mesSel}-${fecha}.pdf`);
   mostrarToast('PDF descargado ✓');
   if (typeof trackEvent === 'function') trackEvent('ventas_exportar_pdf');
 }
