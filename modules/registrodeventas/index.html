@@ -925,28 +925,28 @@ function renderizarHistorial() {
   }, {});
   
   const pagosArr = Object.entries(pagoStats).filter(([k, val]) => val > 0).sort((a, b) => b[1] - a[1]);
-  const breakdownHtml = (fiadoTotal > 0 || pagosArr.length > 0) ? \`
+  const breakdownHtml = (fiadoTotal > 0 || pagosArr.length > 0) ? `
     <div style="font-size:0.75rem;color:var(--gris-texto);margin-top:10px;display:flex;gap:6px;flex-wrap:wrap;justify-content:center;">
-      \${fiadoTotal > 0 ? \`<div style="background:#FEF2F2;color:var(--error);padding:4px 10px;border-radius:12px;font-weight:600;border:1px solid #FECACA;">A cobrar: \${fmt(fiadoTotal)}</div>\` : ''}
-      \${pagosArr.map(([k, val]) => \`<div style="background:var(--gris);padding:4px 10px;border-radius:12px;border:1px solid var(--borde);">\${k}: <b>\${fmt(val)}</b></div>\`).join('')}
-    </div>\` : '';
+      ${fiadoTotal > 0 ? `<div style="background:#FEF2F2;color:var(--error);padding:4px 10px;border-radius:12px;font-weight:600;border:1px solid #FECACA;">A cobrar: ${fmt(fiadoTotal)}</div>` : ''}
+      ${pagosArr.map(([k, val]) => `<div style="background:var(--gris);padding:4px 10px;border-radius:12px;border:1px solid var(--borde);">${k}: <b>${fmt(val)}</b></div>`).join('')}
+    </div>` : '';
 
-  document.getElementById('resumen-periodo').innerHTML = \`
+  document.getElementById('resumen-periodo').innerHTML = `
     <div class="resumen-grid">
       <div class="resumen-item naranja">
-        <div class="rval">\${fmt(totalIng)}</div>
+        <div class="rval">${fmt(totalIng)}</div>
         <div class="rlabel">Ingresos</div>
       </div>
       <div class="resumen-item azul">
-        <div class="rval">\${fmt(totalCos)}</div>
+        <div class="rval">${fmt(totalCos)}</div>
         <div class="rlabel">Costos</div>
       </div>
       <div class="resumen-item verde">
-        <div class="rval">\${fmt(totalGan)}</div>
+        <div class="rval">${fmt(totalGan)}</div>
         <div class="rlabel">Ganancia</div>
       </div>
     </div>
-    \${breakdownHtml}\`;
+    ${breakdownHtml}`;
 
   const lista = document.getElementById('lista-historial');
   actualizarSelectMes();
