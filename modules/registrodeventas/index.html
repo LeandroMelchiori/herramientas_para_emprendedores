@@ -327,10 +327,12 @@ body {
 
 /* ── Resumen del período ── */
 .resumen-periodo {
+  margin-bottom: 14px;
+}
+.resumen-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 8px;
-  margin-bottom: 14px;
 }
 .resumen-item {
   background: white;
@@ -519,6 +521,26 @@ body {
 
     <!-- Desglose sugerido -->
     <div class="totales-box" id="totales-box"></div>
+
+    <div class="field-group">
+      <label for="input-etiqueta">Etiqueta / Nombre del cliente (opcional)</label>
+      <input type="text" id="input-etiqueta" placeholder="Ej: Jorge, Seña...">
+    </div>
+    <div class="field-group" style="display:flex;gap:12px;margin-bottom:16px;">
+      <div style="flex:1">
+        <label for="select-pago">Medio de pago</label>
+        <select id="select-pago">
+          <option value="Efectivo">Efectivo</option>
+          <option value="Transferencia">Transferencia</option>
+          <option value="Tarjeta">Tarjeta</option>
+          <option value="Otro">Otro</option>
+        </select>
+      </div>
+      <label style="display:flex;align-items:center;gap:6px;font-size:0.85rem;color:var(--gris-texto);font-weight:600;cursor:pointer;margin-top:18px;">
+        <input type="checkbox" id="check-fiado" style="width:18px;height:18px;accent-color:var(--naranja)">
+        Falta pagar (fiado)
+      </label>
+    </div>
 
     <!-- Campo de precio final editable -->
     <div class="precio-final-wrap">
@@ -821,6 +843,10 @@ function finalizarVenta() {
   const cobrado       = parseFloat(document.getElementById('input-precio-final').value) || 0;
   if (cobrado <= 0) return;
 
+  const etiqueta  = document.getElementById('input-etiqueta').value.trim();
+  const medioPago = document.getElementById('select-pago').value;
+  const fiado     = document.getElementById('check-fiado').checked;
+
   const venta = {
     id:            Date.now(),
     fecha:         new Date().toISOString(),
@@ -830,6 +856,9 @@ function finalizarVenta() {
     totalCosto,
     totalGanancia: cobrado - totalCosto,
     descuento:     totalSugerido - cobrado,
+    etiqueta,
+    medioPago,
+    fiado,
   };
 
   const historial = obtenerVentas();
@@ -840,6 +869,9 @@ function finalizarVenta() {
   carrito = [];
   precioEditado = false;
   document.getElementById('input-precio-final').value = '';
+  document.getElementById('input-etiqueta').value = '';
+  document.getElementById('select-pago').value = 'Efectivo';
+  document.getElementById('check-fiado').checked = false;
   renderizarCarrito();
 
   mostrarToast('Venta registrada ✓');
@@ -883,19 +915,38 @@ function renderizarHistorial() {
   const totalCos = ventas.reduce((a, v) => a + v.totalCosto,   0);
   const totalGan = ventas.reduce((a, v) => a + v.totalGanancia, 0);
 
-  document.getElementById('resumen-periodo').innerHTML = `
-    <div class="resumen-item naranja">
-      <div class="rval">${fmt(totalIng)}</div>
-      <div class="rlabel">Ingresos</div>
+  const fiadoTotal = ventas.filter(v => v.fiado).reduce((a, v) => a + v.totalCobrado, 0);
+  const pagoStats = ventas.reduce((acc, v) => {
+    if (!v.fiado) {
+      const medio = v.medioPago || 'Efectivo';
+      acc[medio] = (acc[medio] || 0) + v.totalCobrado;
+    }
+    return acc;
+  }, {});
+  
+  const pagosArr = Object.entries(pagoStats).filter(([k, val]) => val > 0).sort((a, b) => b[1] - a[1]);
+  const breakdownHtml = (fiadoTotal > 0 || pagosArr.length > 0) ? \`
+    <div style="font-size:0.75rem;color:var(--gris-texto);margin-top:10px;display:flex;gap:6px;flex-wrap:wrap;justify-content:center;">
+      \${fiadoTotal > 0 ? \`<div style="background:#FEF2F2;color:var(--error);padding:4px 10px;border-radius:12px;font-weight:600;border:1px solid #FECACA;">A cobrar: \${fmt(fiadoTotal)}</div>\` : ''}
+      \${pagosArr.map(([k, val]) => \`<div style="background:var(--gris);padding:4px 10px;border-radius:12px;border:1px solid var(--borde);">\${k}: <b>\${fmt(val)}</b></div>\`).join('')}
+    </div>\` : '';
+
+  document.getElementById('resumen-periodo').innerHTML = \`
+    <div class="resumen-grid">
+      <div class="resumen-item naranja">
+        <div class="rval">\${fmt(totalIng)}</div>
+        <div class="rlabel">Ingresos</div>
+      </div>
+      <div class="resumen-item azul">
+        <div class="rval">\${fmt(totalCos)}</div>
+        <div class="rlabel">Costos</div>
+      </div>
+      <div class="resumen-item verde">
+        <div class="rval">\${fmt(totalGan)}</div>
+        <div class="rlabel">Ganancia</div>
+      </div>
     </div>
-    <div class="resumen-item azul">
-      <div class="rval">${fmt(totalCos)}</div>
-      <div class="rlabel">Costos</div>
-    </div>
-    <div class="resumen-item verde">
-      <div class="rval">${fmt(totalGan)}</div>
-      <div class="rlabel">Ganancia</div>
-    </div>`;
+    \${breakdownHtml}\`;
 
   const lista = document.getElementById('lista-historial');
   actualizarSelectMes();
@@ -918,11 +969,24 @@ function renderizarHistorial() {
       ? `${esc(v.items[0].productoNombre)}`
       : `${v.items.length} productos · ${nItems} unidades`;
 
+    let etiquetaHtml = '';
+    if (v.etiqueta) {
+      etiquetaHtml = `<div style="font-size:0.75rem;font-weight:700;color:var(--texto);margin-bottom:2px;">${esc(v.etiqueta)}</div>`;
+    }
+    
+    let pagoBadge = '';
+    if (v.fiado) {
+      pagoBadge = `<span style="background:#FEF2F2;color:var(--error);padding:2px 6px;border-radius:4px;font-size:0.65rem;font-weight:700;margin-left:6px;vertical-align:middle;">FIADO</span>`;
+    } else if (v.medioPago) {
+      pagoBadge = `<span style="background:var(--gris);color:var(--gris-texto);padding:2px 6px;border-radius:4px;font-size:0.65rem;font-weight:700;margin-left:6px;vertical-align:middle;">${v.medioPago.toUpperCase()}</span>`;
+    }
+
     return `
     <div class="venta-item" id="venta-${v.id}">
       <div class="venta-header" onclick="toggleVenta(${v.id})">
         <div>
-          <div class="venta-fecha">${fmtFecha(v.fecha)}</div>
+          ${etiquetaHtml}
+          <div class="venta-fecha">${fmtFecha(v.fecha)}${pagoBadge}</div>
           <div class="venta-items-hint">${itemHint}</div>
         </div>
         <div>
@@ -1180,14 +1244,19 @@ function generarPDFVentas() {
   doc.setDrawColor(...C.borde); doc.line(mx, y + 1.5, mx + cw, y + 1.5);
   y += 7;
 
-  const c2 = [cw * 0.22, cw * 0.28, cw * 0.20, cw * 0.15, cw * 0.15];
-  drawTableHeader(c2, ['Fecha y hora', 'Productos', 'Cobrado', 'Costo', 'Ganancia']);
+  const c2 = [cw * 0.18, cw * 0.32, cw * 0.20, cw * 0.15, cw * 0.15];
+  drawTableHeader(c2, ['Fecha y hora', 'Detalle', 'Cobrado', 'Costo', 'Ganancia']);
   ventas.forEach((v, ri) => {
     const items = v.items.length === 1
       ? v.items[0].productoNombre
       : `${v.items.length} productos (${v.items.reduce((a, i) => a + i.cantidad, 0)} u.)`;
-    const desc = v.descuento > 0.5 ? ` ·desc.${fmtP(v.descuento)}` : '';
-    drawRow(c2, [fmtD(v.fecha), items + desc, fmtP(v.totalCobrado), fmtP(v.totalCosto), fmtP(v.totalGanancia)], true, ri % 2 === 0);
+    let desc = v.descuento > 0.5 ? ` (-${fmtP(v.descuento)})` : '';
+    let detalle = items + desc;
+    if (v.etiqueta) detalle = `[${v.etiqueta}] ` + detalle;
+    if (v.fiado) detalle += ' [FIADO]';
+    else if (v.medioPago) detalle += ` [${v.medioPago}]`;
+
+    drawRow(c2, [fmtD(v.fecha), detalle, fmtP(v.totalCobrado), fmtP(v.totalCosto), fmtP(v.totalGanancia)], true, ri % 2 === 0);
   });
 
   /* ── GUARDAR ── */

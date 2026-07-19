@@ -49,7 +49,7 @@ Para desplegar: hacer push al repositorio. Vercel detecta el cambio y despliega 
 
 ```
 /
-├── index.html                  # Landing page con acceso a los 4 módulos
+├── index.html                  # Landing page con acceso a los 5 módulos
 ├── privacidad.html             # Política de privacidad
 ├── sw.js                       # Service Worker (caché offline)
 ├── pwa.js                      # Registro del SW + botón de instalación PWA
@@ -61,7 +61,8 @@ Para desplegar: hacer push al repositorio. Vercel detecta el cambio y despliega 
     ├── calculadora/            # Calculadora de costos con PDF, escenarios y localStorage
     ├── guiadeprompts/          # Biblioteca de prompts IA con favoritos y prompts propios
     ├── combinadordecolores/    # Paletas de color con Canvas API y simulación de daltonismo
-    └── herramientasdigitales/  # Recursos de marketing digital
+    ├── herramientasdigitales/  # Recursos de marketing digital
+    └── registrodeventas/       # Registro de ventas, control de ingresos, costos y ganancias
 ```
 
 Cada módulo es **autocontenido**: CSS y JS están inline en su `index.html`. Algunos módulos tienen un archivo de datos separado (ej. `guiadeprompts.html`, `combinadordecolores.html`) que contiene la biblioteca de contenidos.
