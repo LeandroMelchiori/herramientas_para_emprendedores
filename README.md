@@ -55,6 +55,9 @@ Recursos y herramientas gratuitas para crecer en redes sociales.
 - Guías y recursos seleccionados para emprendedores
 - Herramientas online gratuitas recomendadas
 
+### 🛒 Registro de Ventas
+Armá carritos de venta con tus productos, registrá cada operación con fecha y hora, y controlá ingresos, costos y ganancias.
+
 ---
 
 ## Características técnicas
@@ -96,7 +99,7 @@ Recursos y herramientas gratuitas para crecer en redes sociales.
 
 ```
 /
-├── index.html                        # Home con acceso a los 4 módulos
+├── index.html                        # Home con acceso a los 5 módulos
 ├── privacidad.html                   # Política de privacidad
 ├── manifest.json                     # PWA manifest
 ├── sw.js                             # Service Worker
@@ -111,7 +114,8 @@ Recursos y herramientas gratuitas para crecer en redes sociales.
     ├── calculadora/index.html
     ├── guiadeprompts/index.html
     ├── combinadordecolores/index.html
-    └── herramientasdigitales/index.html
+    ├── herramientasdigitales/index.html
+    └── registrodeventas/index.html
 ```
 
 ---

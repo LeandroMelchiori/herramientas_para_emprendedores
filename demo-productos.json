@@ -1,0 +1,325 @@
+{
+  "proyectos": [
+    {
+      "id": 1700000001,
+      "nombre": "Jabón artesanal de lavanda",
+      "fecha": "25/06/2026",
+      "datos": {
+        "nombreProducto": "Jabón artesanal de lavanda",
+        "unidades": 6,
+        "insumos": [
+          { "nombre": "Aceite de coco (1 kg)", "cantidad": 1, "precio": 1200 },
+          { "nombre": "Soda cáustica (500 g)", "cantidad": 1, "precio": 380 },
+          { "nombre": "Fragancia lavanda (30 ml)", "cantidad": 1, "precio": 420 },
+          { "nombre": "Colorante en polvo", "cantidad": 1, "precio": 90 },
+          { "nombre": "Papel kraft (envoltura × 6)", "cantidad": 1, "precio": 180 }
+        ],
+        "servicios": [
+          { "nombre": "Elaboración y moldeo", "horas": 2, "precio": 700 }
+        ],
+        "margen": 80,
+        "modo": "slider",
+        "precioManual": 0,
+        "gastosMensuales": 0,
+        "diasLaborales": 24,
+        "metaIngresos": 0,
+        "ivaActivo": false,
+        "soloServicios": false
+      }
+    },
+    {
+      "id": 1700000002,
+      "nombre": "Vela aromática de soja",
+      "fecha": "25/06/2026",
+      "datos": {
+        "nombreProducto": "Vela aromática de soja",
+        "unidades": 1,
+        "insumos": [
+          { "nombre": "Cera de soja (500 g)", "cantidad": 1, "precio": 900 },
+          { "nombre": "Fragancia floral (15 ml)", "cantidad": 1, "precio": 350 },
+          { "nombre": "Pabilo de algodón", "cantidad": 1, "precio": 80 },
+          { "nombre": "Tarro de vidrio 200 ml", "cantidad": 1, "precio": 650 },
+          { "nombre": "Etiqueta personalizada", "cantidad": 1, "precio": 60 }
+        ],
+        "servicios": [
+          { "nombre": "Derretido, colado y etiquetado", "horas": 1, "precio": 700 }
+        ],
+        "margen": 75,
+        "modo": "slider",
+        "precioManual": 0,
+        "gastosMensuales": 0,
+        "diasLaborales": 24,
+        "metaIngresos": 0,
+        "ivaActivo": false,
+        "soloServicios": false
+      }
+    },
+    {
+      "id": 1700000003,
+      "nombre": "Mermelada de frutilla 250 g",
+      "fecha": "25/06/2026",
+      "datos": {
+        "nombreProducto": "Mermelada de frutilla 250 g",
+        "unidades": 4,
+        "insumos": [
+          { "nombre": "Frutillas frescas (1 kg)", "cantidad": 1, "precio": 1800 },
+          { "nombre": "Azúcar (500 g)", "cantidad": 1, "precio": 350 },
+          { "nombre": "Limón (× 2)", "cantidad": 1, "precio": 120 },
+          { "nombre": "Frascos con tapa (× 4)", "cantidad": 1, "precio": 1200 },
+          { "nombre": "Etiquetas (× 4)", "cantidad": 1, "precio": 80 }
+        ],
+        "servicios": [
+          { "nombre": "Cocción, envasado y esterilizado", "horas": 2, "precio": 600 }
+        ],
+        "margen": 65,
+        "modo": "slider",
+        "precioManual": 0,
+        "gastosMensuales": 0,
+        "diasLaborales": 24,
+        "metaIngresos": 0,
+        "ivaActivo": false,
+        "soloServicios": false
+      }
+    },
+    {
+      "id": 1700000004,
+      "nombre": "Alfajores de maicena × 6",
+      "fecha": "25/06/2026",
+      "datos": {
+        "nombreProducto": "Alfajores de maicena × 6",
+        "unidades": 12,
+        "insumos": [
+          { "nombre": "Maicena (500 g)", "cantidad": 1, "precio": 400 },
+          { "nombre": "Manteca (200 g)", "cantidad": 1, "precio": 600 },
+          { "nombre": "Azúcar impalpable (200 g)", "cantidad": 1, "precio": 200 },
+          { "nombre": "Dulce de leche repostero (1 kg)", "cantidad": 1, "precio": 1400 },
+          { "nombre": "Coco rallado (200 g)", "cantidad": 1, "precio": 280 },
+          { "nombre": "Cajas kraft × 2", "cantidad": 1, "precio": 400 }
+        ],
+        "servicios": [
+          { "nombre": "Amasado, horneado y armado", "horas": 3, "precio": 600 }
+        ],
+        "margen": 70,
+        "modo": "slider",
+        "precioManual": 0,
+        "gastosMensuales": 0,
+        "diasLaborales": 24,
+        "metaIngresos": 0,
+        "ivaActivo": false,
+        "soloServicios": false
+      }
+    },
+    {
+      "id": 1700000005,
+      "nombre": "Taza pintada a mano",
+      "fecha": "25/06/2026",
+      "datos": {
+        "nombreProducto": "Taza pintada a mano",
+        "unidades": 1,
+        "insumos": [
+          { "nombre": "Taza de cerámica blanca", "cantidad": 1, "precio": 2200 },
+          { "nombre": "Pintura para cerámica (set)", "cantidad": 1, "precio": 800 },
+          { "nombre": "Pinceles finos", "cantidad": 1, "precio": 350 },
+          { "nombre": "Caja de regalo con papel tissue", "cantidad": 1, "precio": 450 }
+        ],
+        "servicios": [
+          { "nombre": "Diseño, pintura y terminado", "horas": 2.5, "precio": 900 }
+        ],
+        "margen": 90,
+        "modo": "slider",
+        "precioManual": 0,
+        "gastosMensuales": 0,
+        "diasLaborales": 24,
+        "metaIngresos": 0,
+        "ivaActivo": false,
+        "soloServicios": false
+      }
+    },
+    {
+      "id": 1700000006,
+      "nombre": "Empanadas × 12 (docena)",
+      "fecha": "25/06/2026",
+      "datos": {
+        "nombreProducto": "Empanadas × 12 (docena)",
+        "unidades": 12,
+        "insumos": [
+          { "nombre": "Tapas de empanada (pack × 12)", "cantidad": 1, "precio": 500 },
+          { "nombre": "Carne picada (500 g)", "cantidad": 1, "precio": 2000 },
+          { "nombre": "Cebolla, huevo, aceitunas", "cantidad": 1, "precio": 400 },
+          { "nombre": "Condimentos y especias", "cantidad": 1, "precio": 150 },
+          { "nombre": "Caja para delivery", "cantidad": 1, "precio": 200 }
+        ],
+        "servicios": [
+          { "nombre": "Preparación y horneado", "horas": 1.5, "precio": 600 }
+        ],
+        "margen": 60,
+        "modo": "slider",
+        "precioManual": 0,
+        "gastosMensuales": 0,
+        "diasLaborales": 24,
+        "metaIngresos": 0,
+        "ivaActivo": false,
+        "soloServicios": false
+      }
+    },
+    {
+      "id": 1700000007,
+      "nombre": "Bolso de tela artesanal",
+      "fecha": "25/06/2026",
+      "datos": {
+        "nombreProducto": "Bolso de tela artesanal",
+        "unidades": 1,
+        "insumos": [
+          { "nombre": "Tela de lona cruda (50 cm)", "cantidad": 1, "precio": 800 },
+          { "nombre": "Hilo de algodón (2 colores)", "cantidad": 1, "precio": 200 },
+          { "nombre": "Cierre metálico", "cantidad": 1, "precio": 150 },
+          { "nombre": "Asas de cuerina (par)", "cantidad": 1, "precio": 350 },
+          { "nombre": "Tela interior (forro)", "cantidad": 1, "precio": 400 }
+        ],
+        "servicios": [
+          { "nombre": "Corte, costura y terminado", "horas": 3, "precio": 800 }
+        ],
+        "margen": 85,
+        "modo": "slider",
+        "precioManual": 0,
+        "gastosMensuales": 0,
+        "diasLaborales": 24,
+        "metaIngresos": 0,
+        "ivaActivo": false,
+        "soloServicios": false
+      }
+    },
+    {
+      "id": 1700000008,
+      "nombre": "Pack cuidado personal (x3 productos)",
+      "fecha": "25/06/2026",
+      "datos": {
+        "nombreProducto": "Pack cuidado personal (x3 productos)",
+        "unidades": 1,
+        "insumos": [
+          { "nombre": "Crema facial base (50 g)", "cantidad": 1, "precio": 900 },
+          { "nombre": "Aceite de argán (10 ml)", "cantidad": 1, "precio": 600 },
+          { "nombre": "Jabón exfoliante de avena", "cantidad": 1, "precio": 350 },
+          { "nombre": "Caja rígida con ventana", "cantidad": 1, "precio": 700 },
+          { "nombre": "Papel de relleno y cinta", "cantidad": 1, "precio": 150 }
+        ],
+        "servicios": [
+          { "nombre": "Preparación y empaquetado gift", "horas": 1, "precio": 700 }
+        ],
+        "margen": 100,
+        "modo": "slider",
+        "precioManual": 0,
+        "gastosMensuales": 0,
+        "diasLaborales": 24,
+        "metaIngresos": 0,
+        "ivaActivo": false,
+        "soloServicios": false
+      }
+    },
+    {
+      "id": 1700000009,
+      "nombre": "Clase de tejido (1 hora)",
+      "fecha": "25/06/2026",
+      "datos": {
+        "nombreProducto": "Clase de tejido (1 hora)",
+        "unidades": 1,
+        "insumos": [],
+        "servicios": [
+          { "nombre": "Clase individual presencial", "horas": 1, "precio": 2500 }
+        ],
+        "margen": 30,
+        "modo": "slider",
+        "precioManual": 0,
+        "gastosMensuales": 8000,
+        "diasLaborales": 20,
+        "metaIngresos": 0,
+        "ivaActivo": false,
+        "soloServicios": true
+      }
+    },
+    {
+      "id": 1700000010,
+      "nombre": "Budín de limón 1 kg",
+      "fecha": "25/06/2026",
+      "datos": {
+        "nombreProducto": "Budín de limón 1 kg",
+        "unidades": 1,
+        "insumos": [
+          { "nombre": "Harina 0000 (500 g)", "cantidad": 1, "precio": 350 },
+          { "nombre": "Azúcar (300 g)", "cantidad": 1, "precio": 210 },
+          { "nombre": "Manteca (200 g)", "cantidad": 1, "precio": 600 },
+          { "nombre": "Huevos (× 4)", "cantidad": 1, "precio": 600 },
+          { "nombre": "Limones (× 3)", "cantidad": 1, "precio": 180 },
+          { "nombre": "Azúcar impalpable (glaseado)", "cantidad": 1, "precio": 100 },
+          { "nombre": "Molde y papel manteca", "cantidad": 1, "precio": 120 }
+        ],
+        "servicios": [
+          { "nombre": "Preparación y horneado", "horas": 1.5, "precio": 600 }
+        ],
+        "margen": 65,
+        "modo": "slider",
+        "precioManual": 0,
+        "gastosMensuales": 0,
+        "diasLaborales": 24,
+        "metaIngresos": 0,
+        "ivaActivo": false,
+        "soloServicios": false
+      }
+    },
+    {
+      "id": 1700000011,
+      "nombre": "Maceta con suculenta decorada",
+      "fecha": "25/06/2026",
+      "datos": {
+        "nombreProducto": "Maceta con suculenta decorada",
+        "unidades": 1,
+        "insumos": [
+          { "nombre": "Maceta de barro mediana", "cantidad": 1, "precio": 500 },
+          { "nombre": "Pintura acrílica (3 colores)", "cantidad": 1, "precio": 350 },
+          { "nombre": "Suculenta o cactus pequeño", "cantidad": 1, "precio": 600 },
+          { "nombre": "Sustrato especial", "cantidad": 1, "precio": 200 },
+          { "nombre": "Piedras decorativas", "cantidad": 1, "precio": 120 }
+        ],
+        "servicios": [
+          { "nombre": "Pintura, diseño y armado", "horas": 1.5, "precio": 800 }
+        ],
+        "margen": 80,
+        "modo": "slider",
+        "precioManual": 0,
+        "gastosMensuales": 0,
+        "diasLaborales": 24,
+        "metaIngresos": 0,
+        "ivaActivo": false,
+        "soloServicios": false
+      }
+    },
+    {
+      "id": 1700000012,
+      "nombre": "Torta de cumpleaños (20 porciones)",
+      "fecha": "25/06/2026",
+      "datos": {
+        "nombreProducto": "Torta de cumpleaños (20 porciones)",
+        "unidades": 1,
+        "insumos": [
+          { "nombre": "Harina, azúcar, huevos", "cantidad": 1, "precio": 800 },
+          { "nombre": "Manteca y crema de leche", "cantidad": 1, "precio": 900 },
+          { "nombre": "Dulce de leche repostero (1 kg)", "cantidad": 1, "precio": 1400 },
+          { "nombre": "Fondant o ganache", "cantidad": 1, "precio": 1200 },
+          { "nombre": "Decoraciones comestibles", "cantidad": 1, "precio": 600 },
+          { "nombre": "Caja tortera y base", "cantidad": 1, "precio": 500 }
+        ],
+        "servicios": [
+          { "nombre": "Horneado, relleno y decorado", "horas": 5, "precio": 700 }
+        ],
+        "margen": 70,
+        "modo": "slider",
+        "precioManual": 0,
+        "gastosMensuales": 0,
+        "diasLaborales": 24,
+        "metaIngresos": 0,
+        "ivaActivo": false,
+        "soloServicios": false
+      }
+    }
+  ]
+}
