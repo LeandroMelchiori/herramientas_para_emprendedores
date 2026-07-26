@@ -9,7 +9,7 @@
    ============================================================ */
 
 // Subí este número en cada deploy para invalidar las caches viejas.
-const VERSION   = 'v2.3.0';
+const VERSION   = 'v2.4.0';
 const APP_CACHE = `app-${VERSION}`;       // Núcleo: HTML + iconos + assets propios
 const RUNTIME   = `runtime-${VERSION}`;   // Externos: Google Fonts, CDNs, etc.
 
@@ -58,6 +58,10 @@ const PRECACHE = [
   '/modules/registrodeventas/cart-state.js',
   '/modules/registrodeventas/dashboard.js',
   '/modules/registrodeventas/dashboard-view.js',
+  '/modules/registrodeventas/expenses-domain.js',
+  '/modules/registrodeventas/closures-domain.js',
+  '/modules/registrodeventas/expenses.js',
+  '/modules/registrodeventas/closures.js',
   '/modules/registrodeventas/history.js',
   '/modules/registrodeventas/pdf.js',
   '/manifest.json',

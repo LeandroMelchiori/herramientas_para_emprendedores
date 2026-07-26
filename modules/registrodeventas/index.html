@@ -20,6 +20,10 @@
 <script src="/modules/registrodeventas/sales-domain.js" defer></script>
 <script src="/modules/registrodeventas/cart-state.js" defer></script>
 <script src="/modules/registrodeventas/dashboard.js" defer></script>
+<script src="/modules/registrodeventas/expenses-domain.js" defer></script>
+<script src="/modules/registrodeventas/closures-domain.js" defer></script>
+<script src="/modules/registrodeventas/expenses.js" defer></script>
+<script src="/modules/registrodeventas/closures.js" defer></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" defer></script>
 <script src="/modules/registrodeventas/app.js" defer></script>
 <script src="/modules/registrodeventas/history.js" defer></script>
@@ -43,6 +47,7 @@
   <nav class="nav-tabs">
     <button class="nav-tab active" data-action="navigate" data-page="0">Nueva venta</button>
     <button class="nav-tab" data-action="navigate" data-page="1">Historial</button>
+    <button class="nav-tab" data-action="navigate" data-page="2">Gastos</button>
   </nav>
 </header>
 
@@ -186,11 +191,36 @@
   <div class="resumen-periodo" id="resumen-periodo"></div>
 
   <div id="lista-historial"></div>
-  <div id="undo-delete" class="undo-delete" hidden>
-    <span>Venta eliminada</span>
-    <button type="button" data-action="undo-delete">Deshacer</button>
-  </div>
 
+</div>
+
+<!-- PAGINA 2: GASTOS -->
+<div class="page" id="page-2">
+  <form class="card expense-form" id="form-gasto">
+    <div class="card-title">Registrar gasto real</div>
+    <div class="expense-form-grid">
+      <div class="field-group expense-concept"><label for="gasto-concepto">Concepto</label><input id="gasto-concepto" required maxlength="100" placeholder="Ej: Alquiler del puesto"></div>
+      <div class="field-group"><label for="gasto-monto">Monto</label><input id="gasto-monto" type="number" min="0.01" step="0.01" required></div>
+      <div class="field-group"><label for="gasto-fecha">Fecha</label><input id="gasto-fecha" type="date" required></div>
+      <div class="field-group"><label for="gasto-categoria">Categor&iacute;a</label><select id="gasto-categoria"><option>Insumos</option><option>Servicios</option><option>Transporte</option><option>Alquiler</option><option>Impuestos</option><option>Marketing</option><option>Equipamiento</option><option>Otros</option></select></div>
+      <div class="field-group"><label for="gasto-medio">Medio de pago</label><select id="gasto-medio"><option>Efectivo</option><option>Transferencia</option><option>Tarjeta</option><option>Otro</option></select></div>
+      <label class="expense-repeat"><input id="gasto-recurrente" type="checkbox"> Repetir autom&aacute;ticamente cada mes</label>
+    </div>
+    <button class="btn-finalizar" type="submit">Registrar gasto</button>
+  </form>
+  <div class="expense-toolbar"><select id="select-mes-gastos" aria-label="Mes de gastos"></select><div id="gastos-total"></div></div>
+  <div id="lista-gastos"></div>
+</div>
+
+<div class="modal-backdrop" id="modal-anular" hidden>
+  <div class="modal-sheet" role="dialog" aria-modal="true" aria-labelledby="anular-title">
+    <h2 id="anular-title">Anular venta</h2>
+    <p>La operaci&oacute;n quedar&aacute; en el historial, pero no contar&aacute; en los informes.</p>
+    <label for="anular-motivo">Motivo</label>
+    <textarea id="anular-motivo" rows="3" maxlength="180" placeholder="Ej: El cliente cancel&oacute; la compra"></textarea>
+    <input type="hidden" id="anular-id">
+    <div class="modal-actions"><button type="button" class="secondary" data-action="cancel-annul">Cancelar</button><button type="button" data-action="confirm-annul">Confirmar anulaci&oacute;n</button></div>
+  </div>
 </div>
 
 <!-- Toast -->

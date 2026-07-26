@@ -10,6 +10,8 @@
     projects: 'calculadora_proyectos',
     calculatorDraft: 'calculadora_autosave',
     sales: 'ventas_historial',
+    expenses: 'gastos_historial',
+    monthlyClosures: 'cierres_mensuales',
     backupLast: 'backup_ultimo',
     backupSnoozedUntil: 'backup_pospuesto_hasta',
     promptFavorites: 'gp_favs',
@@ -79,6 +81,22 @@
     return writeJson(KEYS.sales, Array.isArray(sales) ? sales : []);
   }
 
+  function getExpenses() {
+    const expenses = readJson(KEYS.expenses, []);
+    if (!global.AppMigrations) return Array.isArray(expenses) ? expenses : [];
+    return global.AppMigrations.normalizeExpenses(expenses).value;
+  }
+
+  function saveExpenses(expenses) { return writeJson(KEYS.expenses, Array.isArray(expenses) ? expenses : []); }
+
+  function getMonthlyClosures() {
+    const closures = readJson(KEYS.monthlyClosures, []);
+    if (!global.AppMigrations) return Array.isArray(closures) ? closures : [];
+    return global.AppMigrations.normalizeClosures(closures).value;
+  }
+
+  function saveMonthlyClosures(closures) { return writeJson(KEYS.monthlyClosures, Array.isArray(closures) ? closures : []); }
+
   function getCalculatorDraft() {
     const draft = readJson(KEYS.calculatorDraft, null);
     return draft && typeof draft === 'object' && !Array.isArray(draft) ? draft : null;
@@ -90,12 +108,14 @@
 
   function createBackup() {
     return {
-      version: '4.0',
+      version: '5.0',
       schemaVersion: global.AppMigrations?.SCHEMA_VERSION || 2,
       exportedAt: new Date().toISOString(),
       calculadora_proyectos: getProjects(),
       calculadora_autosave: getCalculatorDraft(),
       ventas_historial: getSales(),
+      gastos_historial: getExpenses(),
+      cierres_mensuales: getMonthlyClosures(),
       guia_favoritos: readJson(KEYS.promptFavorites, []),
       guia_prompts_propios: readJson(KEYS.customPrompts, []),
       color_estado: readJson(KEYS.lastColor, null),
@@ -117,6 +137,8 @@
     const draft = own('calculadora_autosave') ? data.calculadora_autosave
       : own('actual') ? data.actual : undefined;
     const sales = own('ventas_historial') ? data.ventas_historial : undefined;
+    const expenses = own('gastos_historial') ? data.gastos_historial : undefined;
+    const closures = own('cierres_mensuales') ? data.cierres_mensuales : undefined;
     const extras = {
       guia_favoritos: [KEYS.promptFavorites, own('guia_favoritos') ? data.guia_favoritos : undefined],
       guia_prompts_propios: [KEYS.customPrompts, own('guia_prompts_propios') ? data.guia_prompts_propios : undefined],
@@ -132,11 +154,13 @@
     if (sales !== undefined && !Array.isArray(sales)) {
       throw new TypeError('El historial de ventas no es valido.');
     }
+    if (expenses !== undefined && !Array.isArray(expenses)) throw new TypeError('La lista de gastos no es valida.');
+    if (closures !== undefined && !Array.isArray(closures)) throw new TypeError('La lista de cierres no es valida.');
     if (draft !== undefined && draft !== null && (typeof draft !== 'object' || Array.isArray(draft))) {
       throw new TypeError('El borrador de la calculadora no es valido.');
     }
 
-    return { projects, draft, sales, extras };
+    return { projects, draft, sales, expenses, closures, extras };
   }
 
   function restoreValue(label, key, value, restored) {
@@ -156,6 +180,8 @@
     if (parsed.projects !== undefined && saveProjects(parsed.projects)) restored.push('proyectos');
     restoreValue('calculo actual', KEYS.calculatorDraft, parsed.draft, restored);
     if (parsed.sales !== undefined && saveSales(parsed.sales)) restored.push('ventas');
+    if (parsed.expenses !== undefined && saveExpenses(parsed.expenses)) restored.push('gastos');
+    if (parsed.closures !== undefined && saveMonthlyClosures(parsed.closures)) restored.push('cierres');
     for (const [label, [key, value]] of Object.entries(parsed.extras)) {
       restoreValue(label.replaceAll('_', ' '), key, value, restored);
     }
@@ -181,19 +207,29 @@
     if (!global.AppMigrations) return { migrated: false, warnings: [] };
     let rawProjects;
     let rawSales;
+    let rawExpenses;
+    let rawClosures;
     try {
       const projectsText = localStorage.getItem(KEYS.projects);
       const salesText = localStorage.getItem(KEYS.sales);
+      const expensesText = localStorage.getItem(KEYS.expenses);
+      const closuresText = localStorage.getItem(KEYS.monthlyClosures);
       rawProjects = projectsText === null ? [] : JSON.parse(projectsText);
       rawSales = salesText === null ? [] : JSON.parse(salesText);
+      rawExpenses = expensesText === null ? [] : JSON.parse(expensesText);
+      rawClosures = closuresText === null ? [] : JSON.parse(closuresText);
     } catch (error) {
       return { migrated: false, warnings: ['Hay datos con formato JSON invalido; se conservaron sin cambios.'] };
     }
     const projects = global.AppMigrations.normalizeProjects(rawProjects);
     const sales = global.AppMigrations.normalizeSales(rawSales);
+    const expenses = global.AppMigrations.normalizeExpenses(rawExpenses);
+    const closures = global.AppMigrations.normalizeClosures(rawClosures);
     const warnings = [];
     if (projects.rejected) warnings.push(`${projects.rejected} proyecto(s) no reconocido(s)`);
     if (sales.rejected) warnings.push(`${sales.rejected} venta(s) no reconocida(s)`);
+    if (expenses.rejected) warnings.push(`${expenses.rejected} gasto(s) no reconocido(s)`);
+    if (closures.rejected) warnings.push(`${closures.rejected} cierre(s) no reconocido(s)`);
     if (warnings.length) return { migrated: false, warnings };
 
     const target = global.AppMigrations.SCHEMA_VERSION;
@@ -201,8 +237,11 @@
     if (current >= target) return { migrated: false, warnings };
     const projectsSaved = writeJson(KEYS.projects, projects.value);
     const salesSaved = writeJson(KEYS.sales, sales.value);
-    if (projectsSaved && salesSaved) writeJson(KEYS.dataSchema, target);
-    return { migrated: projectsSaved && salesSaved, warnings };
+    const expensesSaved = writeJson(KEYS.expenses, expenses.value);
+    const closuresSaved = writeJson(KEYS.monthlyClosures, closures.value);
+    const migrated = projectsSaved && salesSaved && expensesSaved && closuresSaved;
+    if (migrated) writeJson(KEYS.dataSchema, target);
+    return { migrated, warnings };
   }
 
   global.AppStorage = Object.freeze({
@@ -214,6 +253,10 @@
     saveProjects,
     getSales,
     saveSales,
+    getExpenses,
+    saveExpenses,
+    getMonthlyClosures,
+    saveMonthlyClosures,
     getCalculatorDraft,
     saveCalculatorDraft,
     createBackup,

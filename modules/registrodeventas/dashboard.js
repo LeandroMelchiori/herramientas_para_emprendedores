@@ -16,9 +16,10 @@
     return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
   }
 
-  function summarizeMonth(sales, selectedMonth) {
-    const monthlySales = sales.filter((sale) => monthKey(sale.fecha) === selectedMonth);
-    const payments = sales.flatMap((sale) => sale.pagos || [])
+  function summarizeMonth(sales, selectedMonth, expenses = []) {
+    const activeSales = sales.filter((sale) => !sale.anulada);
+    const monthlySales = activeSales.filter((sale) => monthKey(sale.fecha) === selectedMonth);
+    const payments = activeSales.flatMap((sale) => sale.pagos || [])
       .filter((payment) => monthKey(payment.fecha) === selectedMonth);
     const products = {};
 
@@ -38,7 +39,9 @@
     const ganancia = money(monthlySales.reduce((sum, sale) => sum + sale.totalGanancia, 0));
     const cobrado = money(payments.reduce((sum, payment) => sum + payment.monto, 0));
     const descuentos = money(monthlySales.reduce((sum, sale) => sum + sale.descuento, 0));
-    const pendientes = money(sales.reduce((sum, sale) => sum + AppSales.outstanding(sale), 0));
+    const pendientes = money(activeSales.reduce((sum, sale) => sum + AppSales.outstanding(sale), 0));
+    const gastos = money(expenses.filter((expense) => monthKey(expense.fecha) === selectedMonth).reduce((sum, expense) => sum + expense.monto, 0));
+    const resultadoCaja = money(cobrado - gastos);
     const productList = Object.values(products);
 
     return {
@@ -50,6 +53,8 @@
       ganancia,
       descuentos,
       pendientes,
+      gastos,
+      resultadoCaja,
       ticketPromedio: monthlySales.length ? money(facturado / monthlySales.length) : 0,
       margen: costos > 0 ? Math.round(ganancia / costos * 100) : 0,
       masVendido: productList.sort((a, b) => b.unidades - a.unidades)[0] || null,
@@ -57,9 +62,9 @@
     };
   }
 
-  function compareMonths(sales, selectedMonth) {
-    const current = summarizeMonth(sales, selectedMonth);
-    const previous = summarizeMonth(sales, previousMonth(selectedMonth));
+  function compareMonths(sales, selectedMonth, expenses = []) {
+    const current = summarizeMonth(sales, selectedMonth, expenses);
+    const previous = summarizeMonth(sales, previousMonth(selectedMonth), expenses);
     const variation = (field) => {
       if (!previous[field]) return current[field] ? null : 0;
       return Math.round((current[field] - previous[field]) / previous[field] * 100);

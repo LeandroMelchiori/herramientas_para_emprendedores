@@ -80,7 +80,7 @@ Cada modulo separa estructura, presentacion, datos editoriales y comportamiento.
 
 **Responsabilidades pequenas**: `app.js` coordina la interfaz. Estado, reglas puras, catalogos, historial, proyectos, procesamiento de imagenes y exportaciones viven en archivos propios cuando tienen una responsabilidad independiente.
 
-**Cache del Service Worker versionada**: al cambiar paginas o assets hay que actualizar `PRECACHE` e incrementar `VERSION` en `sw.js` (actualmente `v2.3.0`).
+**Cache del Service Worker versionada**: al cambiar paginas o assets hay que actualizar `PRECACHE` e incrementar `VERSION` en `sw.js` (actualmente `v2.4.0`).
 
 **Pruebas**: ejecutar `npm test` antes de integrar cambios. Playwright valida los flujos funcionales sin Service Worker; el listado offline se audita por separado.
 
@@ -90,7 +90,7 @@ Cada modulo separa estructura, presentacion, datos editoriales y comportamiento.
 
 **Persistencia solo local**: no hay backend ni cuentas. Los datos quedan en el dispositivo y el backup completo permite trasladarlos o recuperarlos.
 
-**Compatibilidad de datos**: conservar las claves historicas. Toda migracion debe ser aditiva, mantener campos desconocidos y evitar sobrescribir la base completa si algun registro no puede validarse. Backups 1.x, 2.0, 3.0 y 4.0 son compatibles.
+**Compatibilidad de datos**: conservar las claves historicas. Toda migracion debe ser aditiva, mantener campos desconocidos y evitar sobrescribir la base completa si algun registro no puede validarse. Backups 1.x, 2.0, 3.0, 4.0 y 5.0 son compatibles. El esquema 5 agrega gastos, anulaciones y cierres mensuales sin modificar las claves historicas.
 
 **Eventos**: no usar atributos `onclick`, `oninput` o similares. Vincular controles en archivos `events.js` o mediante delegacion desde `app.js`.
 

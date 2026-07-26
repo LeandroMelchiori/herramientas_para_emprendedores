@@ -16,6 +16,7 @@ document.addEventListener('DOMContentLoaded', () => {
   });
   cargarProductos();
   renderizarHistorial();
+  initExpenses();
   vincularEventosVentas();
 });
 
@@ -293,6 +294,7 @@ function goTo(idx) {
   document.querySelectorAll('.nav-tab').forEach((t, i) => t.classList.toggle('active', i === idx));
   if (idx === 0) cargarProductos();     // recargar por si el usuario cargó proyectos nuevos
   if (idx === 1) renderizarHistorial();
+  if (idx === 2) initExpenses();
 }
 
 /* ══ EXPORTAR PDF ══ */
@@ -324,6 +326,8 @@ function vincularEventosVentas() {
   document.getElementById('btn-pdf')?.addEventListener('click', generarPDFVentas);
   document.getElementById('filtro-estado-pago')?.addEventListener('change', renderizarHistorial);
   document.getElementById('select-mes-panel')?.addEventListener('change', renderizarPanelMensual);
+  document.getElementById('form-gasto')?.addEventListener('submit', guardarGastoDesdeFormulario);
+  document.getElementById('select-mes-gastos')?.addEventListener('change', renderizarGastos);
   document.addEventListener('click', (event) => {
     const action = event.target.closest('[data-action]');
     if (!action) return;
@@ -332,7 +336,14 @@ function vincularEventosVentas() {
     if (action.dataset.action === 'remove-cart-item') quitarDelCarrito(Number(action.dataset.index));
     if (action.dataset.action === 'toggle-sale') toggleVenta(Number(action.dataset.id));
     if (action.dataset.action === 'pay-sale') marcarVentaPagada(Number(action.dataset.id));
-    if (action.dataset.action === 'delete-sale') eliminarVenta(Number(action.dataset.id));
-    if (action.dataset.action === 'undo-delete') restaurarUltimaVenta();
+    if (action.dataset.action === 'annul-sale') abrirModalAnular(Number(action.dataset.id));
+    if (action.dataset.action === 'reactivate-sale') reactivarVenta(Number(action.dataset.id));
+    if (action.dataset.action === 'cancel-annul') cerrarModalAnular();
+    if (action.dataset.action === 'confirm-annul') confirmarAnulacion();
+    if (action.dataset.action === 'delete-expense') eliminarGasto(Number(action.dataset.id));
+    if (action.dataset.action === 'close-month') cerrarMes(action.dataset.month);
+    if (action.dataset.action === 'reopen-month') reabrirMes(action.dataset.month);
+    if (action.dataset.action === 'export-month-csv') exportarCierreCSV(action.dataset.month);
+    if (action.dataset.action === 'export-month-pdf') exportarCierrePDF(action.dataset.month);
   });
 }

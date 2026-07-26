@@ -5,8 +5,9 @@ function generarPDFVentas() {
   const { jsPDF } = window.jspdf;
 
   const mesSel = document.getElementById('select-mes-pdf')?.value || 'todo';
-  const todasVentas = obtenerVentas();
-  let ventas, periodoLabelBase;
+  const todasVentas = obtenerVentas().filter(v => !v.anulada);
+  const todosGastos = obtenerGastos();
+  let ventas, gastos, periodoLabelBase;
   if (mesSel === 'todo') {
     ventas = todasVentas;
     periodoLabelBase = 'Historial completo';
@@ -16,10 +17,11 @@ function generarPDFVentas() {
       const d = new Date(v.fecha);
       return d.getFullYear() === yr && d.getMonth() + 1 === mo;
     });
+    gastos = todosGastos.filter(g => AppExpenses.monthKey(g.fecha) === mesSel);
     const label = new Date(yr, mo - 1, 1).toLocaleDateString('es-AR', { month: 'long', year: 'numeric' });
     periodoLabelBase = label.charAt(0).toUpperCase() + label.slice(1);
   }
-  if (!ventas.length) { mostrarToast('No hay ventas en este período'); return; }
+  if (!ventas.length && !gastos.length) { mostrarToast('No hay movimientos en este periodo'); return; }
 
   const doc = new jsPDF({ unit: 'mm', format: 'a4' });
   const PW = 210, mx = 15, cw = PW - mx * 2;
@@ -75,13 +77,16 @@ function generarPDFVentas() {
   const totalIng = ventas.reduce((a, v) => a + v.totalCobrado,  0);
   const totalCos = ventas.reduce((a, v) => a + v.totalCosto,    0);
   const totalGan = ventas.reduce((a, v) => a + v.totalGanancia, 0);
+  const totalGastos = gastos.reduce((a, g) => a + g.monto, 0);
+  const totalCobrado = ventas.flatMap(v => v.pagos || []).reduce((a, p) => a + p.monto, 0);
+  const resultadoCaja = totalCobrado - totalGastos;
   const margenProm = totalCos > 0 ? Math.round(totalGan / totalCos * 100) : 0;
 
   const stats = [
     { label: 'VENTAS',    value: String(ventas.length), color: C.azul    },
-    { label: 'INGRESOS',  value: fmtP(totalIng),        color: C.naranja },
-    { label: 'COSTOS',    value: fmtP(totalCos),        color: C.gris    },
-    { label: 'GANANCIA',  value: fmtP(totalGan),        color: C.verde   },
+    { label: 'FACTURADO', value: fmtP(totalIng),        color: C.naranja },
+    { label: 'COBRADO',   value: fmtP(totalCobrado),    color: C.verde   },
+    { label: 'GASTOS',    value: fmtP(totalGastos),     color: C.magenta },
   ];
 
   const sw = (cw - 9) / 4;
@@ -96,7 +101,7 @@ function generarPDFVentas() {
   });
 
   doc.setFont('helvetica', 'normal'); doc.setFontSize(8); doc.setTextColor(...C.gris);
-  doc.text(`Margen promedio sobre costos: ${margenProm}%`, mx, y + 21);
+  doc.text(`Costos estimados: ${fmtP(totalCos)} | Ganancia estimada: ${fmtP(totalGan)} | Resultado de caja: ${fmtP(resultadoCaja)} | Margen: ${margenProm}%`, mx, y + 21, { maxWidth: cw });
   y += 28;
 
   /* ── TABLA HELPER ── */
@@ -152,6 +157,22 @@ function generarPDFVentas() {
     drawTableHeader(c1, ['Producto', 'Unid.', 'Ingresos', 'Costo', 'Ganancia']);
     prods.forEach(([nombre, d], ri) =>
       drawRow(c1, [nombre, d.u, fmtP(d.ing), fmtP(d.cos), fmtP(d.gan)], true, ri % 2 === 0));
+    y += 6;
+  }
+
+  /* Los gastos reales se separan de los costos estimados para no mezclar caja con rentabilidad. */
+  if (gastos.length) {
+    chk(16 + gastos.length * 7);
+    doc.setFont('helvetica', 'bold'); doc.setFontSize(9); doc.setTextColor(...C.negro);
+    doc.text('Gastos reales', mx, y);
+    doc.setDrawColor(...C.borde); doc.line(mx, y + 1.5, mx + cw, y + 1.5);
+    y += 7;
+
+    const cGastos = [cw * 0.18, cw * 0.37, cw * 0.25, cw * 0.20];
+    drawTableHeader(cGastos, ['Fecha', 'Concepto', 'Categoria', 'Monto']);
+    gastos.forEach((gasto, ri) => {
+      drawRow(cGastos, [fmtD(gasto.fecha), gasto.concepto, gasto.categoria, fmtP(gasto.monto)], false, ri % 2 === 0);
+    });
     y += 6;
   }
 
