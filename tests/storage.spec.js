@@ -30,7 +30,7 @@ test.describe('Contrato compartido de almacenamiento', () => {
       };
     });
 
-    expect(result.backup.version).toBe('3.0');
+    expect(result.backup.version).toBe('4.0');
     expect(result.projects).toHaveLength(1);
     expect(result.sales).toHaveLength(1);
     expect(result.draft).toBeNull();

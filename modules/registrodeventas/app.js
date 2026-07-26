@@ -323,6 +323,7 @@ function vincularEventosVentas() {
   document.getElementById('input-restaurar')?.addEventListener('change', restaurarBackup);
   document.getElementById('btn-pdf')?.addEventListener('click', generarPDFVentas);
   document.getElementById('filtro-estado-pago')?.addEventListener('change', renderizarHistorial);
+  document.getElementById('select-mes-panel')?.addEventListener('change', renderizarPanelMensual);
   document.addEventListener('click', (event) => {
     const action = event.target.closest('[data-action]');
     if (!action) return;

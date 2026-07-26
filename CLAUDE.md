@@ -27,7 +27,7 @@ App en uso real: [economiasocial.sachadev.me](https://economiasocial.sachadev.me
 
 - Vanilla HTML5 / CSS3 / JavaScript en archivos separados por responsabilidad
 - PWA con Service Worker (`sw.js`) y Web App Manifest (`manifest.json`)
-- `shared/migrations.js` para compatibilidad versionada y no destructiva de datos historicos
+- `shared/migrations.js` para compatibilidad versionada y no destructiva de datos historicos (esquema actual: 4)
 - `shared/storage.js` como contrato unico para localStorage y backups
 - `shared/format.js` para moneda, fechas y escape de HTML
 - `shared/ui.js` para portapapeles, toast y slugs
@@ -80,7 +80,7 @@ Cada modulo separa estructura, presentacion, datos editoriales y comportamiento.
 
 **Responsabilidades pequenas**: `app.js` coordina la interfaz. Estado, reglas puras, catalogos, historial, proyectos, procesamiento de imagenes y exportaciones viven en archivos propios cuando tienen una responsabilidad independiente.
 
-**Cache del Service Worker versionada**: al cambiar paginas o assets hay que actualizar `PRECACHE` e incrementar `VERSION` en `sw.js` (actualmente `v2.2.0`).
+**Cache del Service Worker versionada**: al cambiar paginas o assets hay que actualizar `PRECACHE` e incrementar `VERSION` en `sw.js` (actualmente `v2.3.0`).
 
 **Pruebas**: ejecutar `npm test` antes de integrar cambios. Playwright valida los flujos funcionales sin Service Worker; el listado offline se audita por separado.
 
@@ -90,7 +90,7 @@ Cada modulo separa estructura, presentacion, datos editoriales y comportamiento.
 
 **Persistencia solo local**: no hay backend ni cuentas. Los datos quedan en el dispositivo y el backup completo permite trasladarlos o recuperarlos.
 
-**Compatibilidad de datos**: conservar las claves historicas. Toda migracion debe ser aditiva, mantener campos desconocidos y evitar sobrescribir la base completa si algun registro no puede validarse. Backups 1.x, 2.0 y 3.0 son compatibles.
+**Compatibilidad de datos**: conservar las claves historicas. Toda migracion debe ser aditiva, mantener campos desconocidos y evitar sobrescribir la base completa si algun registro no puede validarse. Backups 1.x, 2.0, 3.0 y 4.0 son compatibles.
 
 **Eventos**: no usar atributos `onclick`, `oninput` o similares. Vincular controles en archivos `events.js` o mediante delegacion desde `app.js`.
 

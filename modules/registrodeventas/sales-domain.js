@@ -54,6 +54,13 @@
     const montoPagado = credit
       ? Math.min(Math.max(roundMoney(deposit), 0), totals.totalCobrado)
       : totals.totalCobrado;
+    const pagos = montoPagado > 0 ? [{
+      id: now.getTime(),
+      fecha: now.toISOString(),
+      monto: montoPagado,
+      medio: paymentMethod,
+      origen: credit ? 'sena_inicial' : 'pago_inicial',
+    }] : [];
     return {
       id: now.getTime(),
       fecha: now.toISOString(),
@@ -63,19 +70,28 @@
       etiqueta: label.trim(),
       medioPago: paymentMethod,
       fiado: montoPagado < totals.totalCobrado,
+      pagos,
     };
   }
 
-  function applyPayment(sale, amount, paymentMethod) {
+  function outstanding(sale) {
+    return roundMoney(Math.max(0, (Number(sale.totalCobrado) || 0) - (Number(sale.montoPagado) || 0)));
+  }
+
+  function applyPayment(sale, amount, paymentMethod, now = new Date()) {
     const totalCobrado = Number(sale.totalCobrado) || 0;
-    const montoPagado = Math.min(totalCobrado, Math.max(0, (Number(sale.montoPagado) || 0) + (Number(amount) || 0)));
-    return {
-      ...sale,
-      montoPagado,
-      fiado: montoPagado < totalCobrado,
-      medioPago: paymentMethod || sale.medioPago || 'Efectivo',
-    };
+    const applied = Math.min(outstanding(sale), Math.max(0, roundMoney(amount)));
+    if (!applied) return { ...sale };
+    const montoPagado = roundMoney((Number(sale.montoPagado) || 0) + applied);
+    const pagos = [...(sale.pagos || []), {
+      id: now.getTime(),
+      fecha: now.toISOString(),
+      monto: applied,
+      medio: paymentMethod || 'Efectivo',
+      origen: 'cobro_pendiente',
+    }];
+    return { ...sale, montoPagado, fiado: montoPagado < totalCobrado, medioPago: paymentMethod || sale.medioPago || 'Efectivo', pagos };
   }
 
-  global.AppSales = Object.freeze({ createItem, updateQuantity, summarize, createSale, applyPayment });
+  global.AppSales = Object.freeze({ createItem, updateQuantity, summarize, createSale, outstanding, applyPayment });
 })(window);

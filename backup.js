@@ -30,7 +30,7 @@
     AppStorage.writeJson(AppStorage.KEYS.backupLast, Date.now());
     AppStorage.remove(AppStorage.KEYS.backupSnoozedUntil);
     hideBanner();
-    if (typeof global.mostrarToast === 'function') global.mostrarToast('Backup descargado ?');
+    if (typeof global.mostrarToast === 'function') global.mostrarToast('Backup descargado');
     if (typeof global.trackEvent === 'function') global.trackEvent('backup_exportar');
   }
 
@@ -60,14 +60,42 @@
     banner.style.cssText = 'display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:wrap;background:#FEF3E2;border-bottom:2px solid #F2A33B;padding:10px 16px;font-size:.82rem;color:#92400E;text-align:center';
 
     const message = document.createElement('span');
-    message.textContent = 'Pas? m?s de una semana desde tu ?ltimo backup.';
-    banner.append(message, createButton('Hacer backup ahora', exportFullBackup, true), createButton('M?s tarde', snoozeBackup));
+    message.textContent = 'Pas\u00f3 m\u00e1s de una semana desde tu \u00faltimo backup.';
+    banner.append(message, createButton('Hacer backup ahora', exportFullBackup, true), createButton('M\u00e1s tarde', snoozeBackup));
     document.body.prepend(banner);
 
     const last = Number(AppStorage.readJson(AppStorage.KEYS.backupLast, 0));
     const snoozedUntil = Number(AppStorage.readJson(AppStorage.KEYS.backupSnoozedUntil, 0));
     if (Date.now() >= snoozedUntil && Date.now() - last >= WEEK_MS) banner.hidden = false;
   }
+
+  function showRestoreUndo() {
+    if (!AppStorage.hasSafetyBackup()) return;
+    let notice = document.getElementById('restore-undo-notice');
+    if (!notice) {
+      notice = document.createElement('aside');
+      notice.id = 'restore-undo-notice';
+      notice.setAttribute('role', 'status');
+      notice.style.cssText = 'position:fixed;left:50%;bottom:18px;transform:translateX(-50%);z-index:100;display:flex;align-items:center;gap:14px;max-width:calc(100% - 24px);background:#1a1a2e;color:#fff;padding:12px 16px;border-radius:8px;box-shadow:0 8px 24px rgba(0,0,0,.24);font-size:.82rem';
+      const message = document.createElement('span');
+      message.textContent = 'Restauraci\u00f3n realizada. Pod\u00e9s volver al estado anterior.';
+      const undo = createButton('Deshacer restauraci\u00f3n', () => {
+        try {
+          AppStorage.restoreSafetyBackup();
+          location.reload();
+        } catch (error) {
+          console.warn('[Backup] No se pudo deshacer la restauracion.', error);
+        }
+      }, true);
+      const close = createButton('Cerrar', () => { notice.hidden = true; });
+      notice.append(message, undo, close);
+      document.body.appendChild(notice);
+    }
+    notice.hidden = false;
+  }
+
+  global.addEventListener('app:backup-restored', showRestoreUndo);
+  document.addEventListener('DOMContentLoaded', showRestoreUndo);
 
   global.exportarBackupCompleto = exportFullBackup;
   global.posponerBackup = snoozeBackup;

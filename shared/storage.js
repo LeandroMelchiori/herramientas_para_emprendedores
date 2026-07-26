@@ -19,6 +19,7 @@
     toolFavorites: 'hd_favs',
     toolFilter: 'hd_filter',
     dataSchema: 'app_data_schema',
+    safetyBackup: 'app_backup_previo_restauracion',
   });
 
   function cloneFallback(value) {
@@ -89,7 +90,7 @@
 
   function createBackup() {
     return {
-      version: '3.0',
+      version: '4.0',
       schemaVersion: global.AppMigrations?.SCHEMA_VERSION || 2,
       exportedAt: new Date().toISOString(),
       calculadora_proyectos: getProjects(),
@@ -144,8 +145,12 @@
     if (success) restored.push(label);
   }
 
-  function restoreBackup(data) {
+  function restoreBackup(data, options = {}) {
     const parsed = parseBackup(data);
+    const createSafety = options.createSafety !== false;
+    if (createSafety && !writeJson(KEYS.safetyBackup, createBackup())) {
+      throw new Error('No se pudo crear la copia preventiva. La restauracion fue cancelada.');
+    }
     const restored = [];
 
     if (parsed.projects !== undefined && saveProjects(parsed.projects)) restored.push('proyectos');
@@ -155,6 +160,19 @@
       restoreValue(label.replaceAll('_', ' '), key, value, restored);
     }
 
+    if (createSafety) global.dispatchEvent(new CustomEvent('app:backup-restored'));
+    return restored;
+  }
+
+  function hasSafetyBackup() {
+    return Boolean(readJson(KEYS.safetyBackup, null));
+  }
+
+  function restoreSafetyBackup() {
+    const previous = readJson(KEYS.safetyBackup, null);
+    if (!previous) throw new Error('No hay una restauracion anterior disponible.');
+    const restored = restoreBackup(previous, { createSafety: false });
+    remove(KEYS.safetyBackup);
     return restored;
   }
 
@@ -201,6 +219,8 @@
     createBackup,
     parseBackup,
     restoreBackup,
+    hasSafetyBackup,
+    restoreSafetyBackup,
     migrateStoredData,
   });
 

@@ -51,5 +51,9 @@ test.describe('Dominio de ventas', () => {
     expect(result.partial.fiado).toBe(true);
     expect(result.complete.montoPagado).toBe(100);
     expect(result.complete.fiado).toBe(false);
+    expect(result.base.pagos).toHaveLength(1);
+    expect(result.partial.pagos).toHaveLength(2);
+    expect(result.complete.pagos).toHaveLength(3);
+    expect(result.complete.pagos[2].monto).toBe(50);
   });
 });

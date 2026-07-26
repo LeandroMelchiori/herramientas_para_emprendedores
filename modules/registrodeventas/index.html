@@ -1,10 +1,10 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="es">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
-<title>Registro de Ventas — Herramientas para Emprendedores</title>
-<meta name="description" content="Registrá tus ventas y controlá ingresos, costos y ganancias en tiempo real.">
+<title>Registro de Ventas â€” Herramientas para Emprendedores</title>
+<meta name="description" content="RegistrÃ¡ tus ventas y controlÃ¡ ingresos, costos y ganancias en tiempo real.">
 <link rel="manifest" href="/manifest.json">
 <link rel="icon" href="/favicon.ico">
 <meta name="theme-color" content="#D5306E">
@@ -19,9 +19,11 @@
 <script src="/backup.js" defer></script>
 <script src="/modules/registrodeventas/sales-domain.js" defer></script>
 <script src="/modules/registrodeventas/cart-state.js" defer></script>
+<script src="/modules/registrodeventas/dashboard.js" defer></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" defer></script>
 <script src="/modules/registrodeventas/app.js" defer></script>
 <script src="/modules/registrodeventas/history.js" defer></script>
+<script src="/modules/registrodeventas/dashboard-view.js" defer></script>
 <script src="/modules/registrodeventas/pdf.js" defer></script>
 <link rel="apple-touch-icon" href="/assets/icons/apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -35,7 +37,7 @@
 
 <header class="header">
   <div class="header-top">
-    <a href="/" class="btn-volver">← Volver</a>
+    <a href="/" class="btn-volver">â† Volver</a>
     <span class="header-title">Registro de ventas</span>
   </div>
   <nav class="nav-tabs">
@@ -44,7 +46,7 @@
   </nav>
 </header>
 
-<!-- ══ PÁGINA 0: NUEVA VENTA ══ -->
+<!-- â•â• PÃGINA 0: NUEVA VENTA â•â• -->
 <div class="page active" id="page-0">
 
   <!-- Selector de producto -->
@@ -54,13 +56,13 @@
     <div class="field-group">
       <label for="select-producto">Producto</label>
       <select id="select-producto">
-        <option value="">— Elegí un producto —</option>
+        <option value="">â€” ElegÃ­ un producto â€”</option>
       </select>
     </div>
 
     <div class="producto-preview" id="producto-preview">
       <span class="preview-precio" id="preview-precio"></span>
-      &nbsp;·&nbsp;
+      &nbsp;Â·&nbsp;
       <span class="preview-costo" id="preview-costo"></span>
     </div>
 
@@ -78,7 +80,7 @@
   <div class="card">
     <div class="card-title">Carrito</div>
     <div id="lista-carrito">
-      <div class="carrito-vacio">Todavía no agregaste productos</div>
+      <div class="carrito-vacio">TodavÃ­a no agregaste productos</div>
     </div>
   </div>
 
@@ -91,7 +93,7 @@
 
     <div class="field-group">
       <label for="input-etiqueta">Etiqueta / Nombre del cliente (opcional)</label>
-      <input type="text" id="input-etiqueta" placeholder="Ej: Jorge, Seña...">
+      <input type="text" id="input-etiqueta" placeholder="Ej: Jorge, SeÃ±a...">
     </div>
     <div class="field-group" style="display:flex;gap:12px;margin-bottom:16px;">
       <div style="flex:1">
@@ -108,7 +110,7 @@
         Falta pagar
       </label>
       <div id="div-sena" style="display:none;margin-top:12px;">
-        <label style="display:block;font-size:0.75rem;color:var(--gris-texto);font-weight:600;margin-bottom:4px;">¿Dejó seña? (Opcional)</label>
+        <label style="display:block;font-size:0.75rem;color:var(--gris-texto);font-weight:600;margin-bottom:4px;">Â¿DejÃ³ seÃ±a? (Opcional)</label>
         <input type="number" id="input-sena" placeholder="Monto abonado ahora" style="width:100%;padding:10px;border:1.5px solid var(--borde);border-radius:10px;font-size:0.85rem;font-family:'DM Sans',sans-serif;">
       </div>
     </div>
@@ -126,23 +128,23 @@
     <div class="desglose" id="desglose-venta"></div>
 
     <button class="btn-finalizar" id="btn-finalizar" disabled>
-      ✓ Registrar venta
+      âœ“ Registrar venta
     </button>
   </div>
 
 </div>
 
-<!-- ══ PÁGINA 1: HISTORIAL ══ -->
+<!-- â•â• PÃGINA 1: HISTORIAL â•â• -->
 <div class="page" id="page-1">
 
   <div style="display:flex;gap:8px;margin-bottom:14px;">
     <button id="btn-backup"
       style="flex:1;background:var(--naranja-palido);color:var(--naranja);border:1.5px solid var(--naranja-claro);border-radius:10px;font-family:'DM Sans',sans-serif;font-size:0.85rem;font-weight:700;padding:10px;cursor:pointer;">
-      🔒 Hacer backup
+      ðŸ”’ Hacer backup
     </button>
     <label
       style="flex:1;background:var(--gris);color:var(--gris-texto);border:1.5px solid var(--borde);border-radius:10px;font-family:'DM Sans',sans-serif;font-size:0.85rem;font-weight:700;padding:10px;cursor:pointer;text-align:center;">
-      ⬆ Restaurar
+      â¬† Restaurar
       <input type="file" accept=".json" id="input-restaurar" style="display:none;">
     </label>
   </div>
@@ -154,9 +156,17 @@
     </select>
     <button id="btn-pdf"
       style="background:var(--azul-palido);color:var(--azul);border:1.5px solid #BFDBFE;border-radius:10px;font-family:'DM Sans',sans-serif;font-size:0.85rem;font-weight:700;padding:10px 16px;cursor:pointer;white-space:nowrap;">
-      📄 PDF
+      ðŸ“„ PDF
     </button>
   </div>
+
+  <section class="monthly-panel" aria-labelledby="monthly-title">
+    <div class="monthly-head">
+      <div><span class="monthly-kicker">Resumen mensual</span><h2 id="monthly-title">Tu negocio en n&uacute;meros</h2></div>
+      <select id="select-mes-panel" aria-label="Mes del resumen"></select>
+    </div>
+    <div id="panel-mensual"></div>
+  </section>
 
   <div class="filtros-periodo">
     <button class="btn-filtro active" data-action="filter-period" data-period="hoy">Hoy</button>
