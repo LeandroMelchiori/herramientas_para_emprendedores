@@ -2,7 +2,7 @@
 (function initMigrations(global) {
   'use strict';
 
-  const SCHEMA_VERSION = 3;
+  const SCHEMA_VERSION = 4;
   const isObject = (value) => value && typeof value === 'object' && !Array.isArray(value);
   const finite = (value, fallback = 0) => Number.isFinite(Number(value)) ? Number(value) : fallback;
 
@@ -35,6 +35,18 @@
     };
   }
 
+  function normalizePayment(payment, fallbackDate, fallbackMethod) {
+    if (!isObject(payment)) return null;
+    return {
+      ...payment,
+      id: payment.id ?? Date.now(),
+      fecha: payment.fecha || fallbackDate || new Date().toISOString(),
+      monto: Math.max(0, finite(payment.monto)),
+      medio: payment.medio || fallbackMethod || 'Efectivo',
+      origen: payment.origen || 'pago_historico',
+    };
+  }
+
   function normalizeSale(sale) {
     if (!isObject(sale)) return null;
     const items = Array.isArray(sale.items) ? sale.items.map(normalizeSaleItem).filter(Boolean) : [];
@@ -42,6 +54,13 @@
     const cost = finite(sale.totalCosto, items.reduce((sum, item) => sum + item.costoTotal, 0));
     const charged = finite(sale.totalCobrado, suggested);
     const paid = finite(sale.montoPagado, sale.fiado ? 0 : charged);
+    const normalizedPaid = Math.min(Math.max(paid, 0), charged);
+    const pagos = Array.isArray(sale.pagos)
+      ? sale.pagos.map(payment => normalizePayment(payment, sale.fecha, sale.medioPago)).filter(Boolean)
+      : normalizedPaid > 0 ? [{
+          id: sale.id ?? Date.now(), fecha: sale.fecha || new Date().toISOString(),
+          monto: normalizedPaid, medio: sale.medioPago || 'Efectivo', origen: 'migracion_historica',
+        }] : [];
     return {
       ...sale,
       id: sale.id ?? Date.now(),
@@ -49,13 +68,14 @@
       items,
       totalSugerido: suggested,
       totalCobrado: charged,
-      montoPagado: Math.min(Math.max(paid, 0), charged),
+      montoPagado: normalizedPaid,
       totalCosto: cost,
       totalGanancia: finite(sale.totalGanancia, charged - cost),
       descuento: finite(sale.descuento, Math.max(suggested - charged, 0)),
       etiqueta: sale.etiqueta || '',
       medioPago: sale.medioPago || 'Efectivo',
-      fiado: Boolean(sale.fiado ?? paid < charged),
+      fiado: Boolean(sale.fiado ?? normalizedPaid < charged),
+      pagos,
     };
   }
 

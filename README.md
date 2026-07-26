@@ -62,9 +62,11 @@ Utiliza los productos guardados en la calculadora para registrar operaciones rea
 - Snapshot del costo, ingreso y ganancia al momento de la venta.
 - Etiquetas para identificar clientes, ferias o canales.
 - Medios de pago: efectivo, transferencia y tarjeta.
-- Registro de ventas fiadas y total pendiente de cobro.
+- Registro de ventas fiadas, se?as, pagos parciales y saldo pendiente.
+- Cronolog?a de cobros con fecha, monto y medio de pago.
 - Historial con filtros por hoy, semana, mes o período completo.
-- Resumen por medio de pago, ingresos, costos y ganancias.
+- Panel mensual con facturaci?n, cobros, costos, ganancias y comparaci?n.
+- Productos m?s vendidos y rentables, ticket promedio y descuentos.
 - Restauración de ventas eliminadas.
 - Backup y restauración de la información.
 - Exportación de resumen mensual en PDF.
@@ -115,7 +117,7 @@ La suite está preparada como PWA:
 - estrategia `stale-while-revalidate` para archivos actualizables;
 - caché versionada para evitar mantener versiones antiguas;
 - aviso cuando existe una actualización;
-- recursos principales precargados por el Service Worker `v2.2.0`.
+- recursos principales precargados por el Service Worker `v2.3.0`.
 
 No requiere tienda de aplicaciones ni un backend para funcionar.
 
@@ -269,6 +271,6 @@ Desarrollado por **Leandro Sacha Melchiori**.
 
 ## Compatibilidad de datos
 
-La version 3 del contrato mantiene las claves historicas de localStorage. Las migraciones completan campos opcionales, conservan propiedades desconocidas y no sobrescriben la base si detectan registros irreconocibles. Los backups 1.x y 2.0 siguen siendo restaurables; los nuevos backups se exportan como version 3.0.
+La version 4 del contrato mantiene las claves historicas de localStorage. Las migraciones completan campos opcionales, conservan propiedades desconocidas y no sobrescriben la base si detectan registros irreconocibles. Los backups 1.x y 2.0 siguen siendo restaurables; los nuevos backups se exportan como version 4.0.
 
 Los eventos de interfaz se enlazan desde JavaScript mediante listeners y delegacion. Los modulos grandes separan estilos por dominio (proyectos e historial) sin proceso de build. La prueba `tests/pwa-assets.spec.js` impide agregar recursos locales sin incluirlos en el precache offline.

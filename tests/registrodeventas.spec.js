@@ -56,7 +56,7 @@ test.describe('Registro de ventas', () => {
     await page.click('#btn-finalizar');
     await page.getByRole('button', { name: 'Historial' }).click();
 
-    await expect(page.locator('.venta-item').first()).toContainText(/SE.A|PENDIENTE/);
+    await expect(page.locator('.venta-item').first()).toContainText(/ABONADO|SALDO|PENDIENTE/);
     const sale = await page.evaluate(() => AppStorage.getSales()[0]);
     expect(sale).toMatchObject({ fiado: true, montoPagado: 500 });
   });

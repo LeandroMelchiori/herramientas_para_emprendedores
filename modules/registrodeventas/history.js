@@ -42,12 +42,12 @@ function renderizarHistorial() {
   const totalCos = ventas.reduce((a, v) => a + v.totalCosto,   0);
   const totalGan = ventas.reduce((a, v) => a + v.totalGanancia, 0);
 
-  const fiadoTotal = ventas.filter(v => v.fiado).reduce((a, v) => a + v.totalCobrado, 0);
-  const pagoStats = ventas.reduce((acc, v) => {
-    if (!v.fiado) {
-      const medio = v.medioPago || 'Efectivo';
-      acc[medio] = (acc[medio] || 0) + v.totalCobrado;
-    }
+  const fiadoTotal = ventas.reduce((sum, sale) => sum + AppSales.outstanding(sale), 0);
+  const pagoStats = ventas.reduce((acc, sale) => {
+    (sale.pagos || []).forEach(payment => {
+      const medio = payment.medio || 'Efectivo';
+      acc[medio] = (acc[medio] || 0) + payment.monto;
+    });
     return acc;
   }, {});
 
@@ -77,6 +77,8 @@ function renderizarHistorial() {
 
   const lista = document.getElementById('lista-historial');
   actualizarSelectMes();
+  populateMonthlySelector(todas);
+  renderizarPanelMensual();
 
   if (!ventas.length) {
     lista.innerHTML = `<div class="empty-state">
@@ -104,7 +106,7 @@ function renderizarHistorial() {
     let pagoBadge = '';
     if (v.fiado) {
       if (v.montoPagado > 0) {
-        pagoBadge = `<span style="background:#FFFBEB;color:#D97706;padding:2px 6px;border-radius:4px;font-size:0.65rem;font-weight:700;margin-left:6px;vertical-align:middle;">SEÑA: ${fmt(v.montoPagado)}</span>`;
+        pagoBadge = `<span style="background:#FFFBEB;color:#D97706;padding:2px 6px;border-radius:4px;font-size:0.65rem;font-weight:700;margin-left:6px;vertical-align:middle;">ABONADO: ${fmt(v.montoPagado)} &middot; SALDO: ${fmt(AppSales.outstanding(v))}</span>`;
       } else {
         pagoBadge = `<span style="background:#FEF2F2;color:var(--error);padding:2px 6px;border-radius:4px;font-size:0.65rem;font-weight:700;margin-left:6px;vertical-align:middle;">FALTA PAGAR</span>`;
       }
@@ -161,13 +163,14 @@ function renderizarHistorial() {
             <span class="det-val verde">${fmt(v.totalGanancia)}</span>
           </div>
         </div>
+        ${v.pagos?.length ? `<div class="payment-history"><div class="payment-history-title">Pagos registrados</div>${v.pagos.map(payment => `<div class="payment-row"><span>${fmtFecha(payment.fecha)} &middot; ${esc(payment.medio)}</span><b>${fmt(payment.monto)}</b></div>`).join('')}</div>` : ''}
         ${v.fiado ? `
         <div style="margin:12px 0;background:var(--gris);border-radius:10px;padding:12px;border:1.5px solid var(--borde);">
           <div style="font-weight:700;font-size:0.85rem;color:var(--texto);margin-bottom:8px;">✓ Cobrar pendiente</div>
           <div style="display:flex;gap:8px;margin-bottom:8px;">
             <div style="flex:1;">
               <div style="font-size:0.7rem;color:var(--gris-texto);margin-bottom:2px;font-weight:600;">Monto a cobrar</div>
-              <input type="number" id="cobro-monto-${v.id}" value="${v.totalCobrado - (v.montoPagado || 0)}" style="width:100%;padding:8px;border:1.5px solid var(--borde);border-radius:8px;font-family:'DM Sans',sans-serif;font-size:0.85rem;background:white;" placeholder="Monto">
+              <input type="number" id="cobro-monto-${v.id}" value="${AppSales.outstanding(v)}" max="${AppSales.outstanding(v)}" min="0.01" step="0.01" style="width:100%;padding:8px;border:1.5px solid var(--borde);border-radius:8px;font-family:'DM Sans',sans-serif;font-size:0.85rem;background:white;" placeholder="Monto">
             </div>
             <div style="flex:1;">
               <div style="font-size:0.7rem;color:var(--gris-texto);margin-bottom:2px;font-weight:600;">Medio</div>
@@ -219,7 +222,7 @@ function toggleVenta(id) {
 }
 
 function eliminarVenta(id) {
-  if (!confirm('??Seguro que quer??s eliminar esta venta?')) return;
+  if (!confirm('\u00bfSeguro que quer\u00e9s eliminar esta venta?')) return;
   const ventas = obtenerVentas();
   const index = ventas.findIndex(v => v.id === id);
   if (index < 0) return;
@@ -257,15 +260,17 @@ function marcarVentaPagada(id) {
 
   const cobroExtra = parseFloat(montoInput.value) || 0;
   const medio = medioSel.value;
+  if (cobroExtra <= 0) { mostrarToast('Ingres\u00e1 un monto mayor a cero'); return; }
 
   const ventas = obtenerVentas();
   const idx = ventas.findIndex(v => v.id === id);
   if (idx > -1) {
+    const saldoAnterior = AppSales.outstanding(ventas[idx]);
     ventas[idx] = AppSales.applyPayment(ventas[idx], cobroExtra, medio);
 
     guardarVentas(ventas);
     renderizarHistorial();
-    mostrarToast('Pago registrado correctamente');
+    mostrarToast(cobroExtra > saldoAnterior ? 'Se registr\u00f3 \u00fanicamente el saldo pendiente' : 'Pago registrado correctamente');
     if (typeof trackEvent === 'function') trackEvent('ventas_marcar_pagada');
   }
 }
@@ -280,7 +285,7 @@ function restaurarBackup(event) {
       if (!restaurado.length) throw new Error('El backup no contiene datos restaurables.');
       cargarProductos();
       renderizarHistorial();
-      mostrarToast(`Restauracion exitosa: ${restaurado.join(' + ')} ?`);
+      mostrarToast(`Restauraci\u00f3n exitosa: ${restaurado.join(' + ')}`);
       if (typeof trackEvent === 'function') trackEvent('ventas_restaurar_backup');
     } catch (error) {
       console.warn('[Ventas] Backup invalido.', error);
