@@ -104,7 +104,7 @@ Directorio curado de recursos gratuitos para mejorar presencia digital y comerci
 - Recursos para diseño, contenido, redes sociales, comercio electrónico y productividad.
 - Enlaces externos acompañados por una explicación de uso.
 
-Los tres ultimos modulos usan el mismo esquema simple: `index.html`, `styles.css` y `app.js`.
+Prompts y herramientas separan contenido editorial (`catalog.js`) de comportamiento (`app.js`). Los modulos de calculadora y colores se dividen ademas por dominio y responsabilidad.
 
 ## 📲 Progressive Web App
 
@@ -115,7 +115,7 @@ La suite está preparada como PWA:
 - estrategia `stale-while-revalidate` para archivos actualizables;
 - caché versionada para evitar mantener versiones antiguas;
 - aviso cuando existe una actualización;
-- recursos principales precargados por el Service Worker.
+- recursos principales precargados por el Service Worker `v2.1.0`.
 
 No requiere tienda de aplicaciones ni un backend para funcionar.
 
@@ -134,28 +134,20 @@ La aplicación está diseñada con un enfoque local-first:
 
 La política completa está disponible en [economiasocial.sachadev.me/privacidad.html](https://economiasocial.sachadev.me/privacidad.html).
 
-## Desarrollo
 
-## 🧱 Arquitectura
+## Arquitectura del codigo
 
-```text
-index.html
-   │
-   ├── Calculadora ──────────────┐
-   ├── Registro de ventas ◄──────┤ localStorage compartido
-   ├── Guía de prompts           │
-   ├── Combinador de colores     │
-   └── Herramientas digitales ───┘
+El sitio es estatico, sin backend, framework ni proceso de build. Los scripts se cargan con `defer` respetando este orden: contratos compartidos, dominio del modulo y coordinadores de interfaz.
 
-Service Worker ─► caché offline y actualización de recursos
-GoatCounter    ─► analítica anónima y eventos de uso
-Vercel         ─► publicación estática y headers de caché
-```
+### Contratos compartidos
 
-El registro de ventas lee los proyectos creados en la calculadora, lo que permite reutilizar costos y precios sin volver a cargar los productos.
+- `AppStorage`: unica puerta de acceso a localStorage y backups.
+- `AppFormat`: moneda, fechas y texto seguro para HTML.
+- `AppUI`: portapapeles, mensajes breves y slugs.
+- `AppCosting`: costos, precios, margen y punto de equilibrio usados por calculadora y ventas.
+- `AppColor`: conversiones, armonias, contraste y simulacion visual.
 
----
-
+El registro de ventas reutiliza proyectos mediante `AppStorage` y calcula sus snapshots con `AppCosting`, evitando formulas duplicadas.
 ## 🛠️ Stack
 
 | Área | Tecnología |
@@ -173,61 +165,81 @@ El proyecto no utiliza framework frontend ni proceso de build para la aplicació
 
 ---
 
-## 📂 Estructura
+## Estructura principal
 
 ```text
 /
-├── index.html
-├── privacidad.html
-├── manifest.json
-├── sw.js
-├── pwa.js
-├── analytics.js
-├── vercel.json
-├── assets/
-├── modules/
-│   ├── calculadora/
-│   ├── registrodeventas/
-│   ├── guiadeprompts/
-│   ├── combinadordecolores/
-│   └── herramientasdigitales/
-└── tests/
-    └── registrodeventas.spec.js
+|-- index.html
+|-- styles.css
+|-- privacidad.html
+|-- shared/
+|   |-- base.css
+|   |-- storage.js
+|   |-- format.js
+|   |-- ui.js
+|   `-- costing.js
+|-- sw.js
+|-- pwa.js
+|-- backup.js
+|-- analytics.js
+|-- modules/
+|   |-- calculadora/
+|   |   |-- state.js
+|   |   |-- app.js
+|   |   |-- projects.js
+|   |   `-- pdf.js
+|   |-- registrodeventas/
+|   |   |-- app.js
+|   |   |-- history.js
+|   |   `-- pdf.js
+|   |-- combinadordecolores/
+|   |   |-- color-domain.js
+|   |   |-- picker.js
+|   |   |-- image-tools.js
+|   |   |-- exports.js
+|   |   `-- app.js
+|   |-- guiadeprompts/
+|   |   |-- catalog.js
+|   |   `-- app.js
+|   `-- herramientasdigitales/
+|       |-- catalog.js
+|       `-- app.js
+`-- tests/
+    |-- calculadora.spec.js
+    |-- registrodeventas.spec.js
+    |-- storage.spec.js
+    |-- domain.spec.js
+    `-- smoke.spec.js
 ```
 
----
-
-## 🚀 Ejecución local
-
-Al ser un sitio estático, puede abrirse mediante cualquier servidor HTTP local.
+Cada modulo mantiene su `index.html` y `styles.css`. Los archivos `catalog.js` contienen marcado editorial, no reglas de negocio.
+## Ejecucion local
 
 ```bash
 git clone https://github.com/LeandroMelchiori/herramientas_para_emprendedores.git
 cd herramientas_para_emprendedores
-python -m http.server 8000
+npm install
+npm run serve
 ```
 
-Abrir `http://localhost:8000`.
+Abrir `http://localhost:3000`. Se requiere HTTP para que funcionen Service Worker y rutas.
+## Pruebas
 
-> Se recomienda un servidor HTTP en lugar de abrir `index.html` directamente para que el Service Worker y las rutas funcionen correctamente.
+```bash
+npm test
+```
 
----
+Playwright cubre 16 casos sobre:
 
-## ✅ Pruebas
+- carga sin errores de los cinco modulos;
+- autoguardado y proyectos de la calculadora;
+- costos, margen, punto de equilibrio y precio manual;
+- carrito, snapshots y ventas pendientes;
+- backup actual y compatibilidad con formatos antiguos;
+- conversiones, armonias y contraste de colores;
+- montaje de los catalogos editoriales.
 
-El repositorio incluye pruebas end-to-end con Playwright para los flujos principales del registro de ventas, entre ellos:
-
-- reutilización de productos guardados por la calculadora;
-- armado del carrito;
-- registro por medio de pago;
-- ventas fiadas;
-- historial y resumen por período;
-- visualización de ingresos pendientes de cobro.
-
-Las pruebas se mantienen alineadas con la estructura real del DOM para detectar regresiones en los flujos de uso.
-
----
-
+Las pruebas funcionales bloquean el Service Worker. El precache y la apertura offline se validan por separado.
 ## ☁️ Deploy
 
 La aplicación se publica como sitio estático en Vercel. `vercel.json` controla los headers de caché y evita que el navegador conserve versiones antiguas del Service Worker o del manifest.
@@ -236,19 +248,14 @@ Cada despliegue actualiza la versión de caché para que la PWA reciba los cambi
 
 ---
 
-## Próximas mejoras
+## Criterios para proximas mejoras
 
-- Ampliar la cobertura end-to-end a la calculadora, prompts y combinador de colores.
-- Incorporar exportaciones tabulares del historial de ventas.
-- Mejorar herramientas de análisis mensual y comparación entre períodos.
-- Agregar importación guiada y validación más detallada de backups.
-- Continuar las pruebas de accesibilidad y uso en dispositivos de gama baja.
-
-1. Agregarlos a `PRECACHE` en `sw.js` si deben funcionar offline.
-2. Incrementar `VERSION` en `sw.js`.
-3. Ejecutar `npm test`.
-4. Hacer push de la rama aprobada.
-
+- Mantener reglas puras fuera del DOM.
+- Usar `AppStorage`, `AppCosting`, `AppFormat` y `AppUI` antes de duplicar funciones.
+- Editar prompts y herramientas en sus archivos `catalog.js`.
+- Agregar comentarios breves solo cuando expliquen una decision no evidente.
+- Actualizar `PRECACHE` y `VERSION` al agregar archivos propios.
+- Ejecutar `npm test` antes de integrar una rama.
 ## Autor
 
 Desarrollado por **Leandro Sacha Melchiori**.

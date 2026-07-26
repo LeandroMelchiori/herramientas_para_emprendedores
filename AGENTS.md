@@ -29,6 +29,8 @@ App en uso real: [economiasocial.sachadev.me](https://economiasocial.sachadev.me
 - PWA con Service Worker (`sw.js`) y Web App Manifest (`manifest.json`)
 - `shared/storage.js` como contrato unico para localStorage y backups
 - `shared/format.js` para moneda, fechas y escape de HTML
+- `shared/ui.js` para portapapeles, toast y slugs
+- `shared/costing.js` como motor comun de calculadora y ventas
 - jsPDF (CDN) para PDF en calculadora y registro de ventas
 - GoatCounter para analytics anonimos (sin cookies)
 - npm solo como herramienta de desarrollo para Playwright y servidor local
@@ -40,7 +42,7 @@ No hay build ni servidor de desarrollo requerido. Para previsualizar localmente:
 
 ```bash
 # Cualquier servidor HTTP estático sirve (el Service Worker necesita HTTP, no file://)
-npx serve .
+npm run serve
 # o
 python3 -m http.server 8080
 ```
@@ -67,19 +69,21 @@ Para desplegar: hacer push al repositorio. Vercel detecta el cambio y despliega 
     └── registrodeventas/       # Registro de ventas, control de ingresos, costos y ganancias
 ```
 
-Cada modulo separa estructura (`index.html`), presentacion (`styles.css`) y comportamiento (`app.js`). Los modulos complejos dividen responsabilidades adicionales: calculadora usa `projects.js` y `pdf.js`; registro de ventas usa `history.js` y `pdf.js`.
+Cada modulo separa estructura (`index.html`), presentacion (`styles.css`), contenido editorial (`catalog.js`, cuando corresponde) y comportamiento. Calculadora divide estado, proyectos y PDF; colores divide dominio, Canvas, imagenes y exportaciones; ventas divide operacion, historial y PDF.
 
 ## Decisiones de arquitectura
 
 **Modulos sin build**: cada pagina enlaza sus archivos CSS y JavaScript directamente. Los scripts usan `defer` y respetan este orden: utilidades compartidas, librerias externas y codigo del modulo.
 
-**Persistencia centralizada**: los modulos no deben acceder directamente a `localStorage`. Deben usar `AppStorage` y ampliar `shared/storage.js` al incorporar un nuevo tipo de dato persistente.
+**Contratos compartidos**: no acceder directamente a `localStorage`; usar `AppStorage`. Costos y precios usan `AppCosting`; formatos usan `AppFormat`; portapapeles, toast y slugs usan `AppUI`. Ampliar el contrato correspondiente en lugar de duplicar funciones.
 
-**Responsabilidades pequenas**: `app.js` contiene el flujo principal. Las responsabilidades grandes e independientes, como historial, proyectos o PDF, viven en archivos propios. No duplicar versiones completas de un modulo.
+**Responsabilidades pequenas**: `app.js` coordina la interfaz. Estado, reglas puras, catalogos, historial, proyectos, procesamiento de imagenes y exportaciones viven en archivos propios cuando tienen una responsabilidad independiente.
 
-**Cache del Service Worker versionada**: al cambiar paginas o assets hay que actualizar `PRECACHE` e incrementar `VERSION` en `sw.js` (actualmente `v2.0.0`).
+**Cache del Service Worker versionada**: al cambiar paginas o assets hay que actualizar `PRECACHE` e incrementar `VERSION` en `sw.js` (actualmente `v2.1.0`).
 
 **Pruebas**: ejecutar `npm test` antes de integrar cambios. Playwright valida los flujos funcionales sin Service Worker; el listado offline se audita por separado.
+
+**Contenido editorial**: prompts y herramientas se editan en `catalog.js`. Esos archivos contienen marcado, no reglas de negocio. Mantener `app.js` enfocado en comportamiento.
 
 **Paleta institucional**: el sistema de colores sigue la identidad del Gobierno de Santa Fe con variables CSS en `:root`. El gradiente institucional va de naranja → magenta → violeta (`#F2A33B` → `#E85D3A` → `#D5306E` → `#6B3FA0`).
 

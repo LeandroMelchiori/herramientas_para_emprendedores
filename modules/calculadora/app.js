@@ -2,31 +2,6 @@
    calculadora/index.html — Lógica principal
    ============================================================ */
 
-const MAX_FILAS      = 10;
-const AUTOSAVE_SCHEMA = 2;  // incrementar si cambia la estructura del autosave
-
-/* true después de guardar un proyecto en esta sesión; se usa para la advertencia de salida */
-let proyectoGuardadoEnSesion = false;
-let _pagProyectos = 1;
-let _filtroProyectos = '';
-let proyectoActivoId         = null;  // id del proyecto cargado (null = cálculo nuevo)
-let proyectoActivoNombre     = '';    // nombre del proyecto activo para el modal
-
-/* 5 filas vacías para que el emprendedor pueda empezar a llenar de inmediato */
-const filaInsumoVacia  = () => ({ nombre: '', cantidad: 1, precio: 0 });
-const filaServicioVacia = () => ({ nombre: '', horas: 1, precio: 0 });
-const FILAS_INICIALES  = 5;
-
-const estado = {
-  insumos:       Array.from({ length: FILAS_INICIALES }, filaInsumoVacia),
-  servicios:     Array.from({ length: FILAS_INICIALES }, filaServicioVacia),
-  margen:        50,
-  modo:          'slider', // 'slider' | 'precio'
-  soloServicios: false,    // emprendedores que no usan materiales
-  ivaActivo:     false,    // mostrar precio con IVA incluido
-};
-
-/* ── Inicio ── */
 document.addEventListener('DOMContentLoaded', () => {
   /* ?reset en la URL limpia el autosave (útil para usuarios con datos corruptos) */
   if (location.search.includes('reset')) {
@@ -202,44 +177,17 @@ function actualizarBadge(badgeId, btnId, count) {
 /* ══ CÁLCULOS ══ */
 
 function calcular() {
-  const unidades       = Math.max(1, parseFloat(document.getElementById('unidades').value) || 1);
-  const totalInsumos   = estado.insumos.reduce((s, i) => s + i.cantidad * i.precio, 0);
-  const totalServicios = estado.servicios.reduce((s, v) => s + v.horas * v.precio, 0);
-  const costoUnitario  = (totalInsumos + totalServicios) / unidades;
-
-  let precioVenta, margenReal;
-  if (estado.modo === 'slider') {
-    margenReal  = estado.margen;
-    precioVenta = costoUnitario * (1 + margenReal / 100);
-  } else {
-    precioVenta = Math.max(0, parseFloat(document.getElementById('precio-manual').value) || 0);
-    margenReal  = costoUnitario > 0 ? ((precioVenta - costoUnitario) / costoUnitario) * 100 : 0;
-  }
-
-  const precioConIva    = precioVenta * 1.21;
-  const gananciaNeta    = precioVenta - costoUnitario;
-  const gastosMensuales = parseFloat(document.getElementById('gastos-mensuales').value) || 0;
-  const diasLaborales   = Math.max(1, parseFloat(document.getElementById('dias-laborales').value) || 24);
-  const metaIngresos    = parseFloat(document.getElementById('meta-ingresos').value) || 0;
-
-  const ventasMensuales = gananciaNeta > 0 ? Math.ceil(gastosMensuales / gananciaNeta) : null;
-  const ventasDiarias   = ventasMensuales !== null ? Math.ceil(ventasMensuales / diasLaborales) : null;
-
-  /* Unidades necesarias para cubrir costos fijos + meta de ingresos */
-  const unidadesMeta = (gananciaNeta > 0 && metaIngresos > 0)
-    ? Math.ceil((gastosMensuales + metaIngresos) / gananciaNeta)
-    : null;
-
-  /* Desglose proporcional materiales vs servicios */
-  const pctInsumos   = costoUnitario > 0 ? Math.round((totalInsumos / unidades / costoUnitario) * 100) : 0;
-  const pctServicios = costoUnitario > 0 ? 100 - pctInsumos : 0;
-
-  return {
-    totalInsumos, totalServicios, costoUnitario, precioVenta, precioConIva,
-    margenReal, gananciaNeta, gastosMensuales, diasLaborales,
-    ventasMensuales, ventasDiarias, metaIngresos, unidadesMeta,
-    pctInsumos, pctServicios, unidades
-  };
+  return AppCosting.calculate({
+    supplies: estado.insumos,
+    services: estado.servicios,
+    units: document.getElementById('unidades').value,
+    margin: estado.margen,
+    mode: estado.modo,
+    manualPrice: document.getElementById('precio-manual').value,
+    monthlyExpenses: document.getElementById('gastos-mensuales').value,
+    workDays: document.getElementById('dias-laborales').value,
+    incomeGoal: document.getElementById('meta-ingresos').value,
+  });
 }
 
 /* Actualiza todos los elementos de la UI y dispara autosave */
@@ -432,181 +380,11 @@ const fmt = AppFormat.currencyARS;
 
 /* Lee los valores actuales del DOM y los vuelca a estado.insumos / estado.servicios.
    Garantiza que cualquier valor escrito pero cuyo oninput no haya disparado quede guardado. */
-function sincronizarEstadoDesdeDOM() {
-  document.querySelectorAll('#lista-insumos .row-insumo-wrap').forEach((wrap, i) => {
-    if (!estado.insumos[i]) return;
-    const [nombreI, cantI, precioI] = wrap.querySelectorAll('input');
-    if (nombreI)  estado.insumos[i].nombre   = nombreI.value;
-    if (cantI)    estado.insumos[i].cantidad  = parseFloat(cantI.value)  || 0;
-    if (precioI)  estado.insumos[i].precio    = parseFloat(precioI.value) || 0;
-  });
-  document.querySelectorAll('#lista-servicios .row-insumo-wrap').forEach((wrap, i) => {
-    if (!estado.servicios[i]) return;
-    const [nombreI, horasI, precioI] = wrap.querySelectorAll('input');
-    if (nombreI)  estado.servicios[i].nombre  = nombreI.value;
-    if (horasI)   estado.servicios[i].horas   = parseFloat(horasI.value)  || 0;
-    if (precioI)  estado.servicios[i].precio  = parseFloat(precioI.value) || 0;
-  });
-}
-
-function leerEstadoCompleto() {
-  sincronizarEstadoDesdeDOM();
-  return {
-    _schema:         AUTOSAVE_SCHEMA,
-    nombreProducto:  document.getElementById('nombre-producto').value,
-    unidades:        parseFloat(document.getElementById('unidades').value) || 1,
-    insumos:         estado.insumos,
-    servicios:       estado.servicios,
-    margen:          estado.margen,
-    modo:            estado.modo,
-    soloServicios:   estado.soloServicios,
-    ivaActivo:       estado.ivaActivo,
-    precioManual:    parseFloat(document.getElementById('precio-manual').value) || 0,
-    gastosMensuales: parseFloat(document.getElementById('gastos-mensuales').value) || 0,
-    diasLaborales:   parseFloat(document.getElementById('dias-laborales').value) || 24,
-    metaIngresos:    parseFloat(document.getElementById('meta-ingresos').value) || 0,
-  };
-}
-
-function aplicarEstado(datos) {
-  document.getElementById('nombre-producto').value  = datos.nombreProducto || '';
-  document.getElementById('unidades').value         = datos.unidades || 1;
-  document.getElementById('gastos-mensuales').value = datos.gastosMensuales || '';
-  document.getElementById('dias-laborales').value   = datos.diasLaborales || 24;
-  document.getElementById('precio-manual').value    = datos.precioManual || '';
-  document.getElementById('margen-slider').value    = datos.margen || 50;
-  { const mi = document.getElementById('margen-input'); if (mi) mi.value = datos.margen || 50; }
-  document.getElementById('meta-ingresos').value    = datos.metaIngresos || '';
-  const ivaEl = document.getElementById('iva-toggle');
-  if (ivaEl) ivaEl.checked = datos.ivaActivo || false;
-  /* Siempre mostrar al menos FILAS_INICIALES filas; completa con vacías si hacen falta */
-  const padRows = (arr, factory) => {
-    const rows = arr ? [...arr] : [];
-    while (rows.length < FILAS_INICIALES) rows.push(factory());
-    return rows;
-  };
-  estado.soloServicios = datos.soloServicios || false;
-  estado.insumos   = estado.soloServicios ? [] : padRows(datos.insumos, filaInsumoVacia);
-  estado.servicios = padRows(datos.servicios, filaServicioVacia);
-  estado.margen    = datos.margen  || 50;
-  estado.modo      = datos.modo    || 'slider';
-  estado.ivaActivo = datos.ivaActivo || false;
-  /* Sincronizar el toggle visual con el estado cargado */
-  sincronizarUIToggle();
-}
-
-let autosaveTimer;
-function autosave() {
-  clearTimeout(autosaveTimer);
-  autosaveTimer = setTimeout(() => {
-    if (AppStorage.saveCalculatorDraft(leerEstadoCompleto())) mostrarIndicadorAutosave();
-  }, 500);
-}
-
-function mostrarIndicadorAutosave() {
-  const el = document.getElementById('autosave-indicator');
-  el.textContent = '✓ Guardado';
-  el.style.opacity = '1';
-  setTimeout(() => { el.style.opacity = '0'; }, 1500);
-}
-
-function cargarAutosave() {
-  const datos = AppStorage.getCalculatorDraft();
-  if (!datos) return;
-  if ((datos._schema || 0) < AUTOSAVE_SCHEMA) {
-    AppStorage.remove(AppStorage.KEYS.calculatorDraft);
-    return;
-  }
-  aplicarEstado(datos);
-}
-
-/* ══ COMPARTIR POR URL ══ */
-
-function compartirPorLink() {
-  const encoded = btoa(unescape(encodeURIComponent(JSON.stringify(leerEstadoCompleto()))));
-  document.getElementById('share-url-text').textContent =
-    `${location.origin}${location.pathname}?d=${encoded}`;
-  abrirModal('modal-compartir');
-}
-
-function copiarLink() {
-  navigator.clipboard.writeText(document.getElementById('share-url-text').textContent)
-    .then(() => mostrarToast('¡Link copiado!'));
-}
-
-function cargarDesdeURL() {
-  const d = new URLSearchParams(location.search).get('d');
-  if (!d) return false;
-  try {
-    aplicarEstado(JSON.parse(decodeURIComponent(escape(atob(d)))));
-    history.replaceState(null, '', location.pathname);
-    return true;
-  } catch (_) { return false; }
-}
-
-/* ══ PROYECTOS ══ */
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/* ══ VACIAR POR SECCIÓN ══ */
-
-/* Doble confirmación inline: primer clic avisa, segundo clic dentro de 2.5s ejecuta. */
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/* ══ EXPORT / IMPORT ══ */
-
-
-
-
-
-/* ══ PDF ══ */
-
-
-
-/* ══ MODALES ══ */
-
 function abrirModal(id)  { document.getElementById(id).classList.add('open'); }
 function cerrarModal(id) { document.getElementById(id).classList.remove('open'); }
 
 /* ══ TOAST ══ */
 
-let toastTimer;
-function mostrarToast(msg) {
-  const el = document.getElementById('toast');
-  el.textContent = msg;
-  el.classList.add('show');
-  clearTimeout(toastTimer);
-  toastTimer = setTimeout(() => el.classList.remove('show'), 2500);
-}
+function mostrarToast(message) { AppUI.showToast('toast', message, 2500); }
 
 const escHtml = AppFormat.escapeHTML;

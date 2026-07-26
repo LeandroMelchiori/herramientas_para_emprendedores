@@ -9,7 +9,7 @@
    ============================================================ */
 
 // Subí este número en cada deploy para invalidar las caches viejas.
-const VERSION   = 'v2.0.0';
+const VERSION   = 'v2.1.0';
 const APP_CACHE = `app-${VERSION}`;       // Núcleo: HTML + iconos + assets propios
 const RUNTIME   = `runtime-${VERSION}`;   // Externos: Google Fonts, CDNs, etc.
 
@@ -23,20 +23,29 @@ const PRECACHE = [
   '/shared/base.css',
   '/shared/storage.js',
   '/shared/format.js',
+  '/shared/ui.js',
+  '/shared/costing.js',
   '/modules/calculadora/',
   '/modules/calculadora/styles.css',
   '/modules/calculadora/app.js',
+  '/modules/calculadora/state.js',
   '/modules/calculadora/projects.js',
   '/modules/calculadora/pdf.js',
   '/modules/guiadeprompts/',
   '/modules/guiadeprompts/styles.css',
   '/modules/guiadeprompts/app.js',
+  '/modules/guiadeprompts/catalog.js',
   '/modules/combinadordecolores/',
   '/modules/combinadordecolores/styles.css',
   '/modules/combinadordecolores/app.js',
+  '/modules/combinadordecolores/color-domain.js',
+  '/modules/combinadordecolores/picker.js',
+  '/modules/combinadordecolores/image-tools.js',
+  '/modules/combinadordecolores/exports.js',
   '/modules/herramientasdigitales/',
   '/modules/herramientasdigitales/styles.css',
   '/modules/herramientasdigitales/app.js',
+  '/modules/herramientasdigitales/catalog.js',
   '/modules/registrodeventas/',
   '/modules/registrodeventas/styles.css',
   '/modules/registrodeventas/app.js',
