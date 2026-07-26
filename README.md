@@ -1,137 +1,103 @@
 # Herramientas para Emprendedores
 
-Suite de herramientas web gratuitas para emprendedores de la economía social, desarrollada para la **Dirección de Economía Social — Ministerio de Igualdad y Desarrollo Humano, Gobierno de Santa Fe, Argentina**.
+Suite gratuita de herramientas web para emprendedores de la economia social, desarrollada para la **Direccion de Economia Social - Ministerio de Igualdad y Desarrollo Humano, Gobierno de Santa Fe, Argentina**.
 
-> App en uso real por emprendedores de la economía social de Santa Fe.
+**Sitio:** [economiasocial.sachadev.me](https://economiasocial.sachadev.me)
 
-🔗 **[Ver en vivo → economiasocial.sachadev.me](https://economiasocial.sachadev.me)**
+## Modulos
 
----
+- **Calculadora de costos:** insumos, servicios, margen, punto de equilibrio, proyectos, autoguardado y PDF.
+- **Guia de prompts IA:** biblioteca, busqueda, filtros, favoritos y prompts propios.
+- **Combinador de colores:** armonias, contraste WCAG, simulacion de daltonismo, extraccion desde fotos y exportacion.
+- **Herramientas digitales:** catalogo gratuito con busqueda, favoritos y recomendaciones.
+- **Registro de ventas:** carrito, descuentos, medios de pago, ventas pendientes, snapshots contables, historial y resumen mensual en PDF.
 
-## Módulos
+La calculadora y el registro de ventas comparten los proyectos guardados. Cada venta conserva un snapshot del costo y el precio del momento para que el historial no cambie al editar un producto.
 
-### 🧮 Calculadora de Costos
-Calculá el precio de venta de tus productos con margen, punto de equilibrio y resumen exportable.
+## Arquitectura
 
-- Cálculo de insumos, materiales y mano de obra por tanda de producción
-- Slider de margen de ganancia con cálculo inverso
-- Punto de equilibrio (unidades/mes y unidades/día)
-- Comparativa de escenarios de precio
-- Proyectos guardados en localStorage (guardar, cargar, duplicar)
-- Compartir por link (estado codificado en URL)
-- Exportar / importar proyectos en JSON
-- Descarga en PDF
-- Monedas: ARS, UYU, CLP, MXN, USD
-- Autoguardado
+El sitio sigue siendo estatico, sin backend, framework ni proceso de build. La modularizacion separa estructura, presentacion y comportamiento:
 
-### 🤖 Guía de Prompts IA
-Biblioteca de prompts listos para usar con ChatGPT y otras IAs.
-
-- +40 prompts organizados por categoría (redes sociales, atención al cliente, finanzas, etc.)
-- Buscador en tiempo real
-- Filtro por categoría (barra compacta colapsable)
-- Favoritos guardados en localStorage
-- **Mis Prompts**: creá, editá y eliminá tus propios prompts personalizados
-- Exportar / importar prompts propios en JSON
-- Copiar prompt al portapapeles con un clic
-- Contadores dinámicos por categoría
-
-### 🎨 Combinador de Colores
-Encontrá la paleta perfecta para tu marca.
-
-- Rueda de color HSL con selector interactivo (canvas)
-- Paletas armónicas: complementario, análogo, triádico, split, cuadrado, monocromático
-- Verificación de contraste WCAG (AA / AAA)
-- Simulación de daltonismo (protanopía, deuteranopía, tritanopía)
-- Guardar paletas en localStorage (hasta 12)
-- Compartir paleta por URL
-- Copiar HEX o variables CSS (`:root { --color: #HEX }`)
-- Extraer colores desde una foto
-- Exportar paleta como PNG (1080×1080)
-
-### 📱 Herramientas de Marketing Digital
-Recursos y herramientas gratuitas para crecer en redes sociales.
-
-- Guías y recursos seleccionados para emprendedores
-- Herramientas online gratuitas recomendadas
-
-### 🛒 Registro de Ventas
-Armá carritos de venta con tus productos, registrá cada operación con fecha y hora, y controlá ingresos, costos y ganancias.
-
----
-
-## Características técnicas
-
-### PWA (Progressive Web App)
-- Instalable en Android, iOS y escritorio (sin app store)
-- Funciona **offline** — páginas servidas desde caché del Service Worker
-- Con conexión lenta: carga instantánea desde caché + actualización en segundo plano (stale-while-revalidate)
-- Caché por versión: cada deploy invalida la caché anterior automáticamente
-
-### Analytics
-- **GoatCounter** — estadísticas anónimas sin cookies ni datos personales
-- No requiere banner de consentimiento (GDPR-friendly)
-- Registra: visitas, dispositivo, país, navegador, referrer y eventos de uso
-- Eventos personalizados: qué prompts se copian, qué paletas se guardan, qué exportaciones se hacen
-
-### Privacidad
-- Cero datos personales recolectados
-- localStorage: datos guardados únicamente en el dispositivo del usuario
-- Sin tracking entre sesiones ni perfiles de usuario
-- [Política de privacidad](https://economiasocial.sachadev.me/privacidad.html)
-
----
-
-## Stack
-
-- **HTML5 / CSS3 / JavaScript** — vanilla, sin frameworks ni dependencias de build
-- **localStorage** — persistencia local (paletas, prompts favoritos, prompts propios)
-- **Canvas API** — rueda de color y exportación PNG
-- **Service Worker** — caché offline y estrategia stale-while-revalidate
-- **Web App Manifest** — instalación PWA
-- **jsPDF** — generación de PDF en el cliente
-- **GoatCounter** — analytics sin cookies
-- **Vercel** — deploy estático con headers personalizados
-
----
-
-## Estructura del proyecto
-
-```
+```text
 /
-├── index.html                        # Home con acceso a los 5 módulos
-├── privacidad.html                   # Política de privacidad
-├── manifest.json                     # PWA manifest
-├── sw.js                             # Service Worker
-├── pwa.js                            # Registro SW + botón de instalación
-├── analytics.js                      # GoatCounter (compartido por todas las páginas)
-├── vercel.json                       # Headers de caché y CORS
-├── assets/
-│   ├── icons/                        # Íconos PWA (192, 512, maskable, apple-touch)
-│   ├── banner-santa-fe.png
-│   └── banco-solidario-santa-fe.png
-└── modules/
-    ├── calculadora/index.html
-    ├── guiadeprompts/index.html
-    ├── combinadordecolores/index.html
-    ├── herramientasdigitales/index.html
-    └── registrodeventas/index.html
+|-- index.html
+|-- styles.css
+|-- privacidad.html
+|-- privacidad.css
+|-- shared/
+|   |-- base.css          # Accesibilidad y elementos comunes
+|   |-- storage.js        # Contrato unico de localStorage y backups
+|   `-- format.js         # Moneda, fechas y escape de HTML
+|-- backup.js             # Backup completo y recordatorio semanal
+|-- pwa.js                # Registro e instalacion PWA
+|-- analytics.js          # GoatCounter
+|-- sw.js                 # Cache offline versionada
+`-- modules/
+    |-- calculadora/
+    |   |-- index.html
+    |   |-- styles.css
+    |   |-- app.js        # Estado, calculos e interfaz
+    |   |-- projects.js   # Proyectos, restauracion y vaciado
+    |   `-- pdf.js        # Exportacion PDF
+    |-- registrodeventas/
+    |   |-- index.html
+    |   |-- styles.css
+    |   |-- app.js        # Productos, carrito y venta actual
+    |   |-- history.js    # Historial, filtros, pagos y restauracion
+    |   `-- pdf.js        # Resumen mensual PDF
+    |-- guiadeprompts/
+    |-- combinadordecolores/
+    `-- herramientasdigitales/
 ```
 
----
+Los tres ultimos modulos usan el mismo esquema simple: `index.html`, `styles.css` y `app.js`.
+
+## Persistencia y backup
+
+Los datos se guardan solo en el navegador del usuario mediante `localStorage`. `shared/storage.js` centraliza las claves y evita que cada modulo implemente su propio formato.
+
+El backup completo incluye:
+
+- proyectos y borrador de la calculadora;
+- historial de ventas;
+- favoritos y prompts propios;
+- estado y paletas de colores;
+- favoritos y filtros de herramientas digitales.
+
+No hay sincronizacion entre dispositivos. Para trasladar o proteger los datos se debe descargar y restaurar el archivo de backup.
+
+## PWA y privacidad
+
+- Instalable en celular y escritorio.
+- Navegacion offline despues de la primera carga.
+- Assets propios precargados y cacheados por version.
+- GoatCounter para estadisticas anonimas sin cookies.
+- Sin cuentas ni recoleccion de contenido ingresado por el usuario.
+
+## Desarrollo
+
+Requiere Node.js solo para el servidor local y las pruebas; la aplicacion desplegada no usa npm.
+
+```bash
+npm install
+npm run serve
+npm test
+```
+
+Las pruebas Playwright cubren carga sin errores de los modulos, autoguardado de insumos, recuperacion de proyectos, carrito, snapshot contable y ventas con sena.
 
 ## Deploy
 
-El sitio es 100% estático. No requiere build ni servidor backend. Se despliega directamente en Vercel conectando el repositorio.
+Vercel publica el sitio directamente desde los archivos estaticos. Al cambiar paginas o assets:
 
-Los headers de `vercel.json` configuran:
-- `sw.js` y `manifest.json`: sin caché (siempre frescos)
-- Íconos PWA: caché inmutable de 1 año
-
----
+1. Agregarlos a `PRECACHE` en `sw.js` si deben funcionar offline.
+2. Incrementar `VERSION` en `sw.js`.
+3. Ejecutar `npm test`.
+4. Hacer push de la rama aprobada.
 
 ## Autor
 
 **Leandro Sacha Melchiori**
+
 - [LinkedIn](https://www.linkedin.com/in/leandromelchiori-developer/)
 - [Instagram](https://www.instagram.com/sacha.melchiori/)
