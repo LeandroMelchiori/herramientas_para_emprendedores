@@ -16,7 +16,7 @@ const project = {
 };
 
 test.describe('Flujos extendidos', () => {
-  test('elimina y restaura una venta desde el historial', async ({ page }) => {
+  test('anula y reactiva una venta sin borrar su historial', async ({ page }) => {
     await page.goto('/modules/registrodeventas/');
     await page.evaluate((data) => {
       localStorage.clear();
@@ -28,11 +28,18 @@ test.describe('Flujos extendidos', () => {
     await page.click('#btn-finalizar');
     await page.getByRole('button', { name: 'Historial' }).click();
     await page.locator('.venta-header').click();
-    page.once('dialog', dialog => dialog.accept());
-    await page.getByRole('button', { name: /Eliminar este registro/ }).click();
-    await expect(page.locator('.venta-item')).toHaveCount(0);
-    await page.getByRole('button', { name: 'Deshacer' }).click();
+    await page.getByRole('button', { name: 'Anular venta' }).click();
+    await page.fill('#anular-motivo', 'Operacion cancelada');
+    await page.getByRole('button', { name: /Confirmar anulaci/ }).click();
     await expect(page.locator('.venta-item')).toHaveCount(1);
+    await expect(page.locator('.venta-item')).toHaveClass(/anulada/);
+    await expect(page.locator('.venta-item')).toContainText('Operacion cancelada');
+
+    await page.locator('.venta-header').click();
+    page.once('dialog', dialog => dialog.accept());
+    await page.getByRole('button', { name: 'Reactivar venta' }).click();
+    await expect(page.locator('.venta-item')).not.toHaveClass(/anulada/);
+    expect(await page.evaluate(() => AppStorage.getSales()[0].anulada)).toBe(false);
   });
 
   test('ofrece meses historicos en el selector PDF', async ({ page }) => {

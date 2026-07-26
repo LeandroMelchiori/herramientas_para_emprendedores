@@ -2,7 +2,7 @@
 (function initMigrations(global) {
   'use strict';
 
-  const SCHEMA_VERSION = 4;
+  const SCHEMA_VERSION = 5;
   const isObject = (value) => value && typeof value === 'object' && !Array.isArray(value);
   const finite = (value, fallback = 0) => Number.isFinite(Number(value)) ? Number(value) : fallback;
 
@@ -76,7 +76,30 @@
       medioPago: sale.medioPago || 'Efectivo',
       fiado: Boolean(sale.fiado ?? normalizedPaid < charged),
       pagos,
+      anulada: Boolean(sale.anulada),
+      anuladaFecha: sale.anuladaFecha || null,
+      anuladaMotivo: sale.anuladaMotivo || '',
     };
+  }
+
+  function normalizeExpense(expense) {
+    if (!isObject(expense)) return null;
+    return {
+      ...expense,
+      id: expense.id ?? Date.now(),
+      fecha: expense.fecha || new Date().toISOString(),
+      concepto: expense.concepto || 'Gasto sin concepto',
+      categoria: expense.categoria || 'Otros',
+      monto: Math.max(0, finite(expense.monto)),
+      medioPago: expense.medioPago || 'Efectivo',
+      recurrenteMensual: Boolean(expense.recurrenteMensual),
+      recurrenteOrigenId: expense.recurrenteOrigenId ?? null,
+    };
+  }
+
+  function normalizeClosure(closure) {
+    if (!isObject(closure) || !closure.mes) return null;
+    return { ...closure, id: closure.id || closure.mes, fechaCierre: closure.fechaCierre || new Date().toISOString(), metrics: isObject(closure.metrics) ? { ...closure.metrics } : {} };
   }
 
   function normalizeList(list, normalizer) {
@@ -97,5 +120,7 @@
     normalizeSale,
     normalizeProjects: (list) => normalizeList(list, normalizeProject),
     normalizeSales: (list) => normalizeList(list, normalizeSale),
+    normalizeExpenses: (list) => normalizeList(list, normalizeExpense),
+    normalizeClosures: (list) => normalizeList(list, normalizeClosure),
   });
 })(window);

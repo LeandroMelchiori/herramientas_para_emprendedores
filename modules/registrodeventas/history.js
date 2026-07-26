@@ -1,7 +1,5 @@
 /* Historial, filtros, pagos y restauracion del registro de ventas. */
 
-let ultimaVentaEliminada = null;
-
 function obtenerVentas() { return AppStorage.getSales(); }
 
 function guardarVentas(ventas) { return AppStorage.saveSales(ventas); }
@@ -38,12 +36,13 @@ function renderizarHistorial() {
     ventas = ventas.filter(v => v.fiado);
   }
 
-  const totalIng = ventas.reduce((a, v) => a + v.totalCobrado, 0);
-  const totalCos = ventas.reduce((a, v) => a + v.totalCosto,   0);
-  const totalGan = ventas.reduce((a, v) => a + v.totalGanancia, 0);
+  const statsVentas = ventas.filter(v => !v.anulada);
+  const totalIng = statsVentas.reduce((a, v) => a + v.totalCobrado, 0);
+  const totalCos = statsVentas.reduce((a, v) => a + v.totalCosto,   0);
+  const totalGan = statsVentas.reduce((a, v) => a + v.totalGanancia, 0);
 
-  const fiadoTotal = ventas.reduce((sum, sale) => sum + AppSales.outstanding(sale), 0);
-  const pagoStats = ventas.reduce((acc, sale) => {
+  const fiadoTotal = statsVentas.reduce((sum, sale) => sum + AppSales.outstanding(sale), 0);
+  const pagoStats = statsVentas.reduce((acc, sale) => {
     (sale.pagos || []).forEach(payment => {
       const medio = payment.medio || 'Efectivo';
       acc[medio] = (acc[medio] || 0) + payment.monto;
@@ -115,10 +114,11 @@ function renderizarHistorial() {
     }
 
     return `
-    <div class="venta-item" id="venta-${v.id}">
+    <div class="venta-item ${v.anulada ? 'anulada' : ''}" id="venta-${v.id}">
       <div class="venta-header" data-action="toggle-sale" data-id="${v.id}">
         <div>
           ${etiquetaHtml}
+          ${v.anulada ? '<span class="annulled-badge">ANULADA</span>' : ''}
           <div class="venta-fecha">${fmtFecha(v.fecha)}${pagoBadge}</div>
           <div class="venta-items-hint">${itemHint}</div>
         </div>
@@ -164,7 +164,8 @@ function renderizarHistorial() {
           </div>
         </div>
         ${v.pagos?.length ? `<div class="payment-history"><div class="payment-history-title">Pagos registrados</div>${v.pagos.map(payment => `<div class="payment-row"><span>${fmtFecha(payment.fecha)} &middot; ${esc(payment.medio)}</span><b>${fmt(payment.monto)}</b></div>`).join('')}</div>` : ''}
-        ${v.fiado ? `
+        ${v.anulada ? `<div class="annulled-reason"><strong>Venta anulada</strong><span>${fmtFecha(v.anuladaFecha)} &middot; ${esc(v.anuladaMotivo)}</span></div>` : ''}
+        ${v.fiado && !v.anulada ? `
         <div style="margin:12px 0;background:var(--gris);border-radius:10px;padding:12px;border:1.5px solid var(--borde);">
           <div style="font-weight:700;font-size:0.85rem;color:var(--texto);margin-bottom:8px;">✓ Cobrar pendiente</div>
           <div style="display:flex;gap:8px;margin-bottom:8px;">
@@ -186,9 +187,7 @@ function renderizarHistorial() {
             Confirmar pago
           </button>
         </div>` : ''}
-        <button class="btn-eliminar-venta" data-action="delete-sale" data-id="${v.id}">
-          ✕ Eliminar este registro
-        </button>
+        ${v.anulada ? `<button class="btn-reactivar-venta" data-action="reactivate-sale" data-id="${v.id}">Reactivar venta</button>` : `<button class="btn-eliminar-venta" data-action="annul-sale" data-id="${v.id}">Anular venta</button>`}
       </div>
     </div>`;
   }).join('');
@@ -198,11 +197,13 @@ function actualizarSelectMes() {
   const sel = document.getElementById('select-mes-pdf');
   if (!sel) return;
   const ventas = obtenerVentas();
+  const gastos = obtenerGastos();
   const meses = new Set();
   ventas.forEach(v => {
     const d = new Date(v.fecha);
     meses.add(`${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`);
   });
+  gastos.forEach(g => meses.add(AppExpenses.monthKey(g.fecha)));
   const ahora = new Date();
   meses.add(`${ahora.getFullYear()}-${String(ahora.getMonth() + 1).padStart(2, '0')}`);
   const sorted = Array.from(meses).sort((a, b) => b.localeCompare(a));
@@ -221,39 +222,50 @@ function toggleVenta(id) {
   document.getElementById(`venta-${id}`).classList.toggle('expandida');
 }
 
-function eliminarVenta(id) {
-  if (!confirm('\u00bfSeguro que quer\u00e9s eliminar esta venta?')) return;
-  const ventas = obtenerVentas();
-  const index = ventas.findIndex(v => v.id === id);
-  if (index < 0) return;
-  ultimaVentaEliminada = { venta: ventas[index], index };
-  ventas.splice(index, 1);
-  guardarVentas(ventas);
-  renderizarHistorial();
-  mostrarDeshacerEliminacion();
+function abrirModalAnular(id) {
+  const sale = obtenerVentas().find((item) => item.id === id);
+  if (sale && mesEstaCerrado(AppSalesDashboard.monthKey(sale.fecha))) { mostrarToast('Reabri ese mes antes de anular ventas'); return; }
+  document.getElementById('anular-id').value = id;
+  document.getElementById('anular-motivo').value = '';
+  document.getElementById('modal-anular').hidden = false;
+  document.getElementById('anular-motivo').focus();
 }
 
-/* Permite corregir una eliminacion accidental sin alterar el formato persistido. */
-function mostrarDeshacerEliminacion() {
-  const bar = document.getElementById('undo-delete');
-  if (!bar) return;
-  bar.hidden = false;
-  clearTimeout(mostrarDeshacerEliminacion.timer);
-  mostrarDeshacerEliminacion.timer = setTimeout(() => { bar.hidden = true; ultimaVentaEliminada = null; }, 8000);
+function cerrarModalAnular() { document.getElementById('modal-anular').hidden = true; }
+
+function confirmarAnulacion() {
+  const id = Number(document.getElementById('anular-id').value);
+  const motivo = document.getElementById('anular-motivo').value.trim();
+  if (!motivo) { mostrarToast('Ingresa el motivo de la anulacion'); return; }
+  const ventas = obtenerVentas();
+  const sale = ventas.find((item) => item.id === id);
+  if (!sale) return;
+  sale.anulada = true;
+  sale.anuladaFecha = new Date().toISOString();
+  sale.anuladaMotivo = motivo;
+  guardarVentas(ventas);
+  cerrarModalAnular();
+  renderizarHistorial();
+  mostrarToast('Venta anulada');
 }
 
-function restaurarUltimaVenta() {
-  if (!ultimaVentaEliminada) return;
+function reactivarVenta(id) {
+  const target = obtenerVentas().find((item) => item.id === id);
+  if (target && mesEstaCerrado(AppSalesDashboard.monthKey(target.fecha))) { mostrarToast('Reabri ese mes antes de reactivar ventas'); return; }
+  if (!confirm('?Reactivar esta venta y volver a incluirla en los informes?')) return;
   const ventas = obtenerVentas();
-  ventas.splice(Math.min(ultimaVentaEliminada.index, ventas.length), 0, ultimaVentaEliminada.venta);
+  const sale = ventas.find((item) => item.id === id);
+  if (!sale) return;
+  sale.anulada = false;
+  sale.anuladaFecha = null;
+  sale.anuladaMotivo = '';
   guardarVentas(ventas);
-  ultimaVentaEliminada = null;
-  document.getElementById('undo-delete').hidden = true;
   renderizarHistorial();
-  mostrarToast('Venta restaurada');
+  mostrarToast('Venta reactivada');
 }
 
 function marcarVentaPagada(id) {
+  if (mesEstaCerrado(AppSalesDashboard.monthKey(new Date()))) { mostrarToast('Reabri el mes actual antes de registrar cobros'); return; }
   const montoInput = document.getElementById(`cobro-monto-${id}`);
   const medioSel = document.getElementById(`cobro-medio-${id}`);
   if (!montoInput || !medioSel) return;
