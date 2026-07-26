@@ -3,3 +3,7 @@
 
 # Comprimidos y temporales
 *.rar
+
+node_modules/
+playwright-report/
+test-results/

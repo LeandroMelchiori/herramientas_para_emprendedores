@@ -9,7 +9,7 @@
    ============================================================ */
 
 // Subí este número en cada deploy para invalidar las caches viejas.
-const VERSION   = 'v1.2.1';
+const VERSION   = 'v2.0.0';
 const APP_CACHE = `app-${VERSION}`;       // Núcleo: HTML + iconos + assets propios
 const RUNTIME   = `runtime-${VERSION}`;   // Externos: Google Fonts, CDNs, etc.
 
@@ -17,11 +17,31 @@ const RUNTIME   = `runtime-${VERSION}`;   // Externos: Google Fonts, CDNs, etc.
 const PRECACHE = [
   '/',
   '/index.html',
+  '/styles.css',
+  '/privacidad.html',
+  '/privacidad.css',
+  '/shared/base.css',
+  '/shared/storage.js',
+  '/shared/format.js',
   '/modules/calculadora/',
+  '/modules/calculadora/styles.css',
+  '/modules/calculadora/app.js',
+  '/modules/calculadora/projects.js',
+  '/modules/calculadora/pdf.js',
   '/modules/guiadeprompts/',
+  '/modules/guiadeprompts/styles.css',
+  '/modules/guiadeprompts/app.js',
   '/modules/combinadordecolores/',
+  '/modules/combinadordecolores/styles.css',
+  '/modules/combinadordecolores/app.js',
   '/modules/herramientasdigitales/',
+  '/modules/herramientasdigitales/styles.css',
+  '/modules/herramientasdigitales/app.js',
   '/modules/registrodeventas/',
+  '/modules/registrodeventas/styles.css',
+  '/modules/registrodeventas/app.js',
+  '/modules/registrodeventas/history.js',
+  '/modules/registrodeventas/pdf.js',
   '/manifest.json',
   '/favicon.ico',
   '/pwa.js',
@@ -52,9 +72,6 @@ self.addEventListener('activate', (event) => {
       keys.filter((k) => k !== APP_CACHE && k !== RUNTIME).map((k) => caches.delete(k))
     );
     await self.clients.claim();   // Toma control de las páginas ya abiertas.
-    /* Notifica a todas las pestañas abiertas para que recarguen con el código nuevo */
-    const allClients = await self.clients.matchAll({ type: 'window' });
-    allClients.forEach((client) => client.postMessage({ type: 'SW_UPDATED' }));
   })());
 });
 
