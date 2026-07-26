@@ -28,7 +28,11 @@ Muchos emprendimientos gestionan costos, precios, ventas y comunicación utiliza
 - La aplicación puede instalarse y utilizarse sin conexión después de la primera visita.
 - Cada módulo puede utilizarse de manera independiente.
 
----
+- **Calculadora de costos:** insumos, servicios, margen, punto de equilibrio, proyectos, autoguardado y PDF.
+- **Guia de prompts IA:** biblioteca, busqueda, filtros, favoritos y prompts propios.
+- **Combinador de colores:** armonias, contraste WCAG, simulacion de daltonismo, extraccion desde fotos y exportacion.
+- **Herramientas digitales:** catalogo gratuito con busqueda, favoritos y recomendaciones.
+- **Registro de ventas:** carrito, descuentos, medios de pago, ventas pendientes, snapshots contables, historial y resumen mensual en PDF.
 
 ## 🧩 Módulos
 
@@ -100,7 +104,7 @@ Directorio curado de recursos gratuitos para mejorar presencia digital y comerci
 - Recursos para diseño, contenido, redes sociales, comercio electrónico y productividad.
 - Enlaces externos acompañados por una explicación de uso.
 
----
+Los tres ultimos modulos usan el mismo esquema simple: `index.html`, `styles.css` y `app.js`.
 
 ## 📲 Progressive Web App
 
@@ -115,7 +119,7 @@ La suite está preparada como PWA:
 
 No requiere tienda de aplicaciones ni un backend para funcionar.
 
----
+No hay sincronizacion entre dispositivos. Para trasladar o proteger los datos se debe descargar y restaurar el archivo de backup.
 
 ## 🔐 Privacidad
 
@@ -130,7 +134,7 @@ La aplicación está diseñada con un enfoque local-first:
 
 La política completa está disponible en [economiasocial.sachadev.me/privacidad.html](https://economiasocial.sachadev.me/privacidad.html).
 
----
+## Desarrollo
 
 ## 🧱 Arquitectura
 
@@ -240,7 +244,10 @@ Cada despliegue actualiza la versión de caché para que la PWA reciba los cambi
 - Agregar importación guiada y validación más detallada de backups.
 - Continuar las pruebas de accesibilidad y uso en dispositivos de gama baja.
 
----
+1. Agregarlos a `PRECACHE` en `sw.js` si deben funcionar offline.
+2. Incrementar `VERSION` en `sw.js`.
+3. Ejecutar `npm test`.
+4. Hacer push de la rama aprobada.
 
 ## Autor
 
