@@ -41,6 +41,12 @@
       "short_name": "Marketing",
       "url": "/modules/herramientasdigitales/",
       "icons": [{ "src": "/assets/icons/icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Registro de Ventas",
+      "short_name": "Ventas",
+      "url": "/modules/registrodeventas/",
+      "icons": [{ "src": "/assets/icons/icon-192.png", "sizes": "192x192" }]
     }
   ]
 }
