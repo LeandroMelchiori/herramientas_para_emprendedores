@@ -185,6 +185,8 @@ function resetQuiz() {
 
 // ── Init ──
 function init() {
+  const catalog = document.getElementById('tools-catalog');
+  if (catalog && window.ToolsCatalogMarkup) catalog.innerHTML = window.ToolsCatalogMarkup;
   // Add star buttons to all cards
   document.querySelectorAll('.tool-card').forEach(function(card) {
     var key = card.dataset.key;

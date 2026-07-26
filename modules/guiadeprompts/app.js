@@ -14,20 +14,7 @@ function copyPrompt(btn) {
   });
   text = text.trim();
 
-  const doCopy = t => {
-    if (navigator.clipboard && navigator.clipboard.writeText)
-      return navigator.clipboard.writeText(t).catch(() => fb(t));
-    fb(t);
-  };
-  const fb = t => {
-    const ta = document.createElement('textarea');
-    ta.value = t; ta.style.cssText = 'position:fixed;top:-9999px;opacity:0;';
-    document.body.appendChild(ta); ta.focus(); ta.select();
-    try { document.execCommand('copy'); } catch(e) {}
-    document.body.removeChild(ta);
-  };
-
-  doCopy(text);
+  AppUI.copyText(text);
   btn.textContent = '✓ Copiado!'; btn.classList.add('copied');
   showToast('✓ Prompt copiado — pegalo en Claude, ChatGPT o Gemini');
   trackEvent('Copiar prompt', { titulo: (card.querySelector('.prompt-title')?.textContent || '').slice(0,100), categoria: card.closest('.category')?.dataset.cat || 'mine' });
@@ -50,17 +37,8 @@ function closeFilterPanel(){
   if (ft) ft.setAttribute('aria-expanded','false');
 }
 
-let toastT;
-function showToast(msg) {
-  const t = document.getElementById('toast');
-  t.textContent = msg; t.classList.add('show');
-  clearTimeout(toastT);
-  toastT = setTimeout(() => t.classList.remove('show'), 2200);
-}
+function showToast(message) { AppUI.showToast('toast', message, 2200); }
 
-/* ═══════════════════════════════════════════════════════════════
-   BÚSQUEDA · FAVORITOS · MIS PROMPTS  (todo guardado con localStorage)
-   ═══════════════════════════════════════════════════════════════ */
 let activeCat = 'all';
 let searchTerm = '';
 let editingId = null;            // id del prompt propio que se está editando
@@ -69,8 +47,8 @@ const FAV_KEY  = AppStorage.KEYS.promptFavorites;      // claves de prompts marc
 const MINE_KEY = AppStorage.KEYS.customPrompts;      // prompts creados por el usuario
 
 // — Utilidades —
-function slug(t){return (t||'').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/[^a-z0-9]+/g,'-').replace(/(^-|-$)/g,'');}
-function esc(s){return (s||'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));}
+const slug = AppUI.slugify;
+const esc = AppFormat.escapeHTML;
 // Resalta los [corchetes] en cian, igual que en los prompts originales (sobre texto ya escapado).
 function fmtText(s){return esc(s).replace(/\[([^\]]+)\]/g,'<em class="ph">[$1]</em>');}
 
@@ -240,6 +218,8 @@ function importMine(file){
 
 // — Inicialización —
 function initGuide(){
+  const catalog = document.getElementById('prompt-catalog');
+  if (catalog && window.PromptCatalogMarkup) catalog.innerHTML = window.PromptCatalogMarkup;
   // Clave estable + estrella de favorito para cada prompt original
   document.querySelectorAll('.category .prompt-card').forEach(card=>{
     if(card.dataset.key) return;
