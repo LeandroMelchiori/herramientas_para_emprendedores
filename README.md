@@ -1,10 +1,32 @@
-# Herramientas para Emprendedores
+<div align="center">
 
-Suite gratuita de herramientas web para emprendedores de la economia social, desarrollada para la **Direccion de Economia Social - Ministerio de Igualdad y Desarrollo Humano, Gobierno de Santa Fe, Argentina**.
+# 🧰 Herramientas para Emprendedores
 
-**Sitio:** [economiasocial.sachadev.me](https://economiasocial.sachadev.me)
+### Suite web gratuita para la gestión cotidiana de emprendimientos
 
-## Modulos
+[![Demo](https://img.shields.io/badge/Demo-economiasocial.sachadev.me-0B6E4F?style=for-the-badge)](https://economiasocial.sachadev.me)
+![PWA](https://img.shields.io/badge/PWA-Offline-5A0FC8?style=for-the-badge&logo=pwa&logoColor=white)
+![JavaScript](https://img.shields.io/badge/JavaScript-Vanilla-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black)
+![Playwright](https://img.shields.io/badge/Playwright-E2E-2EAD33?style=for-the-badge&logo=playwright&logoColor=white)
+
+</div>
+
+**Herramientas para Emprendedores** es una aplicación web progresiva creada para acompañar a emprendedores de la economía social en tareas concretas de gestión, comercialización y comunicación.
+
+El proyecto se utiliza en actividades vinculadas con la **Dirección de Economía Social del Gobierno de Santa Fe** y prioriza tres criterios: acceso gratuito, funcionamiento desde el celular y privacidad de la información.
+
+🔗 **Aplicación publicada:** [economiasocial.sachadev.me](https://economiasocial.sachadev.me)
+
+---
+
+## 🎯 Problema que resuelve
+
+Muchos emprendimientos gestionan costos, precios, ventas y comunicación utilizando anotaciones dispersas o herramientas que requieren conocimientos previos. Esta suite reúne funciones frecuentes en una experiencia sencilla y sin necesidad de crear una cuenta.
+
+- Los cálculos y registros se realizan en el navegador.
+- Los datos permanecen en el dispositivo del usuario.
+- La aplicación puede instalarse y utilizarse sin conexión después de la primera visita.
+- Cada módulo puede utilizarse de manera independiente.
 
 - **Calculadora de costos:** insumos, servicios, margen, punto de equilibrio, proyectos, autoguardado y PDF.
 - **Guia de prompts IA:** biblioteca, busqueda, filtros, favoritos y prompts propios.
@@ -12,83 +34,215 @@ Suite gratuita de herramientas web para emprendedores de la economia social, des
 - **Herramientas digitales:** catalogo gratuito con busqueda, favoritos y recomendaciones.
 - **Registro de ventas:** carrito, descuentos, medios de pago, ventas pendientes, snapshots contables, historial y resumen mensual en PDF.
 
-La calculadora y el registro de ventas comparten los proyectos guardados. Cada venta conserva un snapshot del costo y el precio del momento para que el historial no cambie al editar un producto.
+## 🧩 Módulos
 
-## Arquitectura
+### 🧮 Calculadora de costos
 
-El sitio sigue siendo estatico, sin backend, framework ni proceso de build. La modularizacion separa estructura, presentacion y comportamiento:
+Permite construir el costo de un producto y estimar un precio de venta sostenible.
 
-```text
-/
-|-- index.html
-|-- styles.css
-|-- privacidad.html
-|-- privacidad.css
-|-- shared/
-|   |-- base.css          # Accesibilidad y elementos comunes
-|   |-- storage.js        # Contrato unico de localStorage y backups
-|   `-- format.js         # Moneda, fechas y escape de HTML
-|-- backup.js             # Backup completo y recordatorio semanal
-|-- pwa.js                # Registro e instalacion PWA
-|-- analytics.js          # GoatCounter
-|-- sw.js                 # Cache offline versionada
-`-- modules/
-    |-- calculadora/
-    |   |-- index.html
-    |   |-- styles.css
-    |   |-- app.js        # Estado, calculos e interfaz
-    |   |-- projects.js   # Proyectos, restauracion y vaciado
-    |   `-- pdf.js        # Exportacion PDF
-    |-- registrodeventas/
-    |   |-- index.html
-    |   |-- styles.css
-    |   |-- app.js        # Productos, carrito y venta actual
-    |   |-- history.js    # Historial, filtros, pagos y restauracion
-    |   `-- pdf.js        # Resumen mensual PDF
-    |-- guiadeprompts/
-    |-- combinadordecolores/
-    `-- herramientasdigitales/
-```
+- Insumos, materiales, mano de obra y producción por tanda.
+- Costo unitario y precio sugerido.
+- Margen de ganancia editable mediante slider e input numérico.
+- Cálculo inverso del margen.
+- Punto de equilibrio mensual y diario.
+- Comparación de escenarios de precio.
+- Guardado y autoguardado de proyectos.
+- Búsqueda y paginación de proyectos guardados.
+- Duplicación, exportación, importación y backup en JSON.
+- Estado compartible mediante URL.
+- Resumen descargable en PDF.
+- Soporte para ARS, UYU, CLP, MXN y USD.
+
+### 🛒 Registro de ventas
+
+Utiliza los productos guardados en la calculadora para registrar operaciones reales.
+
+- Carrito con uno o varios productos.
+- Cantidades y precio final editable.
+- Snapshot del costo, ingreso y ganancia al momento de la venta.
+- Etiquetas para identificar clientes, ferias o canales.
+- Medios de pago: efectivo, transferencia y tarjeta.
+- Registro de ventas fiadas y total pendiente de cobro.
+- Historial con filtros por hoy, semana, mes o período completo.
+- Resumen por medio de pago, ingresos, costos y ganancias.
+- Restauración de ventas eliminadas.
+- Backup y restauración de la información.
+- Exportación de resumen mensual en PDF.
+
+### 🤖 Guía de prompts para IA
+
+Biblioteca práctica para utilizar ChatGPT y otras herramientas de IA en tareas del emprendimiento.
+
+- Más de 40 prompts organizados por categoría.
+- Búsqueda y filtros en tiempo real.
+- Favoritos guardados localmente.
+- Copiado al portapapeles.
+- Creación, edición y eliminación de prompts propios.
+- Exportación e importación de prompts personalizados.
+- Categorías para redes sociales, atención, finanzas, ventas y organización.
+
+### 🎨 Combinador de colores
+
+Ayuda a construir y evaluar paletas para una identidad visual.
+
+- Rueda HSL interactiva mediante Canvas.
+- Paletas complementarias, análogas, triádicas, split, cuadradas y monocromáticas.
+- Verificación de contraste WCAG AA y AAA.
+- Simulación de protanopía, deuteranopía y tritanopía.
+- Extracción de colores desde una imagen.
+- Guardado de paletas en el navegador.
+- Compartir paletas mediante URL.
+- Copiar valores HEX o variables CSS.
+- Exportación de la paleta como imagen PNG.
+
+### 📱 Herramientas de marketing digital
+
+Directorio curado de recursos gratuitos para mejorar presencia digital y comercialización.
+
+- Organización por categorías.
+- Buscador y filtros persistentes.
+- Recursos para diseño, contenido, redes sociales, comercio electrónico y productividad.
+- Enlaces externos acompañados por una explicación de uso.
 
 Los tres ultimos modulos usan el mismo esquema simple: `index.html`, `styles.css` y `app.js`.
 
-## Persistencia y backup
+## 📲 Progressive Web App
 
-Los datos se guardan solo en el navegador del usuario mediante `localStorage`. `shared/storage.js` centraliza las claves y evita que cada modulo implemente su propio formato.
+La suite está preparada como PWA:
 
-El backup completo incluye:
+- instalación en Android, iOS y escritorio;
+- shell disponible offline;
+- estrategia `stale-while-revalidate` para archivos actualizables;
+- caché versionada para evitar mantener versiones antiguas;
+- aviso cuando existe una actualización;
+- recursos principales precargados por el Service Worker.
 
-- proyectos y borrador de la calculadora;
-- historial de ventas;
-- favoritos y prompts propios;
-- estado y paletas de colores;
-- favoritos y filtros de herramientas digitales.
+No requiere tienda de aplicaciones ni un backend para funcionar.
 
 No hay sincronizacion entre dispositivos. Para trasladar o proteger los datos se debe descargar y restaurar el archivo de backup.
 
-## PWA y privacidad
+## 🔐 Privacidad
 
-- Instalable en celular y escritorio.
-- Navegacion offline despues de la primera carga.
-- Assets propios precargados y cacheados por version.
-- GoatCounter para estadisticas anonimas sin cookies.
-- Sin cuentas ni recoleccion de contenido ingresado por el usuario.
+La aplicación está diseñada con un enfoque local-first:
+
+- no solicita registro ni inicio de sesión;
+- no almacena información de usuarios en una base de datos remota;
+- proyectos, ventas, prompts y paletas permanecen en `localStorage`;
+- los backups se generan en el dispositivo;
+- las estadísticas se recopilan con GoatCounter sin cookies publicitarias;
+- no se crean perfiles de seguimiento entre sitios.
+
+La política completa está disponible en [economiasocial.sachadev.me/privacidad.html](https://economiasocial.sachadev.me/privacidad.html).
 
 ## Desarrollo
 
-Requiere Node.js solo para el servidor local y las pruebas; la aplicacion desplegada no usa npm.
+## 🧱 Arquitectura
 
-```bash
-npm install
-npm run serve
-npm test
+```text
+index.html
+   │
+   ├── Calculadora ──────────────┐
+   ├── Registro de ventas ◄──────┤ localStorage compartido
+   ├── Guía de prompts           │
+   ├── Combinador de colores     │
+   └── Herramientas digitales ───┘
+
+Service Worker ─► caché offline y actualización de recursos
+GoatCounter    ─► analítica anónima y eventos de uso
+Vercel         ─► publicación estática y headers de caché
 ```
 
-Las pruebas Playwright cubren carga sin errores de los modulos, autoguardado de insumos, recuperacion de proyectos, carrito, snapshot contable y ventas con sena.
+El registro de ventas lee los proyectos creados en la calculadora, lo que permite reutilizar costos y precios sin volver a cargar los productos.
 
-## Deploy
+---
 
-Vercel publica el sitio directamente desde los archivos estaticos. Al cambiar paginas o assets:
+## 🛠️ Stack
+
+| Área | Tecnología |
+|---|---|
+| Interfaz | HTML5, CSS3 y JavaScript vanilla |
+| Persistencia | `localStorage` y archivos JSON |
+| Gráficos y exportación | Canvas API, jsPDF |
+| PWA | Service Worker y Web App Manifest |
+| Accesibilidad visual | Cálculos de contraste WCAG y simulación de daltonismo |
+| Analytics | GoatCounter |
+| Testing | Playwright |
+| Deploy | Vercel |
+
+El proyecto no utiliza framework frontend ni proceso de build para la aplicación principal.
+
+---
+
+## 📂 Estructura
+
+```text
+/
+├── index.html
+├── privacidad.html
+├── manifest.json
+├── sw.js
+├── pwa.js
+├── analytics.js
+├── vercel.json
+├── assets/
+├── modules/
+│   ├── calculadora/
+│   ├── registrodeventas/
+│   ├── guiadeprompts/
+│   ├── combinadordecolores/
+│   └── herramientasdigitales/
+└── tests/
+    └── registrodeventas.spec.js
+```
+
+---
+
+## 🚀 Ejecución local
+
+Al ser un sitio estático, puede abrirse mediante cualquier servidor HTTP local.
+
+```bash
+git clone https://github.com/LeandroMelchiori/herramientas_para_emprendedores.git
+cd herramientas_para_emprendedores
+python -m http.server 8000
+```
+
+Abrir `http://localhost:8000`.
+
+> Se recomienda un servidor HTTP en lugar de abrir `index.html` directamente para que el Service Worker y las rutas funcionen correctamente.
+
+---
+
+## ✅ Pruebas
+
+El repositorio incluye pruebas end-to-end con Playwright para los flujos principales del registro de ventas, entre ellos:
+
+- reutilización de productos guardados por la calculadora;
+- armado del carrito;
+- registro por medio de pago;
+- ventas fiadas;
+- historial y resumen por período;
+- visualización de ingresos pendientes de cobro.
+
+Las pruebas se mantienen alineadas con la estructura real del DOM para detectar regresiones en los flujos de uso.
+
+---
+
+## ☁️ Deploy
+
+La aplicación se publica como sitio estático en Vercel. `vercel.json` controla los headers de caché y evita que el navegador conserve versiones antiguas del Service Worker o del manifest.
+
+Cada despliegue actualiza la versión de caché para que la PWA reciba los cambios sin perder la información almacenada localmente.
+
+---
+
+## Próximas mejoras
+
+- Ampliar la cobertura end-to-end a la calculadora, prompts y combinador de colores.
+- Incorporar exportaciones tabulares del historial de ventas.
+- Mejorar herramientas de análisis mensual y comparación entre períodos.
+- Agregar importación guiada y validación más detallada de backups.
+- Continuar las pruebas de accesibilidad y uso en dispositivos de gama baja.
 
 1. Agregarlos a `PRECACHE` en `sw.js` si deben funcionar offline.
 2. Incrementar `VERSION` en `sw.js`.
@@ -97,7 +251,7 @@ Vercel publica el sitio directamente desde los archivos estaticos. Al cambiar pa
 
 ## Autor
 
-**Leandro Sacha Melchiori**
+Desarrollado por **Leandro Sacha Melchiori**.
 
+- [GitHub](https://github.com/LeandroMelchiori)
 - [LinkedIn](https://www.linkedin.com/in/leandromelchiori-developer/)
-- [Instagram](https://www.instagram.com/sacha.melchiori/)
