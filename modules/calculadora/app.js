@@ -123,13 +123,13 @@ function renderizarFilas() {
     wrap.innerHTML = `
       <div class="row-insumo">
         <input type="text" placeholder="Material" value="${escHtml(ins.nombre)}"
-          oninput="estado.insumos[${i}].nombre=this.value;autosave()">
+          data-row-type="insumos" data-index="${i}" data-field="nombre">
         <input type="number" min="0" step="any" value="${ins.cantidad}"
-          oninput="estado.insumos[${i}].cantidad=parseFloat(this.value)||0;actualizar()">
+          data-row-type="insumos" data-index="${i}" data-field="cantidad">
         <input type="number" min="0" step="any" value="${ins.precio}"
-          oninput="estado.insumos[${i}].precio=parseFloat(this.value)||0;actualizar()">
+          data-row-type="insumos" data-index="${i}" data-field="precio">
       </div>
-      <button class="btn-delete" onclick="eliminarInsumo(${i})" aria-label="Eliminar">✕</button>`;
+      <button class="btn-delete" data-action="delete-supply" data-index="${i}" aria-label="Eliminar">✕</button>`;
     listaI.appendChild(wrap);
   });
   actualizarBadge('limite-insumos', 'btn-agregar-insumo', estado.insumos.length);
@@ -142,13 +142,13 @@ function renderizarFilas() {
     wrap.innerHTML = `
       <div class="row-insumo">
         <input type="text" placeholder="${i === 0 ? 'Mano de obra' : 'Servicio'}" value="${escHtml(srv.nombre)}"
-          oninput="estado.servicios[${i}].nombre=this.value;autosave()">
+          data-row-type="servicios" data-index="${i}" data-field="nombre">
         <input type="number" min="0" step="any" value="${srv.horas}"
-          oninput="estado.servicios[${i}].horas=parseFloat(this.value)||0;actualizar()">
+          data-row-type="servicios" data-index="${i}" data-field="horas">
         <input type="number" min="0" step="any" value="${srv.precio}"
-          oninput="estado.servicios[${i}].precio=parseFloat(this.value)||0;actualizar()">
+          data-row-type="servicios" data-index="${i}" data-field="precio">
       </div>
-      <button class="btn-delete" onclick="eliminarServicio(${i})" aria-label="Eliminar">✕</button>`;
+      <button class="btn-delete" data-action="delete-service" data-index="${i}" aria-label="Eliminar">✕</button>`;
     listaS.appendChild(wrap);
   });
   actualizarBadge('limite-servicios', 'btn-agregar-servicio', estado.servicios.length);

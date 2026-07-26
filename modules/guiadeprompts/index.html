@@ -27,10 +27,10 @@
 
 <div style="background:#0a0f1a;padding:0.45rem 1rem;display:flex;justify-content:flex-end;align-items:center;gap:0.9rem;border-bottom:1px solid rgba(0,212,255,0.12);">
   <span style="color:#475569;font-size:0.7rem;letter-spacing:0.06em;font-family:'JetBrains Mono',monospace;">creado por Sacha Melchiori</span>
-  <a href="https://www.instagram.com/sacha.melchiori" target="_blank" title="Instagram" style="color:#475569;transition:color 0.15s;display:flex;" onmouseover="this.style.color='#00d4ff'" onmouseout="this.style.color='#475569'">
+  <a href="https://www.instagram.com/sacha.melchiori" target="_blank" title="Instagram" style="color:#475569;transition:color 0.15s;display:flex;">
     <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
   </a>
-  <a href="https://www.linkedin.com/in/leandromelchiori-developer/" target="_blank" title="LinkedIn" style="color:#475569;transition:color 0.15s;display:flex;" onmouseover="this.style.color='#00d4ff'" onmouseout="this.style.color='#475569'">
+  <a href="https://www.linkedin.com/in/leandromelchiori-developer/" target="_blank" title="LinkedIn" style="color:#475569;transition:color 0.15s;display:flex;">
     <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
   </a>
 </div>
@@ -63,16 +63,16 @@
       <button id="filter-toggle" type="button" aria-expanded="false" aria-label="Mostrar categorías">☰ <span id="filter-current">Todos</span></button>
     </div>
     <div class="filter-panel" id="filter-panel" hidden>
-      <button class="filter-btn active" onclick="filterCat('all',this)">✦ Todos</button>
-      <button class="filter-btn" onclick="filterCat('favs',this)">⭐ Favoritos</button>
-      <button class="filter-btn" onclick="filterCat('mine',this)">✍️ Mis Prompts</button>
-      <button class="filter-btn" onclick="filterCat('redes',this)">📱 Redes sociales</button>
-      <button class="filter-btn" onclick="filterCat('ventas',this)">💬 Ventas y clientes</button>
-      <button class="filter-btn" onclick="filterCat('marca',this)">✨ Identidad de marca</button>
-      <button class="filter-btn" onclick="filterCat('contenido',this)">📅 Contenido</button>
-      <button class="filter-btn" onclick="filterCat('textos',this)">✍️ Textos</button>
-      <button class="filter-btn" onclick="filterCat('wabiz',this)">📲 WhatsApp Business</button>
-      <button class="filter-btn" onclick="filterCat('tiendanube',this)">🛒 Tiendanube</button>
+      <button class="filter-btn active" data-category="all">✦ Todos</button>
+      <button class="filter-btn" data-category="favs">⭐ Favoritos</button>
+      <button class="filter-btn" data-category="mine">✍️ Mis Prompts</button>
+      <button class="filter-btn" data-category="redes">📱 Redes sociales</button>
+      <button class="filter-btn" data-category="ventas">💬 Ventas y clientes</button>
+      <button class="filter-btn" data-category="marca">✨ Identidad de marca</button>
+      <button class="filter-btn" data-category="contenido">📅 Contenido</button>
+      <button class="filter-btn" data-category="textos">✍️ Textos</button>
+      <button class="filter-btn" data-category="wabiz">📲 WhatsApp Business</button>
+      <button class="filter-btn" data-category="tiendanube">🛒 Tiendanube</button>
     </div>
   </div>
 </div>
@@ -126,11 +126,11 @@
 
 <footer>Guía de Prompts para Emprendedores · Creado por <strong style="color:#00d4ff">Leandro Sacha Melchiori</strong>
   <div style="margin-top:0.6rem;display:flex;justify-content:center;gap:1.2rem;">
-    <a href="https://www.instagram.com/sacha.melchiori" target="_blank" style="color:#94a3b8;text-decoration:none;font-size:0.78rem;display:flex;align-items:center;gap:0.35rem;transition:color 0.15s;" onmouseover="this.style.color='#00d4ff'" onmouseout="this.style.color='#94a3b8'">
+    <a href="https://www.instagram.com/sacha.melchiori" target="_blank" style="color:#94a3b8;text-decoration:none;font-size:0.78rem;display:flex;align-items:center;gap:0.35rem;transition:color 0.15s;">
       <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
       @sacha.melchiori
     </a>
-    <a href="https://www.linkedin.com/in/leandromelchiori-developer/" target="_blank" style="color:#94a3b8;text-decoration:none;font-size:0.78rem;display:flex;align-items:center;gap:0.35rem;transition:color 0.15s;" onmouseover="this.style.color='#00d4ff'" onmouseout="this.style.color='#94a3b8'">
+    <a href="https://www.linkedin.com/in/leandromelchiori-developer/" target="_blank" style="color:#94a3b8;text-decoration:none;font-size:0.78rem;display:flex;align-items:center;gap:0.35rem;transition:color 0.15s;">
       <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
       leandromelchiori-developer
     </a>
@@ -138,6 +138,7 @@
 </footer>
 <div id="toast"></div>
 
+<script src="/shared/migrations.js" defer></script>
 <script src="/shared/storage.js" defer></script>
 <script src="/shared/format.js" defer></script>
 <script src="/shared/ui.js" defer></script>

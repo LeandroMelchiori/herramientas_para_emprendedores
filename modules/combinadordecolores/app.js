@@ -4,26 +4,28 @@ const {
   generatePalette, contrastRatio, simulateCb,
 } = AppColor;
 
-function currentHex(){return hslToHex(H,S,L);}
+function currentHex(){return exactHex||hslToHex(H,S,L);}
+let exactHex=null;
 let H=25,S=72,L=55,currentHarmony="analogos",currentTab="wheel";
 const copyToClipboard = AppUI.copyText;
 function showToast(message) { AppUI.showToast('toast', message, 2000); }
 function copyColor(hex){copyToClipboard(hex);showToast("✓ "+hex.toUpperCase()+" copiado");}
 function copyHeroHex(){const hex=currentHex();copyColor(hex);const btn=document.getElementById("copy-hex-btn");const o=btn.textContent;btn.textContent="✓ Copiado!";setTimeout(()=>btn.textContent=o,1500);}
 function copyPaletteColor(hex,btn){copyColor(hex);const s=btn.querySelector(".phex");const o=s.textContent;s.textContent="✓ Copiado!";setTimeout(()=>s.textContent=o,1500);}
-function fromHslSliders(){H=+document.getElementById("s-h").value;S=+document.getElementById("s-hs").value;L=+document.getElementById("s-hl").value;syncAll();}
-function fromRgbSliders(){[H,S,L]=rgbToHsl(+document.getElementById("s-r").value,+document.getElementById("s-g").value,+document.getElementById("s-b").value);syncAll();}
-function fromHex(hex){if(isValidHex(hex)){[H,S,L]=hexToHsl(hex);syncAll();}}
-function fromHexInput(val){let v=val.trim();if(v&&v[0]!=="#")v="#"+v;const err=document.getElementById("hex-error");if(isValidHex(v)){err.style.display="none";[H,S,L]=hexToHsl(v);syncAll();}else err.style.display=v.length>2?"block":"none";}
+function fromHslSliders(){exactHex=null;H=+document.getElementById("s-h").value;S=+document.getElementById("s-hs").value;L=+document.getElementById("s-hl").value;syncAll();}
+function fromRgbSliders(){exactHex=null;[H,S,L]=rgbToHsl(+document.getElementById("s-r").value,+document.getElementById("s-g").value,+document.getElementById("s-b").value);syncAll();}
+function fromHex(hex){if(isValidHex(hex)){exactHex=hex.toLowerCase();[H,S,L]=hexToHsl(hex);syncAll();}}
+function fromHexInput(val){let v=val.trim();if(v&&v[0]!=="#")v="#"+v;const err=document.getElementById("hex-error");if(isValidHex(v)){err.style.display="none";exactHex=v.toLowerCase();[H,S,L]=hexToHsl(v);syncAll();}else err.style.display=v.length>2?"block":"none";}
 const TABS=["wheel","hsl","rgb","hex"];
 function setTab(t){currentTab=t;document.querySelectorAll(".tab-btn").forEach((b,i)=>b.classList.toggle("active",TABS[i]===t));TABS.forEach(p=>document.getElementById("panel-"+p).style.display=p===t?"block":"none");}
 function toggleHarmonies(){const l=document.getElementById("harmony-list");l.classList.toggle("open");document.getElementById("harmony-arrow").textContent=l.classList.contains("open")?"▲":"▼";}
 function setHarmony(key){currentHarmony=key;document.getElementById("harmony-current").textContent=harmonies[key].label;document.getElementById("harmony-list").classList.remove("open");document.getElementById("harmony-arrow").textContent="▼";renderPalette();}
-function renderRow(id,items){const row=document.getElementById(id);row.innerHTML="";items.forEach(item=>{const d=document.createElement("div");d.className="color-swatch"+(item.active?" active":"");d.style.background=item.hex;d.onclick=item.cb;row.appendChild(d);});}
+function renderRow(id,items){const row=document.getElementById(id);row.innerHTML="";items.forEach(item=>{const d=document.createElement("div");d.className="color-swatch"+(item.active?" active":"");d.style.background=item.hex;d.addEventListener("click",item.cb);row.appendChild(d);});}
 function renderPalette(){
   const hex=currentHex(),tc=getTextColor(hex),palette=generatePalette(H,S,L,currentHarmony);
+  palette[0].hex=hex;
   const strip=document.getElementById("palette-strip");strip.innerHTML="";palette.forEach(c=>{const d=document.createElement("div");d.className="strip-chunk";d.style.background=c.hex;strip.appendChild(d);});
-  const cards=document.getElementById("palette-cards");cards.innerHTML="";palette.forEach(c=>{const btn=document.createElement("button");btn.className="palette-card";btn.style.background=c.hex;btn.style.color=getTextColor(c.hex);btn.innerHTML=`<span class="plabel">${c.label}</span><span class="phex">${c.hex.toUpperCase()}</span>`;btn.onclick=()=>copyPaletteColor(c.hex,btn);cards.appendChild(btn);});
+  const cards=document.getElementById("palette-cards");cards.innerHTML="";palette.forEach(c=>{const btn=document.createElement("button");btn.className="palette-card";btn.style.background=c.hex;btn.style.color=getTextColor(c.hex);btn.innerHTML=`<span class="plabel">${c.label}</span><span class="phex">${c.hex.toUpperCase()}</span>`;btn.addEventListener("click",()=>copyPaletteColor(c.hex,btn));cards.appendChild(btn);});
   const rD=[{pct:"60%",role:"Principal",tip:"Fondo, logo, elemento dominante",idx:0},{pct:"30%",role:"Secundario",tip:"Títulos, botones, destacados",idx:1},{pct:"10%",role:"Acento",tip:"Llamadas a la acción, detalles",idx:Math.min(2,palette.length-1)}];
   const rules=document.getElementById("rules");rules.innerHTML="";rD.forEach(r=>{const ph=palette[r.idx]?.hex||hex;rules.innerHTML+=`<div class="rule-row"><div class="rule-box" style="background:${ph};color:${getTextColor(ph)}">${r.pct}</div><div class="rule-info"><div class="role">${r.role}</div><div class="tip">${r.tip}</div></div></div>`;});
   document.getElementById("tip-box").style.borderLeftColor=hex;
@@ -57,9 +59,9 @@ function syncAll(){
   document.getElementById("hex-input").value=hex;document.getElementById("hex-input").style.borderColor=hex;document.getElementById("hex-preview-box").style.background=hex;
   document.querySelectorAll(".preset-btn").forEach(b=>b.classList.toggle("active",b.dataset.hex.toLowerCase()===hex.toLowerCase()));
   document.querySelectorAll(".quick-color").forEach(d=>d.classList.toggle("active",(d.dataset.hex||"").toLowerCase()===hex.toLowerCase()));
-  renderRow("row-l",[8,18,30,45,58,70,82,93].map(lv=>({hex:hslToHex(H,S,lv),active:Math.abs(L-lv)<4,cb:()=>{L=lv;syncAll();}})));
-  renderRow("row-s",[5,18,32,46,60,74,87,100].map(sv=>({hex:hslToHex(H,sv,L),active:Math.abs(S-sv)<6,cb:()=>{S=sv;syncAll();}})));
-  renderRow("row-h",[0,45,90,135,180,225,270,315].map(hv=>({hex:hslToHex(hv,S,L),active:Math.abs(H-hv)<22||(H>338&&hv===0),cb:()=>{H=hv;syncAll();}})));
+  renderRow("row-l",[8,18,30,45,58,70,82,93].map(lv=>({hex:hslToHex(H,S,lv),active:Math.abs(L-lv)<4,cb:()=>{exactHex=null;L=lv;syncAll();}})));
+  renderRow("row-s",[5,18,32,46,60,74,87,100].map(sv=>({hex:hslToHex(H,sv,L),active:Math.abs(S-sv)<6,cb:()=>{exactHex=null;S=sv;syncAll();}})));
+  renderRow("row-h",[0,45,90,135,180,225,270,315].map(hv=>({hex:hslToHex(hv,S,L),active:Math.abs(H-hv)<22||(H>338&&hv===0),cb:()=>{exactHex=null;H=hv;syncAll();}})));
   drawPicker();renderPalette();
   updateContrast();        // recalcula legibilidad WCAG
   scheduleStateSave();     // persiste en localStorage + URL (con debounce)
@@ -67,9 +69,9 @@ function syncAll(){
 const presets=[{name:"Panadería",hex:"#C0392B"},{name:"Belleza",hex:"#E91E8C"},{name:"Orgánico",hex:"#4CAF50"},{name:"Tech",hex:"#1565C0"},{name:"Arte",hex:"#7B1FA2"},{name:"Catering",hex:"#E65100"},{name:"Salud",hex:"#00897B"},{name:"Moda",hex:"#F48FB1"}];
 const quickColors=["#FF6B35","#004E89","#1A936F","#C9B1FF","#F7B731","#E84393","#2D2D2D","#F5E6D3"];
 function init(){
-  const pW=document.getElementById("presets");presets.forEach(p=>{const b=document.createElement("button");b.className="preset-btn";b.dataset.hex=p.hex;b.style.background=p.hex;b.style.color=getTextColor(p.hex);b.textContent=p.name;b.onclick=()=>fromHex(p.hex);pW.appendChild(b);});
-  const qW=document.getElementById("quick-colors");quickColors.forEach(c=>{const d=document.createElement("div");d.className="quick-color";d.dataset.hex=c;d.style.background=c;d.title=c;d.onclick=()=>fromHex(c);qW.appendChild(d);});
-  const hL=document.getElementById("harmony-list");Object.entries(harmonies).forEach(([key,val])=>{const b=document.createElement("button");b.className="harmony-btn";b.dataset.key=key;b.innerHTML=`<span class="hlabel">${val.label}</span><span class="hdesc">${val.desc}</span>`;b.onclick=()=>setHarmony(key);hL.appendChild(b);});
+  const pW=document.getElementById("presets");presets.forEach(p=>{const b=document.createElement("button");b.className="preset-btn";b.dataset.hex=p.hex;b.style.background=p.hex;b.style.color=getTextColor(p.hex);b.textContent=p.name;b.addEventListener("click",()=>fromHex(p.hex));pW.appendChild(b);});
+  const qW=document.getElementById("quick-colors");quickColors.forEach(c=>{const d=document.createElement("div");d.className="quick-color";d.dataset.hex=c;d.style.background=c;d.title=c;d.addEventListener("click",()=>fromHex(c));qW.appendChild(d);});
+  const hL=document.getElementById("harmony-list");Object.entries(harmonies).forEach(([key,val])=>{const b=document.createElement("button");b.className="harmony-btn";b.dataset.key=key;b.innerHTML=`<span class="hlabel">${val.label}</span><span class="hdesc">${val.desc}</span>`;b.addEventListener("click",()=>setHarmony(key));hL.appendChild(b);});
   loadInitialState();   // recupera color y armonía desde la URL o localStorage
   document.getElementById("harmony-current").textContent=harmonies[currentHarmony].label;
   wireFeatureButtons(); // conecta copiar / compartir / guardar / PNG / foto / daltonismo
@@ -91,8 +93,9 @@ function updateContrast(){
 }
 
 // ── Estado: persistencia (localStorage) + compartir por URL ─────
-function getState(){return {h:H,s:S,l:L,arm:currentHarmony};}
+function getState(){return {h:H,s:S,l:L,hex:currentHex(),arm:currentHarmony};}
 function applyState(st){
+  exactHex=isValidHex(st.hex)?st.hex.toLowerCase():null;
   if(Number.isFinite(st.h))H=clamp(Math.round(st.h),0,359);
   if(Number.isFinite(st.s))S=clamp(Math.round(st.s),0,100);
   if(Number.isFinite(st.l))L=clamp(Math.round(st.l),0,100);
@@ -101,9 +104,9 @@ function applyState(st){
 // Prioridad al cargar: parámetros de la URL > último estado guardado > valor por defecto.
 function loadInitialState(){
   const p=new URLSearchParams(location.search);
-  if(p.has("h")||p.has("s")||p.has("l")){
+  if(p.has("h")||p.has("s")||p.has("l")||p.has("hex")){
     const clamp=(v,min,max)=>Math.max(min,Math.min(max,v));
-    applyState({h:clamp(+p.get("h"),0,359),s:clamp(+p.get("s"),0,100),l:clamp(+p.get("l"),5,95),arm:p.get("arm")});
+    applyState({h:clamp(+p.get("h"),0,359),s:clamp(+p.get("s"),0,100),l:clamp(+p.get("l"),5,95),hex:p.get("hex"),arm:p.get("arm")});
     return;
   }
   const saved=AppStorage.readJson(AppStorage.KEYS.lastColor,null);if(saved)applyState(saved);
@@ -113,12 +116,12 @@ function scheduleStateSave(){
   clearTimeout(saveT);
   saveT=setTimeout(()=>{
     AppStorage.writeJson(AppStorage.KEYS.lastColor,getState());
-    const p=new URLSearchParams({h:H,s:S,l:L,arm:currentHarmony});
+    const p=new URLSearchParams({h:H,s:S,l:L,hex:currentHex(),arm:currentHarmony});
     history.replaceState(null,"","?"+p.toString());   // refleja el estado en la URL sin recargar
   },400);
 }
 function shareURL(){
-  const p=new URLSearchParams({h:H,s:S,l:L,arm:currentHarmony});
+  const p=new URLSearchParams({h:H,s:S,l:L,hex:currentHex(),arm:currentHarmony});
   copyToClipboard(location.origin+location.pathname+"?"+p.toString());
   showToast("🔗 Link de la paleta copiado");
 }

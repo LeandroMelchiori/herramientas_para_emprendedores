@@ -1,5 +1,7 @@
 /* Historial, filtros, pagos y restauracion del registro de ventas. */
 
+let ultimaVentaEliminada = null;
+
 function obtenerVentas() { return AppStorage.getSales(); }
 
 function guardarVentas(ventas) { return AppStorage.saveSales(ventas); }
@@ -112,7 +114,7 @@ function renderizarHistorial() {
 
     return `
     <div class="venta-item" id="venta-${v.id}">
-      <div class="venta-header" onclick="toggleVenta(${v.id})">
+      <div class="venta-header" data-action="toggle-sale" data-id="${v.id}">
         <div>
           ${etiquetaHtml}
           <div class="venta-fecha">${fmtFecha(v.fecha)}${pagoBadge}</div>
@@ -177,11 +179,11 @@ function renderizarHistorial() {
               </select>
             </div>
           </div>
-          <button onclick="marcarVentaPagada(${v.id})" style="width:100%;padding:10px;background:var(--naranja);color:white;border:none;border-radius:8px;font-family:'DM Sans',sans-serif;font-weight:700;font-size:0.85rem;cursor:pointer;">
+          <button data-action="pay-sale" data-id="${v.id}" style="width:100%;padding:10px;background:var(--naranja);color:white;border:none;border-radius:8px;font-family:'DM Sans',sans-serif;font-weight:700;font-size:0.85rem;cursor:pointer;">
             Confirmar pago
           </button>
         </div>` : ''}
-        <button class="btn-eliminar-venta" onclick="eliminarVenta(${v.id})">
+        <button class="btn-eliminar-venta" data-action="delete-sale" data-id="${v.id}">
           ✕ Eliminar este registro
         </button>
       </div>
@@ -217,11 +219,35 @@ function toggleVenta(id) {
 }
 
 function eliminarVenta(id) {
-  if (!confirm('¿Seguro que querés eliminar esta venta?')) return;
-  const ventas = obtenerVentas().filter(v => v.id !== id);
+  if (!confirm('??Seguro que quer??s eliminar esta venta?')) return;
+  const ventas = obtenerVentas();
+  const index = ventas.findIndex(v => v.id === id);
+  if (index < 0) return;
+  ultimaVentaEliminada = { venta: ventas[index], index };
+  ventas.splice(index, 1);
   guardarVentas(ventas);
   renderizarHistorial();
-  mostrarToast('Venta eliminada');
+  mostrarDeshacerEliminacion();
+}
+
+/* Permite corregir una eliminacion accidental sin alterar el formato persistido. */
+function mostrarDeshacerEliminacion() {
+  const bar = document.getElementById('undo-delete');
+  if (!bar) return;
+  bar.hidden = false;
+  clearTimeout(mostrarDeshacerEliminacion.timer);
+  mostrarDeshacerEliminacion.timer = setTimeout(() => { bar.hidden = true; ultimaVentaEliminada = null; }, 8000);
+}
+
+function restaurarUltimaVenta() {
+  if (!ultimaVentaEliminada) return;
+  const ventas = obtenerVentas();
+  ventas.splice(Math.min(ultimaVentaEliminada.index, ventas.length), 0, ultimaVentaEliminada.venta);
+  guardarVentas(ventas);
+  ultimaVentaEliminada = null;
+  document.getElementById('undo-delete').hidden = true;
+  renderizarHistorial();
+  mostrarToast('Venta restaurada');
 }
 
 function marcarVentaPagada(id) {
@@ -235,13 +261,7 @@ function marcarVentaPagada(id) {
   const ventas = obtenerVentas();
   const idx = ventas.findIndex(v => v.id === id);
   if (idx > -1) {
-    const v = ventas[idx];
-    v.totalCobrado = (v.montoPagado || 0) + cobroExtra;
-    v.montoPagado = v.totalCobrado;
-    v.fiado = false;
-    v.medioPago = medio;
-    v.totalGanancia = v.totalCobrado - v.totalCosto;
-    v.descuento = v.totalSugerido > v.totalCobrado ? v.totalSugerido - v.totalCobrado : 0;
+    ventas[idx] = AppSales.applyPayment(ventas[idx], cobroExtra, medio);
 
     guardarVentas(ventas);
     renderizarHistorial();

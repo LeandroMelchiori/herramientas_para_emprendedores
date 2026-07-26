@@ -235,9 +235,9 @@ function renderizarProyectos() {
         <div class="proyecto-meta">${p.fecha}</div>
       </div>
       <div class="proyecto-acciones">
-        <button class="btn-proyecto-cargar" onclick="cargarProyecto(${p.id})">Cargar</button>
-        <button class="btn-proyecto-duplicar" onclick="duplicarProyecto(${p.id})" title="Duplicar">⧉</button>
-        <button class="btn-proyecto-eliminar" onclick="eliminarProyecto(${p.id})" title="Eliminar">✕</button>
+        <button class="btn-proyecto-cargar" data-action="load-project" data-id="${p.id}">Cargar</button>
+        <button class="btn-proyecto-duplicar" data-action="duplicate-project" data-id="${p.id}" title="Duplicar">⧉</button>
+        <button class="btn-proyecto-eliminar" data-action="delete-project" data-id="${p.id}" title="Eliminar">✕</button>
       </div>
     </div>`).join('');
 

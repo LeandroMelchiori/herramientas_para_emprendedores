@@ -15,6 +15,7 @@
 <meta name="mobile-web-app-capable" content="yes">
 <script src="/pwa.js" defer></script>
 <script src="/analytics.js" defer></script>
+<script src="/shared/migrations.js" defer></script>
 <script src="/shared/storage.js" defer></script>
 <script src="/shared/format.js" defer></script>
 <script src="/shared/ui.js" defer></script>
@@ -25,8 +26,10 @@
 <script src="/modules/calculadora/app.js" defer></script>
 <script src="/modules/calculadora/projects.js" defer></script>
 <script src="/modules/calculadora/pdf.js" defer></script>
+<script src="/modules/calculadora/events.js" defer></script>
 <link rel="stylesheet" href="/shared/base.css">
 <link rel="stylesheet" href="/modules/calculadora/styles.css">
+<link rel="stylesheet" href="/modules/calculadora/projects.css">
 </head>
 <body>
 <!-- ══ Botón volver al inicio ══ -->
@@ -43,30 +46,30 @@
 <!-- Barra de proyecto activo -->
 <div class="proyecto-activo-bar" id="proyecto-activo-bar">
   Editando: <strong id="proyecto-activo-nombre"></strong>
-  <button class="btn-limpiar-barra" onclick="limpiarTodo()">Nuevo cálculo</button>
+  <button class="btn-limpiar-barra" data-action="clear-all">Nuevo cálculo</button>
 </div>
 
 <!-- Tabs de navegación -->
 <div class="nav-tabs">
-  <button class="nav-tab active" onclick="goTo(0)"><span class="tab-num">1</span>Insumos</button>
-  <button class="nav-tab" onclick="goTo(1)"><span class="tab-num">2</span>Servicios</button>
-  <button class="nav-tab" onclick="goTo(2)"><span class="tab-num">3</span>Precio</button>
-  <button class="nav-tab" onclick="goTo(3)"><span class="tab-num">4</span>Ventas</button>
-  <button class="nav-tab" onclick="goTo(4)"><span class="tab-num">💾</span>Proyectos</button>
+  <button class="nav-tab active" data-action="navigate" data-page="0"><span class="tab-num">1</span>Insumos</button>
+  <button class="nav-tab" data-action="navigate" data-page="1"><span class="tab-num">2</span>Servicios</button>
+  <button class="nav-tab" data-action="navigate" data-page="2"><span class="tab-num">3</span>Precio</button>
+  <button class="nav-tab" data-action="navigate" data-page="3"><span class="tab-num">4</span>Ventas</button>
+  <button class="nav-tab" data-action="navigate" data-page="4"><span class="tab-num">💾</span>Proyectos</button>
 </div>
 
 <!-- ══ PÁGINA 1: INSUMOS ══ -->
 <div class="page active" id="page-0">
   <div class="nombre-prod">
-    <input type="text" id="nombre-producto" placeholder="¿Qué producís?" oninput="actualizar()">
+    <input type="text" id="nombre-producto" placeholder="¿Qué producís?">
   </div>
 
   <div class="card">
     <div class="card-title-row">
       <div class="card-title">Materiales e insumos</div>
-      <button class="btn-vaciar-seccion" onclick="confirmarVaciar(vaciarInsumos, this)">Vaciar</button>
+      <button class="btn-vaciar-seccion" data-action="empty" data-handler="vaciarInsumos">Vaciar</button>
       <label class="switch" title="Activar o desactivar materiales">
-        <input type="checkbox" id="toggle-insumos" checked onchange="toggleInsumos(this.checked)">
+        <input type="checkbox" id="toggle-insumos" checked>
         <span class="slider"></span>
       </label>
     </div>
@@ -79,7 +82,7 @@
       </div>
       <div id="lista-insumos"></div>
       <div class="limite-badge" id="limite-insumos"></div>
-      <button class="btn-agregar" id="btn-agregar-insumo" onclick="agregarInsumo()">+ Agregar material</button>
+      <button class="btn-agregar" id="btn-agregar-insumo" data-action="add-supply">+ Agregar material</button>
       <div class="total-row">
         <span class="label">Total insumos:</span>
         <span class="valor" id="total-insumos">$0</span>
@@ -94,13 +97,13 @@
     <div class="card-title">¿Cuántas unidades hace esa tanda?</div>
     <div class="produccion-field">
       <label>Unidades producidas:</label>
-      <input type="number" id="unidades" value="1" min="1" oninput="actualizar()">
+      <input type="number" id="unidades" value="1" min="1">
       <span>unidades por tanda</span>
     </div>
   </div>
 
   <div class="nav-steps">
-    <button class="btn-step next" onclick="goTo(1)">Servicios →</button>
+    <button class="btn-step next" data-action="navigate" data-page="1">Servicios →</button>
   </div>
 </div>
 
@@ -109,7 +112,7 @@
   <div class="card">
     <div class="card-title-row">
       <div class="card-title">Servicios y mano de obra</div>
-      <button class="btn-vaciar-seccion" onclick="confirmarVaciar(vaciarServicios, this)">Vaciar</button>
+      <button class="btn-vaciar-seccion" data-action="empty" data-handler="vaciarServicios">Vaciar</button>
     </div>
     <div class="info-box">
       Incluí la luz, gas, tu tiempo (¡cobrarte a vos misma/o!), y cualquier servicio que uses.
@@ -119,7 +122,7 @@
     </div>
     <div id="lista-servicios"></div>
     <div class="limite-badge" id="limite-servicios"></div>
-    <button class="btn-agregar" id="btn-agregar-servicio" onclick="agregarServicio()">+ Agregar servicio</button>
+    <button class="btn-agregar" id="btn-agregar-servicio" data-action="add-service">+ Agregar servicio</button>
     <div class="total-row">
       <span class="label">Total servicios:</span>
       <span class="valor" id="total-servicios">$0</span>
@@ -133,8 +136,8 @@
   </div>
 
   <div class="nav-steps">
-    <button class="btn-step prev" onclick="goTo(0)">← Insumos</button>
-    <button class="btn-step next" onclick="goTo(2)">Precio →</button>
+    <button class="btn-step prev" data-action="navigate" data-page="0">← Insumos</button>
+    <button class="btn-step next" data-action="navigate" data-page="2">Precio →</button>
   </div>
 </div>
 
@@ -143,13 +146,13 @@
   <div class="card">
     <div class="card-title-row">
       <div class="card-title">Tu margen de ganancia</div>
-      <button class="btn-vaciar-seccion" onclick="confirmarVaciar(vaciarPrecio, this)">Vaciar</button>
+      <button class="btn-vaciar-seccion" data-action="empty" data-handler="vaciarPrecio">Vaciar</button>
     </div>
 
     <!-- Toggle modo slider / precio manual -->
     <div style="display:flex;gap:0;margin-bottom:14px;border-radius:8px;overflow:hidden;border:1.5px solid var(--borde);">
-      <button id="btn-modo-slider" class="btn-modo active" onclick="setModo('slider')">🎚 Elegir margen</button>
-      <button id="btn-modo-precio" class="btn-modo" onclick="setModo('precio')">💰 Ingresar precio</button>
+      <button id="btn-modo-slider" class="btn-modo active" data-action="set-mode" data-mode="slider">🎚 Elegir margen</button>
+      <button id="btn-modo-precio" class="btn-modo" data-action="set-mode" data-mode="precio">💰 Ingresar precio</button>
     </div>
 
     <!-- Modo slider -->
@@ -158,7 +161,7 @@
       <div class="margen-display">
         <div>
           <div style="display:flex;align-items:baseline;gap:2px;">
-            <input type="number" id="margen-input" class="margen-num-input" min="10" max="200" value="50" oninput="actualizarMargenManual(this.value)">
+            <input type="number" id="margen-input" class="margen-num-input" min="10" max="200" value="50">
             <span class="pct">%</span>
           </div>
           <div id="margen-pct" style="display:none">50%</div>
@@ -170,12 +173,12 @@
         </div>
       </div>
       <div class="slider-container">
-        <input type="range" id="margen-slider" min="10" max="200" value="50" step="5" oninput="actualizarMargen(this.value)">
+        <input type="range" id="margen-slider" min="10" max="200" value="50" step="5">
         <div class="slider-labels"><span>10%</span><span>100%</span><span>200%</span></div>
       </div>
     </div>
     <div class="iva-toggle-wrap">
-      <input type="checkbox" id="iva-toggle" onchange="toggleIva()">
+      <input type="checkbox" id="iva-toggle">
       <label for="iva-toggle">Mostrar precio con IVA (21%)</label>
     </div>
     <div class="precio-con-iva" id="precio-con-iva"></div>
@@ -186,7 +189,6 @@
       <div class="field-group">
         <label>Precio de venta</label>
         <input type="number" id="precio-manual" placeholder="Ej: 5000" min="0"
-          oninput="actualizarPrecioManual()"
           style="font-size:1.1rem;font-weight:600;border-color:var(--naranja-claro);">
       </div>
       <div id="resultado-inverso" style="display:none;margin-top:10px;">
@@ -219,8 +221,8 @@
   </div>
 
   <div class="nav-steps">
-    <button class="btn-step prev" onclick="goTo(1)">← Servicios</button>
-    <button class="btn-step next" onclick="goTo(3)">Ventas →</button>
+    <button class="btn-step prev" data-action="navigate" data-page="1">← Servicios</button>
+    <button class="btn-step next" data-action="navigate" data-page="3">Ventas →</button>
   </div>
 </div>
 
@@ -229,22 +231,22 @@
   <div class="card">
     <div class="card-title-row">
       <div class="card-title">¿Cuánto necesitás vender?</div>
-      <button class="btn-vaciar-seccion" onclick="confirmarVaciar(vaciarVentas, this)">Vaciar</button>
+      <button class="btn-vaciar-seccion" data-action="empty" data-handler="vaciarVentas">Vaciar</button>
     </div>
     <div class="info-box">
       Anotá cuánto gastás por mes (alquiler, servicios fijos, etc.) y calculamos cuántas unidades tenés que vender para cubrir todo.
     </div>
     <div class="field-group">
       <label>Gastos fijos mensuales</label>
-      <input type="number" id="gastos-mensuales" placeholder="Ej: 100000" min="0" oninput="actualizar()">
+      <input type="number" id="gastos-mensuales" placeholder="Ej: 100000" min="0">
     </div>
     <div class="field-group">
       <label>Días que trabajás por mes</label>
-      <input type="number" id="dias-laborales" value="24" min="1" max="31" oninput="actualizar()">
+      <input type="number" id="dias-laborales" value="24" min="1" max="31">
     </div>
     <div class="field-group">
       <p class="meta-ingresos-label">¿Cuánto querés ganar por mes? (opcional)</p>
-      <input type="number" id="meta-ingresos" placeholder="Ej: 150000" min="0" oninput="actualizar()">
+      <input type="number" id="meta-ingresos" placeholder="Ej: 150000" min="0">
     </div>
   </div>
 
@@ -273,13 +275,13 @@
     <div id="desglose-costos" style="display:none;margin-top:14px;padding-top:12px;border-top:1.5px solid var(--borde);"></div>
   </div>
 
-  <button class="btn-pdf" id="btn-pdf" onclick="descargarPDF()" disabled>
+  <button class="btn-pdf" id="btn-pdf" data-action="download-pdf" disabled>
     <span>⬇</span> Descargar resumen en PDF
   </button>
 
   <div class="nav-steps" style="margin-top:10px;">
-    <button class="btn-step prev" onclick="goTo(2)">← Precio</button>
-    <button class="btn-step next" onclick="goTo(4)">Proyectos →</button>
+    <button class="btn-step prev" data-action="navigate" data-page="2">← Precio</button>
+    <button class="btn-step next" data-action="navigate" data-page="4">Proyectos →</button>
   </div>
 </div>
 
@@ -292,17 +294,17 @@
     <div class="info-box" id="info-guardar-card">
       Guardá el cálculo que estás haciendo con un nombre para encontrarlo después.
     </div>
-    <button class="btn-guardar" id="btn-guardar-principal" onclick="abrirModalGuardar()">💾 Guardar proyecto actual</button>
-    <button class="btn-nuevo-calculo" onclick="limpiarTodo()">✕ Nuevo cálculo (limpiar todo)</button>
-    <button class="btn-compartir" onclick="compartirPorLink()">🔗 Compartir por link</button>
+    <button class="btn-guardar" id="btn-guardar-principal" data-action="open-save">💾 Guardar proyecto actual</button>
+    <button class="btn-nuevo-calculo" data-action="clear-all">✕ Nuevo cálculo (limpiar todo)</button>
+    <button class="btn-compartir" data-action="share">🔗 Compartir por link</button>
     <div style="display:flex;gap:8px;margin-top:4px;">
-      <button class="btn-secundario" onclick="exportarBackupCompleto()"
+      <button class="btn-secundario" data-action="backup"
         style="flex:1;background:var(--naranja-palido);color:var(--naranja);border-color:var(--naranja-claro);">
         🔒 Hacer backup
       </button>
       <label class="btn-secundario" style="cursor:pointer;">
         ⬆ Restaurar
-        <input type="file" accept=".json" onchange="importarJSON(event)" style="display:none;">
+        <input id="input-restaurar-calculadora" type="file" accept=".json" style="display:none;">
       </label>
     </div>
   </div>
@@ -310,12 +312,12 @@
   <!-- Lista de proyectos guardados -->
   <div class="card">
     <div class="card-title">Proyectos guardados</div>
-    <input type="search" id="buscar-proyectos" class="buscar-proyectos" placeholder="Buscar proyecto..." oninput="filtrarProyectos(this.value)">
+    <input type="search" id="buscar-proyectos" class="buscar-proyectos" placeholder="Buscar proyecto...">
     <div id="lista-proyectos"></div>
     <div id="paginacion-proyectos" class="paginacion-proyectos" style="display:none">
-      <button class="btn-pag" id="pag-prev" onclick="cambiarPaginaProyectos(-1)">← Ant.</button>
+      <button class="btn-pag" id="pag-prev" data-action="project-page" data-delta="-1">← Ant.</button>
       <span class="pag-info" id="pag-info"></span>
-      <button class="btn-pag" id="pag-next" onclick="cambiarPaginaProyectos(1)">Sig. →</button>
+      <button class="btn-pag" id="pag-next" data-action="project-page" data-delta="1">Sig. →</button>
     </div>
   </div>
 </div>
@@ -326,9 +328,9 @@
     <h3 id="modal-guardar-titulo">Nombrar proyecto</h3>
     <input type="text" id="input-nombre-proyecto" placeholder="Ej: Pan casero, Torta de cumpleaños..." maxlength="60">
     <div class="modal-btns">
-      <button class="btn-cancelar" onclick="cerrarModal('modal-guardar')">Cancelar</button>
-      <button id="btn-guardar-nuevo" class="btn-guardar-secundario" style="display:none" onclick="confirmarGuardar(true)">+ Guardar copia</button>
-      <button id="btn-guardar-confirm" class="btn-guardar" style="flex:1.5" onclick="confirmarGuardar()">💾 Guardar</button>
+      <button class="btn-cancelar" data-action="close-modal" data-modal="modal-guardar">Cancelar</button>
+      <button id="btn-guardar-nuevo" class="btn-guardar-secundario" style="display:none" data-action="save-project" data-copy="true">+ Guardar copia</button>
+      <button id="btn-guardar-confirm" class="btn-guardar" style="flex:1.5" data-action="save-project">💾 Guardar</button>
     </div>
   </div>
 </div>
@@ -342,10 +344,10 @@
     </p>
     <div class="share-url-box">
       <span class="share-url-text" id="share-url-text"></span>
-      <button class="btn-copy-url" onclick="copiarLink()">Copiar</button>
+      <button class="btn-copy-url" data-action="copy-link">Copiar</button>
     </div>
     <div class="modal-btns">
-      <button class="btn-cancelar" onclick="cerrarModal('modal-compartir')">Cerrar</button>
+      <button class="btn-cancelar" data-action="close-modal" data-modal="modal-compartir">Cerrar</button>
     </div>
   </div>
 </div>
@@ -356,18 +358,14 @@
 <footer style="text-align:center;padding:20px 16px 28px;font-family:'DM Sans',sans-serif;font-size:0.78rem;color:#aaa;letter-spacing:0.03em;">
   Creado por Leandro Sacha Melchiori
   <a href="https://www.linkedin.com/in/leandromelchiori-developer/" target="_blank" rel="noopener"
-    style="display:inline-flex;align-items:center;gap:5px;margin-left:8px;color:#aaa;text-decoration:none;vertical-align:middle;transition:color 0.2s;"
-    onmouseover="this.style.color='#0A66C2'" onmouseout="this.style.color='#aaa'">
+    style="display:inline-flex;align-items:center;gap:5px;margin-left:8px;color:#aaa;text-decoration:none;vertical-align:middle;transition:color 0.2s;">
     <img src="https://cdn.simpleicons.org/linkedin/aaaaaa" alt="LinkedIn" width="14" height="14"
-      onerror="this.replaceWith('🔗')"
       style="vertical-align:middle;transition:filter 0.2s;">
     LinkedIn
   </a>
   <a href="https://www.instagram.com/sacha.melchiori/" target="_blank" rel="noopener"
-    style="display:inline-flex;align-items:center;gap:5px;margin-left:8px;color:#aaa;text-decoration:none;vertical-align:middle;transition:color 0.2s;"
-    onmouseover="this.style.color='#E1306C'" onmouseout="this.style.color='#aaa'">
+    style="display:inline-flex;align-items:center;gap:5px;margin-left:8px;color:#aaa;text-decoration:none;vertical-align:middle;transition:color 0.2s;">
     <img src="https://cdn.simpleicons.org/instagram/aaaaaa" alt="Instagram" width="14" height="14"
-      onerror="this.replaceWith('📸')"
       style="vertical-align:middle;transition:filter 0.2s;">
     Instagram
   </a>

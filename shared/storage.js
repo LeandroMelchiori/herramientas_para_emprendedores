@@ -18,6 +18,7 @@
     savedPalettes: 'cc_saved',
     toolFavorites: 'hd_favs',
     toolFilter: 'hd_filter',
+    dataSchema: 'app_data_schema',
   });
 
   function cloneFallback(value) {
@@ -59,7 +60,8 @@
 
   function getProjects() {
     const projects = readJson(KEYS.projects, []);
-    return Array.isArray(projects) ? projects : [];
+    if (!global.AppMigrations) return Array.isArray(projects) ? projects : [];
+    return global.AppMigrations.normalizeProjects(projects).value;
   }
 
   function saveProjects(projects) {
@@ -68,7 +70,8 @@
 
   function getSales() {
     const sales = readJson(KEYS.sales, []);
-    return Array.isArray(sales) ? sales : [];
+    if (!global.AppMigrations) return Array.isArray(sales) ? sales : [];
+    return global.AppMigrations.normalizeSales(sales).value;
   }
 
   function saveSales(sales) {
@@ -86,7 +89,8 @@
 
   function createBackup() {
     return {
-      version: '2.0',
+      version: '3.0',
+      schemaVersion: global.AppMigrations?.SCHEMA_VERSION || 2,
       exportedAt: new Date().toISOString(),
       calculadora_proyectos: getProjects(),
       calculadora_autosave: getCalculatorDraft(),
@@ -154,6 +158,35 @@
     return restored;
   }
 
+  /* Solo persiste si todos los registros son reconocibles; ante dudas conserva el original. */
+  function migrateStoredData() {
+    if (!global.AppMigrations) return { migrated: false, warnings: [] };
+    let rawProjects;
+    let rawSales;
+    try {
+      const projectsText = localStorage.getItem(KEYS.projects);
+      const salesText = localStorage.getItem(KEYS.sales);
+      rawProjects = projectsText === null ? [] : JSON.parse(projectsText);
+      rawSales = salesText === null ? [] : JSON.parse(salesText);
+    } catch (error) {
+      return { migrated: false, warnings: ['Hay datos con formato JSON invalido; se conservaron sin cambios.'] };
+    }
+    const projects = global.AppMigrations.normalizeProjects(rawProjects);
+    const sales = global.AppMigrations.normalizeSales(rawSales);
+    const warnings = [];
+    if (projects.rejected) warnings.push(`${projects.rejected} proyecto(s) no reconocido(s)`);
+    if (sales.rejected) warnings.push(`${sales.rejected} venta(s) no reconocida(s)`);
+    if (warnings.length) return { migrated: false, warnings };
+
+    const target = global.AppMigrations.SCHEMA_VERSION;
+    const current = Number(readJson(KEYS.dataSchema, 0)) || 0;
+    if (current >= target) return { migrated: false, warnings };
+    const projectsSaved = writeJson(KEYS.projects, projects.value);
+    const salesSaved = writeJson(KEYS.sales, sales.value);
+    if (projectsSaved && salesSaved) writeJson(KEYS.dataSchema, target);
+    return { migrated: projectsSaved && salesSaved, warnings };
+  }
+
   global.AppStorage = Object.freeze({
     KEYS,
     readJson,
@@ -168,5 +201,9 @@
     createBackup,
     parseBackup,
     restoreBackup,
+    migrateStoredData,
   });
+
+  // Ejecuta una sola vez por version y mantiene intacta la base si detecta inconsistencias.
+  migrateStoredData();
 })(window);

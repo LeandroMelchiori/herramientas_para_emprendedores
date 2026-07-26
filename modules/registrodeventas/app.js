@@ -1,15 +1,22 @@
 /* ══ CONSTANTES ══ */
 
 /* ══ ESTADO ══ */
-let carrito      = [];    // items del carrito actual
+let carrito      = [];    // vista compatible del estado central del carrito
 let productoSel  = null;  // proyecto seleccionado en el selector
 let filtroActivo = 'hoy';
 let precioEditado = false; // si el usuario tocó el campo de precio final
 
 /* ══ INIT ══ */
 document.addEventListener('DOMContentLoaded', () => {
+  AppStorage.migrateStoredData();
+  SalesCart.subscribe((items) => {
+    carrito = items;
+    if (!items.length) precioEditado = false;
+    renderizarCarrito();
+  });
   cargarProductos();
   renderizarHistorial();
+  vincularEventosVentas();
 });
 
 /* ══ FORMATO ══ */
@@ -108,9 +115,7 @@ function agregarAlCarrito() {
 }
 
 function quitarDelCarrito(idx) {
-  carrito.splice(idx, 1);
-  if (!carrito.length) precioEditado = false;
-  renderizarCarrito();
+  SalesCart.remove(idx);
 }
 
 /* ══ RENDER DEL CARRITO ══ */
@@ -131,7 +136,7 @@ function renderizarCarrito() {
         <div class="cart-item-meta">${item.cantidad} × ${fmt(item.precioUnit)}</div>
       </div>
       <div class="cart-item-subtotal">${fmt(item.subtotal)}</div>
-      <button class="btn-quitar" onclick="quitarDelCarrito(${i})" title="Quitar">✕</button>
+      <button class="btn-quitar" data-action="remove-cart-item" data-index="${i}" title="Quitar">✕</button>
     </div>`).join('');
 
   cardTotales.style.display = 'block';
@@ -247,7 +252,7 @@ function finalizarVenta() {
   guardarVentas(historial);
 
   /* Resetear carrito */
-  carrito = [];
+  SalesCart.clear();
   precioEditado = false;
   document.getElementById('input-precio-final').value = '';
   document.getElementById('input-etiqueta').value = '';
@@ -304,4 +309,29 @@ function mostrarToast(msg) {
   t.classList.add('visible');
   clearTimeout(_toastTimer);
   _toastTimer = setTimeout(() => t.classList.remove('visible'), 2500);
+}
+
+
+/* Centraliza interacciones para evitar logica embebida en el HTML. */
+function vincularEventosVentas() {
+  document.getElementById('select-producto')?.addEventListener('change', seleccionarProducto);
+  document.getElementById('btn-agregar')?.addEventListener('click', agregarAlCarrito);
+  document.getElementById('check-fiado')?.addEventListener('change', toggleSena);
+  document.getElementById('input-precio-final')?.addEventListener('input', onPrecioFinalInput);
+  document.getElementById('btn-finalizar')?.addEventListener('click', finalizarVenta);
+  document.getElementById('btn-backup')?.addEventListener('click', exportarBackupCompleto);
+  document.getElementById('input-restaurar')?.addEventListener('change', restaurarBackup);
+  document.getElementById('btn-pdf')?.addEventListener('click', generarPDFVentas);
+  document.getElementById('filtro-estado-pago')?.addEventListener('change', renderizarHistorial);
+  document.addEventListener('click', (event) => {
+    const action = event.target.closest('[data-action]');
+    if (!action) return;
+    if (action.dataset.action === 'navigate') goTo(Number(action.dataset.page));
+    if (action.dataset.action === 'filter-period') setFiltro(action.dataset.period, action);
+    if (action.dataset.action === 'remove-cart-item') quitarDelCarrito(Number(action.dataset.index));
+    if (action.dataset.action === 'toggle-sale') toggleVenta(Number(action.dataset.id));
+    if (action.dataset.action === 'pay-sale') marcarVentaPagada(Number(action.dataset.id));
+    if (action.dataset.action === 'delete-sale') eliminarVenta(Number(action.dataset.id));
+    if (action.dataset.action === 'undo-delete') restaurarUltimaVenta();
+  });
 }

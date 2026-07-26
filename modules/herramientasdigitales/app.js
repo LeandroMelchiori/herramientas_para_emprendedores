@@ -127,10 +127,10 @@ function renderQuizStep(step) {
   var label = step === 1 ? '¿Cuál es tu mayor desafío ahora?' : '¿Desde dónde trabajás más?';
   var html = '<div class="quiz-q">' + step + '/2 — ' + label + '</div><div class="quiz-opts">';
   opts.forEach(function(o) {
-    html += '<button class="quiz-opt" onclick="selectQuizOpt(' + step + ',\'' + o.key + '\',this)">' + o.label + '</button>';
+    html += '<button class="quiz-opt" data-action="quiz-option" data-step="' + step + '" data-key="' + o.key + '">' + o.label + '</button>';
   });
   html += '</div>';
-  if (step === 2) html += '<button class="quiz-back" onclick="renderQuizStep(1)">← Volver</button>';
+  if (step === 2) html += '<button class="quiz-back" data-action="quiz-back">← Volver</button>';
   panel.innerHTML = html;
 }
 
@@ -162,7 +162,7 @@ function showQuizResults() {
   panel.innerHTML = '<div class="quiz-results">'
     + '<div class="quiz-results-title">✨ Estas son tus herramientas recomendadas</div>'
     + '<div class="quiz-results-sub">Las demás herramientas siguen disponibles abajo.</div>'
-    + '<button class="quiz-reset" onclick="resetQuiz()">Ver todas sin resaltar</button>'
+    + '<button class="quiz-reset" data-action="quiz-reset">Ver todas sin resaltar</button>'
     + '</div>';
   var first = document.querySelector('.tool-card.quiz-recommended');
   if (first) setTimeout(function(){ first.scrollIntoView({ behavior:'smooth', block:'center' }); }, 100);
@@ -186,7 +186,7 @@ function resetQuiz() {
 // ── Init ──
 function init() {
   const catalog = document.getElementById('tools-catalog');
-  if (catalog && window.ToolsCatalogMarkup) catalog.innerHTML = window.ToolsCatalogMarkup;
+  if (catalog && window.ToolsCatalog) catalog.innerHTML = window.renderToolsCatalog(window.ToolsCatalog);
   // Add star buttons to all cards
   document.querySelectorAll('.tool-card').forEach(function(card) {
     var key = card.dataset.key;
@@ -221,7 +221,7 @@ function init() {
       }
       if (saved.cat && saved.cat !== 'all') {
         activeCat = saved.cat;
-        var activeBtn = document.querySelector('.filter-btn[onclick*=\'' + saved.cat + '\']');
+        var activeBtn = document.querySelector('.filter-btn[data-category=\'' + saved.cat + '\']');
         if (activeBtn) {
           document.querySelectorAll('.filter-btn').forEach(function(b){ b.classList.remove('active'); });
           activeBtn.classList.add('active');

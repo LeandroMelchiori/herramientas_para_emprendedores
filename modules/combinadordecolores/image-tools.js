@@ -4,7 +4,7 @@ function handleImageFile(file){
   if(!file)return;
   const img=new Image();
   img.onload=()=>{const cols=extractPaletteFromImage(img);renderExtracted(cols);showToast(cols.length+" colores extraídos");URL.revokeObjectURL(img.src);};
-  img.onerror=()=>showToast("No se pudo leer la imagen");
+  img.addEventListener("error",()=>showToast("No se pudo leer la imagen"));
   img.src=URL.createObjectURL(file);
 }
 function extractPaletteFromImage(img){

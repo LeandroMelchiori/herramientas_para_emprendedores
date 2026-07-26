@@ -136,7 +136,7 @@ function buildMineCard(p){
       '<button class="fav-btn" type="button" aria-label="Favorito"></button>'+
       '<button class="mine-edit" type="button" title="Editar">✎</button>'+
       '<button class="mine-del" type="button" title="Eliminar">🗑</button>'+
-      '<button class="copy-btn" onclick="copyPrompt(this)">📋 Copiar</button>'+
+      '<button class="copy-btn" data-action="copy-prompt">📋 Copiar</button>'+
     '</div>';
   card.querySelector('.fav-btn').addEventListener('click',()=>{ toggleFav(card.dataset.key); refreshStars(); if(activeCat==='favs') applyFilters(); });
   card.querySelector('.mine-edit').addEventListener('click',()=>openForm(p.id));
@@ -219,7 +219,7 @@ function importMine(file){
 // — Inicialización —
 function initGuide(){
   const catalog = document.getElementById('prompt-catalog');
-  if (catalog && window.PromptCatalogMarkup) catalog.innerHTML = window.PromptCatalogMarkup;
+  if (catalog && window.PromptCatalog) catalog.innerHTML = window.renderPromptCatalog(window.PromptCatalog);
   // Clave estable + estrella de favorito para cada prompt original
   document.querySelectorAll('.category .prompt-card').forEach(card=>{
     if(card.dataset.key) return;
@@ -245,6 +245,11 @@ function initGuide(){
   document.getElementById('btn-cancel-prompt').addEventListener('click',closeForm);
   document.getElementById('btn-export').addEventListener('click',exportMine);
   document.getElementById('import-input').addEventListener('change',e=>importMine(e.target.files[0]));
+  document.addEventListener('click', e=>{
+    const action=e.target.closest('[data-action]');
+    if(action?.dataset.action==='copy-prompt') copyPrompt(action);
+  });
+  document.querySelectorAll('.filter-btn[data-category]').forEach(btn=>btn.addEventListener('click',()=>filterCat(btn.dataset.category,btn)));
   refreshStars(); updateCounts(); applyFilters();
 }
 initGuide();
