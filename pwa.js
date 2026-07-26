@@ -76,3 +76,9 @@ window.addEventListener('appinstalled', () => {
   deferredPrompt = null;
   if (window.trackEvent) window.trackEvent('Instalar PWA');
 });
+
+// Sustituye iconos externos fallidos sin JavaScript embebido en el HTML.
+document.addEventListener('error', (event) => {
+  const image = event.target;
+  if (image instanceof HTMLImageElement && image.dataset.fallback) image.replaceWith(image.dataset.fallback);
+}, true);

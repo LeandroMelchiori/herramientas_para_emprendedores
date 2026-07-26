@@ -43,21 +43,20 @@
   <div class="filter-top">
     <input type="search" id="search-input" class="search-input"
       placeholder="🔍 Buscar herramienta..."
-      autocomplete="off" aria-label="Buscar herramienta"
-      oninput="onSearch(this.value)">
-    <button class="quiz-toggle-btn" id="quiz-btn" onclick="toggleQuiz()" aria-expanded="false">✨ ¿Por dónde empiezo?</button>
+      autocomplete="off" aria-label="Buscar herramienta">
+    <button class="quiz-toggle-btn" id="quiz-btn" aria-expanded="false">✨ ¿Por dónde empiezo?</button>
   </div>
   <div class="filter-tabs-wrap">
     <div class="filter-inner">
-      <button class="filter-btn active" onclick="filterCat('all',this)">Todas</button>
-      <button class="filter-btn favs-btn" id="favs-filter-btn" onclick="filterCat('favs',this)">⭐ Favoritas</button>
-      <button class="filter-btn" onclick="filterCat('diseno',this)">🎨 Diseño</button>
-      <button class="filter-btn" onclick="filterCat('video',this)">🎬 Video</button>
-      <button class="filter-btn" onclick="filterCat('inspiracion',this)">💡 Inspiración</button>
-      <button class="filter-btn" onclick="filterCat('imagenes',this)">🖼️ Imágenes</button>
-      <button class="filter-btn" onclick="filterCat('gestion',this)">📊 Gestión</button>
-      <button class="filter-btn" onclick="filterCat('ventas',this)">🛒 Ventas Online</button>
-      <button class="filter-btn" onclick="filterCat('ia',this)">🤖 IA</button>
+      <button class="filter-btn active" data-category="all">Todas</button>
+      <button class="filter-btn favs-btn" id="favs-filter-btn" data-category="favs">⭐ Favoritas</button>
+      <button class="filter-btn" data-category="diseno">🎨 Diseño</button>
+      <button class="filter-btn" data-category="video">🎬 Video</button>
+      <button class="filter-btn" data-category="inspiracion">💡 Inspiración</button>
+      <button class="filter-btn" data-category="imagenes">🖼️ Imágenes</button>
+      <button class="filter-btn" data-category="gestion">📊 Gestión</button>
+      <button class="filter-btn" data-category="ventas">🛒 Ventas Online</button>
+      <button class="filter-btn" data-category="ia">🤖 IA</button>
     </div>
   </div>
 </div>
@@ -85,12 +84,13 @@
   Herramientas Gratuitas para Marketing Digital · Creado por <strong>Leandro Sacha Melchiori</strong>
   <div class="footer-links">
     <a href="https://www.linkedin.com/in/leandromelchiori-developer/" target="_blank" rel="noopener noreferrer">
-      <img src="https://cdn.simpleicons.org/linkedin/aaaaaa" alt="LinkedIn" width="13" height="13" onerror="this.replaceWith('🔗')" style="vertical-align:middle;margin-right:4px;">LinkedIn
+      <img src="https://cdn.simpleicons.org/linkedin/aaaaaa" alt="LinkedIn" width="13" height="13" style="vertical-align:middle;margin-right:4px;">LinkedIn
     </a>
     <a href="/privacidad.html">Política de privacidad</a>
   </div>
 </footer>
 
+<script src="/shared/migrations.js" defer></script>
 <script src="/shared/storage.js" defer></script>
 <script src="/modules/herramientasdigitales/catalog.js" defer></script>
 <script src="/modules/herramientasdigitales/app.js" defer></script>

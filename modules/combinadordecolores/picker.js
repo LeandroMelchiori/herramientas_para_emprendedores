@@ -99,10 +99,12 @@ function hitZone(x, y) {
 function applyRing(x, y) {
   let angle = Math.atan2(y - CY, x - CX) * 180 / Math.PI + 90;
   if (angle < 0) angle += 360;
+  exactHex = null;
   H = Math.round(angle) % 360;
 }
 
 function applySquare(x, y) {
+  exactHex = null;
   S = Math.round(clamp((x - SQ_X) / SQ_W, 0, 1) * 100);
   L = Math.round(clamp(1 - (y - SQ_Y) / SQ_W, 0, 1) * 100);
 }

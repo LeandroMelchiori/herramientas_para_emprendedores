@@ -27,6 +27,7 @@ App en uso real: [economiasocial.sachadev.me](https://economiasocial.sachadev.me
 
 - Vanilla HTML5 / CSS3 / JavaScript en archivos separados por responsabilidad
 - PWA con Service Worker (`sw.js`) y Web App Manifest (`manifest.json`)
+- `shared/migrations.js` para compatibilidad versionada y no destructiva de datos historicos
 - `shared/storage.js` como contrato unico para localStorage y backups
 - `shared/format.js` para moneda, fechas y escape de HTML
 - `shared/ui.js` para portapapeles, toast y slugs
@@ -69,7 +70,7 @@ Para desplegar: hacer push al repositorio. Vercel detecta el cambio y despliega 
     └── registrodeventas/       # Registro de ventas, control de ingresos, costos y ganancias
 ```
 
-Cada modulo separa estructura (`index.html`), presentacion (`styles.css`), contenido editorial (`catalog.js`, cuando corresponde) y comportamiento. Calculadora divide estado, proyectos y PDF; colores divide dominio, Canvas, imagenes y exportaciones; ventas divide operacion, historial y PDF.
+Cada modulo separa estructura, presentacion, datos editoriales y comportamiento. Calculadora divide estado, proyectos, eventos y PDF; colores divide dominio, Canvas, eventos, imagenes y exportaciones; ventas divide carrito, dominio contable, historial y PDF. Los CSS grandes se separan por dominio sin alterar la cascada.
 
 ## Decisiones de arquitectura
 
@@ -79,15 +80,19 @@ Cada modulo separa estructura (`index.html`), presentacion (`styles.css`), conte
 
 **Responsabilidades pequenas**: `app.js` coordina la interfaz. Estado, reglas puras, catalogos, historial, proyectos, procesamiento de imagenes y exportaciones viven en archivos propios cuando tienen una responsabilidad independiente.
 
-**Cache del Service Worker versionada**: al cambiar paginas o assets hay que actualizar `PRECACHE` e incrementar `VERSION` en `sw.js` (actualmente `v2.1.0`).
+**Cache del Service Worker versionada**: al cambiar paginas o assets hay que actualizar `PRECACHE` e incrementar `VERSION` en `sw.js` (actualmente `v2.2.0`).
 
 **Pruebas**: ejecutar `npm test` antes de integrar cambios. Playwright valida los flujos funcionales sin Service Worker; el listado offline se audita por separado.
 
-**Contenido editorial**: prompts y herramientas se editan en `catalog.js`. Esos archivos contienen marcado, no reglas de negocio. Mantener `app.js` enfocado en comportamiento.
+**Contenido editorial**: prompts y herramientas se editan como objetos estructurados en `catalog.js`; sus renderizadores no contienen reglas de negocio. Mantener `app.js` enfocado en comportamiento.
 
 **Paleta institucional**: el sistema de colores sigue la identidad del Gobierno de Santa Fe con variables CSS en `:root`. El gradiente institucional va de naranja → magenta → violeta (`#F2A33B` → `#E85D3A` → `#D5306E` → `#6B3FA0`).
 
 **Persistencia solo local**: no hay backend ni cuentas. Los datos quedan en el dispositivo y el backup completo permite trasladarlos o recuperarlos.
+
+**Compatibilidad de datos**: conservar las claves historicas. Toda migracion debe ser aditiva, mantener campos desconocidos y evitar sobrescribir la base completa si algun registro no puede validarse. Backups 1.x, 2.0 y 3.0 son compatibles.
+
+**Eventos**: no usar atributos `onclick`, `oninput` o similares. Vincular controles en archivos `events.js` o mediante delegacion desde `app.js`.
 
 ## Convenciones de desarrollo
 

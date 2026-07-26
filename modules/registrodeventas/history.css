@@ -1,0 +1,167 @@
+/* Estilos del dominio extraidos para mantener responsabilidades pequenas. */
+/* ── Historial ── */
+.filtros-periodo {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 14px;
+  flex-wrap: wrap;
+}
+.btn-filtro {
+  background: white;
+  border: 1.5px solid var(--borde);
+  border-radius: 20px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--gris-texto);
+  padding: 5px 14px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.btn-filtro.active {
+  background: var(--naranja-palido);
+  border-color: var(--naranja);
+  color: var(--naranja);
+}
+
+/* ── Resumen del período ── */
+.resumen-periodo {
+  margin-bottom: 14px;
+}
+.resumen-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+.resumen-item {
+  background: white;
+  border-radius: 12px;
+  padding: 12px 8px;
+  text-align: center;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+.resumen-item .rval { font-size: 0.88rem; font-weight: 700; }
+.resumen-item .rlabel { font-size: 0.66rem; color: var(--gris-texto); margin-top: 3px; text-transform: uppercase; letter-spacing: 0.03em; }
+.resumen-item.naranja .rval { color: var(--naranja); }
+.resumen-item.verde   .rval { color: var(--verde); }
+.resumen-item.azul    .rval { color: var(--azul); }
+
+/* ── Ventas en el historial ── */
+.venta-item {
+  background: white;
+  border-radius: 12px;
+  margin-bottom: 8px;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+.venta-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 14px;
+  cursor: pointer;
+  user-select: none;
+  gap: 8px;
+}
+.venta-header:hover { background: var(--gris); }
+.venta-fecha { font-size: 0.76rem; color: var(--gris-texto); }
+.venta-items-hint { font-size: 0.72rem; color: var(--gris-texto); margin-top: 2px; }
+.venta-total { font-size: 1rem; font-weight: 700; color: var(--naranja); }
+.venta-ganancia-hint { font-size: 0.72rem; color: var(--verde); margin-top: 2px; text-align: right; }
+.venta-chevron { font-size: 0.65rem; color: var(--gris-texto); transition: transform 0.2s; display: block; margin-top: 2px; text-align: right; }
+.venta-item.expandida .venta-chevron { transform: rotate(180deg); }
+
+.venta-detalle {
+  display: none;
+  border-top: 1px solid var(--borde);
+  padding: 10px 14px 12px;
+}
+.venta-item.expandida .venta-detalle { display: block; }
+
+.det-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 5px 0;
+  border-bottom: 1px dashed var(--borde);
+  font-size: 0.82rem;
+}
+.det-item:last-of-type { border-bottom: none; }
+.det-item-nombre { color: var(--texto); }
+.det-item-meta { font-size: 0.72rem; color: var(--gris-texto); }
+
+.det-totales {
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1.5px solid var(--borde);
+}
+.det-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.8rem;
+  padding: 2px 0;
+  color: var(--gris-texto);
+}
+.det-row .det-val { font-weight: 600; color: var(--texto); }
+.det-row .det-val.verde  { color: var(--verde); }
+.det-row .det-val.naranja { color: var(--naranja); }
+.det-row .det-val.rojo   { color: var(--error); }
+
+.btn-eliminar-venta {
+  background: none;
+  border: none;
+  color: var(--error);
+  font-size: 0.72rem;
+  cursor: pointer;
+  opacity: 0.5;
+  font-family: 'DM Sans', sans-serif;
+  margin-top: 10px;
+  padding: 0;
+}
+.btn-eliminar-venta:hover { opacity: 1; }
+
+/* ── Empty states ── */
+.empty-state {
+  text-align: center;
+  padding: 32px 16px;
+  color: var(--gris-texto);
+}
+.empty-icon { font-size: 2.5rem; margin-bottom: 10px; }
+.empty-state p { font-size: 0.88rem; opacity: 0.7; line-height: 1.6; }
+.empty-state a { color: var(--azul); text-decoration: none; font-weight: 600; }
+.empty-state a:hover { text-decoration: underline; }
+
+/* ── Toast ── */
+.toast {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%) translateY(20px);
+  background: var(--negro);
+  color: white;
+  padding: 10px 20px;
+  border-radius: 30px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s, transform 0.25s;
+  z-index: 9000;
+  white-space: nowrap;
+}
+.toast.visible { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+/* ── Info box ── */
+.info-box {
+  background: var(--azul-palido);
+  border-left: 3px solid var(--azul);
+  border-radius: 0 8px 8px 0;
+  padding: 10px 12px;
+  font-size: 0.8rem;
+  color: var(--gris-texto);
+  margin-bottom: 12px;
+  line-height: 1.5;
+}
+
+/* Aviso temporal para recuperar una venta eliminada por error. */
+.undo-delete{position:fixed;left:50%;bottom:18px;transform:translateX(-50%);z-index:30;display:flex;align-items:center;gap:18px;background:#1a1a2e;color:#fff;padding:12px 16px;border-radius:8px;box-shadow:0 8px 24px rgba(0,0,0,.22)}.undo-delete[hidden]{display:none}.undo-delete button{border:0;background:transparent;color:#f2a33b;font:inherit;font-weight:700;cursor:pointer}
+

@@ -104,7 +104,7 @@ Directorio curado de recursos gratuitos para mejorar presencia digital y comerci
 - Recursos para diseño, contenido, redes sociales, comercio electrónico y productividad.
 - Enlaces externos acompañados por una explicación de uso.
 
-Prompts y herramientas separan contenido editorial (`catalog.js`) de comportamiento (`app.js`). Los modulos de calculadora y colores se dividen ademas por dominio y responsabilidad.
+Prompts y herramientas usan datos editoriales estructurados y renderizadores en `catalog.js`, separados del comportamiento de `app.js`. Los modulos de calculadora y colores se dividen ademas por dominio y responsabilidad.
 
 ## 📲 Progressive Web App
 
@@ -115,7 +115,7 @@ La suite está preparada como PWA:
 - estrategia `stale-while-revalidate` para archivos actualizables;
 - caché versionada para evitar mantener versiones antiguas;
 - aviso cuando existe una actualización;
-- recursos principales precargados por el Service Worker `v2.1.0`.
+- recursos principales precargados por el Service Worker `v2.2.0`.
 
 No requiere tienda de aplicaciones ni un backend para funcionar.
 
@@ -142,10 +142,12 @@ El sitio es estatico, sin backend, framework ni proceso de build. Los scripts se
 ### Contratos compartidos
 
 - `AppStorage`: unica puerta de acceso a localStorage y backups.
+- `AppMigrations`: normalizacion versionada y no destructiva de datos historicos.
 - `AppFormat`: moneda, fechas y texto seguro para HTML.
 - `AppUI`: portapapeles, mensajes breves y slugs.
 - `AppCosting`: costos, precios, margen y punto de equilibrio usados por calculadora y ventas.
 - `AppColor`: conversiones, armonias, contraste y simulacion visual.
+- `AppSales`: carrito, descuentos, snapshots y pagos parciales sin depender del DOM.
 
 El registro de ventas reutiliza proyectos mediante `AppStorage` y calcula sus snapshots con `AppCosting`, evitando formulas duplicadas.
 ## 🛠️ Stack
@@ -174,6 +176,7 @@ El proyecto no utiliza framework frontend ni proceso de build para la aplicació
 |-- privacidad.html
 |-- shared/
 |   |-- base.css
+|   |-- migrations.js
 |   |-- storage.js
 |   |-- format.js
 |   |-- ui.js
@@ -262,3 +265,10 @@ Desarrollado por **Leandro Sacha Melchiori**.
 
 - [GitHub](https://github.com/LeandroMelchiori)
 - [LinkedIn](https://www.linkedin.com/in/leandromelchiori-developer/)
+
+
+## Compatibilidad de datos
+
+La version 3 del contrato mantiene las claves historicas de localStorage. Las migraciones completan campos opcionales, conservan propiedades desconocidas y no sobrescriben la base si detectan registros irreconocibles. Los backups 1.x y 2.0 siguen siendo restaurables; los nuevos backups se exportan como version 3.0.
+
+Los eventos de interfaz se enlazan desde JavaScript mediante listeners y delegacion. Los modulos grandes separan estilos por dominio (proyectos e historial) sin proceso de build. La prueba `tests/pwa-assets.spec.js` impide agregar recursos locales sin incluirlos en el precache offline.

@@ -11,11 +11,14 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <script src="/pwa.js" defer></script>
 <script src="/analytics.js" defer></script>
+<script src="/shared/migrations.js" defer></script>
 <script src="/shared/storage.js" defer></script>
 <script src="/shared/format.js" defer></script>
 <script src="/shared/ui.js" defer></script>
 <script src="/shared/costing.js" defer></script>
 <script src="/backup.js" defer></script>
+<script src="/modules/registrodeventas/sales-domain.js" defer></script>
+<script src="/modules/registrodeventas/cart-state.js" defer></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" defer></script>
 <script src="/modules/registrodeventas/app.js" defer></script>
 <script src="/modules/registrodeventas/history.js" defer></script>
@@ -26,6 +29,7 @@
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/shared/base.css">
 <link rel="stylesheet" href="/modules/registrodeventas/styles.css">
+<link rel="stylesheet" href="/modules/registrodeventas/history.css">
 </head>
 <body>
 
@@ -35,8 +39,8 @@
     <span class="header-title">Registro de ventas</span>
   </div>
   <nav class="nav-tabs">
-    <button class="nav-tab active" onclick="goTo(0)">Nueva venta</button>
-    <button class="nav-tab" onclick="goTo(1)">Historial</button>
+    <button class="nav-tab active" data-action="navigate" data-page="0">Nueva venta</button>
+    <button class="nav-tab" data-action="navigate" data-page="1">Historial</button>
   </nav>
 </header>
 
@@ -49,7 +53,7 @@
 
     <div class="field-group">
       <label for="select-producto">Producto</label>
-      <select id="select-producto" onchange="seleccionarProducto()">
+      <select id="select-producto">
         <option value="">— Elegí un producto —</option>
       </select>
     </div>
@@ -65,7 +69,7 @@
       <input type="number" id="input-cantidad" value="1" min="1" step="1">
     </div>
 
-    <button class="btn-agregar" id="btn-agregar" onclick="agregarAlCarrito()" disabled>
+    <button class="btn-agregar" id="btn-agregar" disabled>
       + Agregar al carrito
     </button>
   </div>
@@ -100,7 +104,7 @@
         </select>
       </div>
       <label style="display:flex;align-items:center;gap:6px;font-size:0.85rem;color:var(--gris-texto);font-weight:600;cursor:pointer;margin-top:18px;">
-        <input type="checkbox" id="check-fiado" onchange="toggleSena()" style="width:18px;height:18px;accent-color:var(--naranja)">
+        <input type="checkbox" id="check-fiado" style="width:18px;height:18px;accent-color:var(--naranja)">
         Falta pagar
       </label>
       <div id="div-sena" style="display:none;margin-top:12px;">
@@ -113,8 +117,7 @@
     <div class="precio-final-wrap">
       <span class="precio-final-label">Precio final cobrado</span>
       <div class="precio-final-input-wrap">
-        <input type="number" id="input-precio-final" min="0" step="1"
-          oninput="onPrecioFinalInput()">
+        <input type="number" id="input-precio-final" min="0" step="1">
         <span class="descuento-badge" id="badge-descuento"></span>
       </div>
     </div>
@@ -122,7 +125,7 @@
     <!-- Desglose costo / ganancia real -->
     <div class="desglose" id="desglose-venta"></div>
 
-    <button class="btn-finalizar" id="btn-finalizar" onclick="finalizarVenta()" disabled>
+    <button class="btn-finalizar" id="btn-finalizar" disabled>
       ✓ Registrar venta
     </button>
   </div>
@@ -133,14 +136,14 @@
 <div class="page" id="page-1">
 
   <div style="display:flex;gap:8px;margin-bottom:14px;">
-    <button onclick="exportarBackupCompleto()"
+    <button id="btn-backup"
       style="flex:1;background:var(--naranja-palido);color:var(--naranja);border:1.5px solid var(--naranja-claro);border-radius:10px;font-family:'DM Sans',sans-serif;font-size:0.85rem;font-weight:700;padding:10px;cursor:pointer;">
       🔒 Hacer backup
     </button>
     <label
       style="flex:1;background:var(--gris);color:var(--gris-texto);border:1.5px solid var(--borde);border-radius:10px;font-family:'DM Sans',sans-serif;font-size:0.85rem;font-weight:700;padding:10px;cursor:pointer;text-align:center;">
       ⬆ Restaurar
-      <input type="file" accept=".json" onchange="restaurarBackup(event)" style="display:none;">
+      <input type="file" accept=".json" id="input-restaurar" style="display:none;">
     </label>
   </div>
 
@@ -149,21 +152,21 @@
       style="flex:1;padding:10px 12px;border:1.5px solid var(--borde);border-radius:10px;font-size:0.85rem;font-family:'DM Sans',sans-serif;background:var(--fondo);color:var(--texto);">
       <option value="todo">Todo el historial</option>
     </select>
-    <button onclick="generarPDFVentas()"
+    <button id="btn-pdf"
       style="background:var(--azul-palido);color:var(--azul);border:1.5px solid #BFDBFE;border-radius:10px;font-family:'DM Sans',sans-serif;font-size:0.85rem;font-weight:700;padding:10px 16px;cursor:pointer;white-space:nowrap;">
       📄 PDF
     </button>
   </div>
 
   <div class="filtros-periodo">
-    <button class="btn-filtro active" onclick="setFiltro('hoy', this)">Hoy</button>
-    <button class="btn-filtro" onclick="setFiltro('semana', this)">Esta semana</button>
-    <button class="btn-filtro" onclick="setFiltro('mes', this)">Este mes</button>
-    <button class="btn-filtro" onclick="setFiltro('todo', this)">Todo</button>
+    <button class="btn-filtro active" data-action="filter-period" data-period="hoy">Hoy</button>
+    <button class="btn-filtro" data-action="filter-period" data-period="semana">Esta semana</button>
+    <button class="btn-filtro" data-action="filter-period" data-period="mes">Este mes</button>
+    <button class="btn-filtro" data-action="filter-period" data-period="todo">Todo</button>
   </div>
 
   <div style="margin-bottom:14px;">
-    <select id="filtro-estado-pago" onchange="renderizarHistorial()"
+    <select id="filtro-estado-pago"
       style="width:100%;padding:10px 12px;border:1.5px solid var(--borde);border-radius:10px;font-size:0.85rem;font-family:'DM Sans',sans-serif;background:var(--fondo);color:var(--texto);font-weight:600;">
       <option value="todas">Mostrar todas las ventas</option>
       <option value="pendientes">Mostrar solo "Falta pagar"</option>
@@ -173,6 +176,10 @@
   <div class="resumen-periodo" id="resumen-periodo"></div>
 
   <div id="lista-historial"></div>
+  <div id="undo-delete" class="undo-delete" hidden>
+    <span>Venta eliminada</span>
+    <button type="button" data-action="undo-delete">Deshacer</button>
+  </div>
 
 </div>
 

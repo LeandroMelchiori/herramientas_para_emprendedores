@@ -37,7 +37,7 @@
     <div id="hero-meta">
       <span id="hero-emoji">🧡</span>
       <div><div id="hero-emotion-name"></div><div id="hero-emotion-words"></div></div>
-      <button id="copy-hex-btn" onclick="copyHeroHex()"></button>
+      <button id="copy-hex-btn"></button>
     </div>
   </div>
 </div>
@@ -50,7 +50,7 @@
     <p class="card-title">Personalizar color</p>
     <div id="circle-wrap">
       <div id="circle-preview" style="position:relative">
-        <input type="color" id="native-picker" oninput="fromHex(this.value)">
+        <input type="color" id="native-picker">
         <div id="circle-badge">🎨</div>
       </div>
       <div>
@@ -59,10 +59,10 @@
       </div>
     </div>
     <div id="tabs">
-      <button class="tab-btn active" onclick="setTab('wheel')">🎡 Rueda</button>
-      <button class="tab-btn"        onclick="setTab('hsl')">HSL</button>
-      <button class="tab-btn"        onclick="setTab('rgb')">RGB</button>
-      <button class="tab-btn"        onclick="setTab('hex')">HEX</button>
+      <button class="tab-btn active" data-color-tab="wheel">🎡 Rueda</button>
+      <button class="tab-btn"        data-color-tab="hsl">HSL</button>
+      <button class="tab-btn"        data-color-tab="rgb">RGB</button>
+      <button class="tab-btn"        data-color-tab="hex">HEX</button>
     </div>
     <!-- WHEEL -->
     <div id="panel-wheel">
@@ -78,15 +78,15 @@
     <div id="panel-hsl" style="display:none">
       <div class="slider-wrap">
         <div class="slider-header"><span class="slider-label">Matiz (Hue)</span><span class="slider-value" id="v-h">25°</span></div>
-        <div class="slider-track-wrap"><div class="slider-track" id="t-h"></div><input type="range" id="s-h" min="0" max="359" value="25" oninput="fromHslSliders()"></div>
+        <div class="slider-track-wrap"><div class="slider-track" id="t-h"></div><input type="range" id="s-h" min="0" max="359" value="25"></div>
       </div>
       <div class="slider-wrap">
         <div class="slider-header"><span class="slider-label">Saturación</span><span class="slider-value" id="v-hs">72%</span></div>
-        <div class="slider-track-wrap"><div class="slider-track" id="t-hs"></div><input type="range" id="s-hs" min="0" max="100" value="72" oninput="fromHslSliders()"></div>
+        <div class="slider-track-wrap"><div class="slider-track" id="t-hs"></div><input type="range" id="s-hs" min="0" max="100" value="72"></div>
       </div>
       <div class="slider-wrap">
         <div class="slider-header"><span class="slider-label">Luminosidad</span><span class="slider-value" id="v-hl">55%</span></div>
-        <div class="slider-track-wrap"><div class="slider-track" id="t-hl"></div><input type="range" id="s-hl" min="2" max="97" value="55" oninput="fromHslSliders()"></div>
+        <div class="slider-track-wrap"><div class="slider-track" id="t-hl"></div><input type="range" id="s-hl" min="2" max="97" value="55"></div>
       </div>
       <div class="code-display" id="hsl-display"></div>
     </div>
@@ -94,15 +94,15 @@
     <div id="panel-rgb" style="display:none">
       <div class="slider-wrap">
         <div class="slider-header"><span class="slider-label">Rojo (R)</span><span class="slider-value" id="v-r">224</span></div>
-        <div class="slider-track-wrap"><div class="slider-track" id="t-r"></div><input type="range" id="s-r" min="0" max="255" value="224" oninput="fromRgbSliders()"></div>
+        <div class="slider-track-wrap"><div class="slider-track" id="t-r"></div><input type="range" id="s-r" min="0" max="255" value="224"></div>
       </div>
       <div class="slider-wrap">
         <div class="slider-header"><span class="slider-label">Verde (G)</span><span class="slider-value" id="v-g">123</span></div>
-        <div class="slider-track-wrap"><div class="slider-track" id="t-g"></div><input type="range" id="s-g" min="0" max="255" value="123" oninput="fromRgbSliders()"></div>
+        <div class="slider-track-wrap"><div class="slider-track" id="t-g"></div><input type="range" id="s-g" min="0" max="255" value="123"></div>
       </div>
       <div class="slider-wrap">
         <div class="slider-header"><span class="slider-label">Azul (B)</span><span class="slider-value" id="v-b">57</span></div>
-        <div class="slider-track-wrap"><div class="slider-track" id="t-b"></div><input type="range" id="s-b" min="0" max="255" value="57" oninput="fromRgbSliders()"></div>
+        <div class="slider-track-wrap"><div class="slider-track" id="t-b"></div><input type="range" id="s-b" min="0" max="255" value="57"></div>
       </div>
       <div class="code-display" id="rgb-display"></div>
     </div>
@@ -110,7 +110,7 @@
     <div id="panel-hex" style="display:none">
       <div id="hex-row">
         <div id="hex-preview-box"></div>
-        <input type="text" id="hex-input" placeholder="#RRGGBB" maxlength="7" oninput="fromHexInput(this.value)">
+        <input type="text" id="hex-input" placeholder="#RRGGBB" maxlength="7">
       </div>
       <div id="hex-error">Formato inválido — usá # seguido de 6 caracteres (ej: #FF5733)</div>
       <p style="font-size:0.7rem;color:#ccc;font-family:'DM Sans',sans-serif;text-transform:uppercase;letter-spacing:0.1em;margin-bottom:0.45rem;">Ejemplos rápidos:</p>
@@ -124,7 +124,7 @@
     <div class="color-row" id="row-h"></div>
   </div>
   <div class="card">
-    <div id="harmony-header" onclick="toggleHarmonies()">
+    <div id="harmony-header">
       <p id="harmony-title">Combinación — <span id="harmony-current">Análogos</span></p>
       <span id="harmony-arrow">▼</span>
     </div>
@@ -187,10 +187,11 @@
 
 <!-- Print button -->
 <div id="print-btn-wrap">
-  <button id="print-btn" onclick="printPDF()">
+  <button id="print-btn">
     🖨️ Imprimir / Guardar como PDF
   </button>
 </div>
+<script src="/shared/migrations.js" defer></script>
 <script src="/shared/storage.js" defer></script>
 <script src="/shared/ui.js" defer></script>
 <script src="/modules/combinadordecolores/color-domain.js" defer></script>
@@ -198,14 +199,13 @@
 <script src="/modules/combinadordecolores/picker.js" defer></script>
 <script src="/modules/combinadordecolores/image-tools.js" defer></script>
 <script src="/modules/combinadordecolores/exports.js" defer></script>
+<script src="/modules/combinadordecolores/events.js" defer></script>
 
 <footer style="text-align:center;padding:20px 16px 28px;font-family:'DM Sans',sans-serif;font-size:0.78rem;color:#aaa;letter-spacing:0.03em;">
   Creado por Leandro Sacha Melchiori
   <a href="https://www.linkedin.com/in/leandromelchiori-developer/" target="_blank" rel="noopener"
-    style="display:inline-flex;align-items:center;gap:5px;margin-left:8px;color:#aaa;text-decoration:none;vertical-align:middle;transition:color 0.2s;"
-    onmouseover="this.style.color='#0A66C2'" onmouseout="this.style.color='#aaa'">
+    style="display:inline-flex;align-items:center;gap:5px;margin-left:8px;color:#aaa;text-decoration:none;vertical-align:middle;transition:color 0.2s;">
     <img src="https://cdn.simpleicons.org/linkedin/aaaaaa" alt="LinkedIn" width="14" height="14"
-      onerror="this.replaceWith('🔗')"
       style="vertical-align:middle;">
     LinkedIn
   </a>
