@@ -23,13 +23,15 @@ App en uso real: [economiasocial.sachadev.me](https://economiasocial.sachadev.me
 
 ## Stack y arquitectura
 
-**Sitio 100% estático — sin build, sin frameworks, sin dependencias npm.**
+**Sitio 100% estático — sin build, sin frameworks de producción.**
 
 - Vanilla HTML5 / CSS3 / JavaScript (todo inline dentro de cada `index.html`)
 - PWA con Service Worker (`sw.js`) y Web App Manifest (`manifest.json`)
 - localStorage para persistencia de datos del usuario (no hay backend ni base de datos)
-- jsPDF (CDN) para exportar PDF en el cliente — solo en `modules/calculadora/`
+- `backup.js` (raíz): exportar/restaurar backup completo + recordatorio semanal, compartido por calculadora y registro de ventas
+- jsPDF (CDN) para exportar PDF en el cliente — en `modules/calculadora/` y `modules/registrodeventas/`
 - GoatCounter para analytics anónimos (sin cookies)
+- npm solo como herramienta de desarrollo (Playwright para tests E2E, servidor local)
 - Deploy automático en Vercel al hacer push
 
 ## Comandos de desarrollo
@@ -71,9 +73,13 @@ Cada módulo es **autocontenido**: CSS y JS están inline en su `index.html`. Al
 
 **Todo inline, sin archivos externos propios**: CSS y JS viven dentro del `<style>` y `<script>` de cada `index.html` del módulo. Esto simplifica el deploy y elimina dependencias entre archivos, a costa de no compartir estilos entre módulos.
 
-**Caché del Service Worker versionada**: al hacer un deploy con cambios, hay que incrementar `VERSION` en `sw.js` (actualmente `v1.0.1`). Esto invalida las caches `app-${VERSION}` y `runtime-${VERSION}` y fuerza la descarga de assets actualizados en todos los clientes.
+**Caché del Service Worker versionada**: al hacer un deploy con cambios, hay que incrementar `VERSION` en `sw.js` (actualmente `v2.4.0`) y agregar los nuevos archivos al array `PRECACHE`. Esto invalida las caches `app-${VERSION}` y `runtime-${VERSION}` y fuerza la descarga de assets actualizados en todos los clientes.
 
-**Datos en archivos `.html` separados**: los módulos `guiadeprompts`, `combinadordecolores` y `herramientasdigitales` cargan su contenido (prompts, paletas, recursos) desde un archivo `.html` hermano mediante `fetch()`. Esto permite editar el contenido sin tocar la lógica del módulo.
+**Datos en archivos `.html` separados**: los módulos `guiadeprompts`, `combinadordecolores` y `herramientasdigitales` cargan su contenido desde un archivo hermano mediante `fetch()`. Esto permite editar el contenido sin tocar la lógica del módulo.
+
+**Backup compartido**: `backup.js` en la raíz provee `exportarBackupCompleto()` y `posponerBackup()`. Se incluye en todos los módulos que manejan datos persistentes. Los datos exportados incluyen `calculadora_proyectos`, `calculadora_autosave` y `ventas_historial` en un solo JSON.
+
+**Pruebas**: ejecutar `npm test` antes de integrar cambios. Playwright valida los flujos funcionales; no requiere Service Worker activo durante los tests.
 
 **Paleta institucional**: el sistema de colores sigue la identidad del Gobierno de Santa Fe con variables CSS en `:root`. El gradiente institucional va de naranja → magenta → violeta (`#F2A33B` → `#E85D3A` → `#D5306E` → `#6B3FA0`).
 
