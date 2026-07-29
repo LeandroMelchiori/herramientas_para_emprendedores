@@ -56,7 +56,20 @@ Recursos y herramientas gratuitas para crecer en redes sociales.
 - Herramientas online gratuitas recomendadas
 
 ### 🛒 Registro de Ventas
-Armá carritos de venta con tus productos, registrá cada operación con fecha y hora, y controlá ingresos, costos y ganancias.
+Armá carritos de venta con tus productos de la calculadora, registrá cada operación y controlá ingresos, costos y ganancias.
+
+- Carrito con uno o varios productos y precio final editable
+- Snapshot del costo, ingreso y ganancia al momento de cada venta
+- Etiquetas para identificar clientes, ferias o canales
+- Medios de pago: efectivo, transferencia y tarjeta
+- Registro de ventas fiadas, señas, pagos parciales y saldo pendiente
+- Cronología de cobros con fecha, monto y medio de pago
+- Historial con filtros por hoy, semana, mes o período completo, y anulación reversible
+- Panel mensual con facturación, cobros, costos, ganancias y resultado de caja
+- Productos más vendidos y rentables, ticket promedio y descuentos
+- Cierre mensual con snapshot y reapertura explícita
+- Exportación de resumen PDF con selector de período específico
+- Backup y restauración integral de ventas, gastos y cierres
 
 ---
 
@@ -105,7 +118,9 @@ Armá carritos de venta con tus productos, registrá cada operación con fecha y
 ├── sw.js                             # Service Worker
 ├── pwa.js                            # Registro SW + botón de instalación
 ├── analytics.js                      # GoatCounter (compartido por todas las páginas)
+├── backup.js                         # Exportar/restaurar backup completo + recordatorio semanal
 ├── vercel.json                       # Headers de caché y CORS
+├── demo-productos.json               # Datos de demo para talleres (importar con Restaurar)
 ├── assets/
 │   ├── icons/                        # Íconos PWA (192, 512, maskable, apple-touch)
 │   ├── banner-santa-fe.png
