@@ -13,19 +13,20 @@ if ('serviceWorker' in navigator) {
       .catch((err) => console.warn('[PWA] No se pudo registrar el Service Worker:', err));
   });
 
-  /* Cuando un nuevo SW toma el control (nueva versión deployada), recargamos la
-     página automáticamente para que todos los usuarios reciban el código nuevo
-     sin tener que saber qué es un Service Worker.
-     El flag evita recargas dobles si controllerchange y SW_UPDATED disparan juntos. */
+  /* Una actualizacion activa recarga la pagina; la primera instalacion queda en segundo plano. */
   let swReloading = false;
-  const recargarPorSW = () => { if (!swReloading) { swReloading = true; window.location.reload(); } };
+  let hadController = Boolean(navigator.serviceWorker.controller);
 
-  navigator.serviceWorker.addEventListener('controllerchange', recargarPorSW);
-
-  /* El SW también manda un mensaje SW_UPDATED al activarse — esto cubre el caso
-     en que el usuario tiene el pwa.js viejo sin el listener de controllerchange. */
-  navigator.serviceWorker.addEventListener('message', (e) => {
-    if (e.data?.type === 'SW_UPDATED') recargarPorSW();
+  navigator.serviceWorker.addEventListener('controllerchange', () => {
+    // La primera instalacion no debe interrumpir a quien ya esta usando la pagina.
+    if (!hadController) {
+      hadController = true;
+      return;
+    }
+    if (!swReloading) {
+      swReloading = true;
+      window.location.reload();
+    }
   });
 }
 

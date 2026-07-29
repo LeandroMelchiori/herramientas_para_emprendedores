@@ -1,0 +1,26 @@
+{
+  "name": "calculadora_costos_produccion",
+  "version": "1.0.0",
+  "description": "Suite modular de herramientas web gratuitas para emprendedores de la economia social.",
+  "scripts": {
+    "test": "playwright test",
+    "test:headed": "playwright test --headed",
+    "serve": "serve -l 3000"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/LeandroMelchiori/herramientas_para_emprendedores.git"
+  },
+  "keywords": [],
+  "author": "Leandro Sacha Melchiori",
+  "license": "MIT",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/LeandroMelchiori/herramientas_para_emprendedores/issues"
+  },
+  "homepage": "https://github.com/LeandroMelchiori/herramientas_para_emprendedores#readme",
+  "devDependencies": {
+    "@playwright/test": "^1.61.1",
+    "serve": "^14.2.6"
+  }
+}

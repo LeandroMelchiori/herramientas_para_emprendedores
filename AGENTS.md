@@ -23,16 +23,18 @@ App en uso real: [economiasocial.sachadev.me](https://economiasocial.sachadev.me
 
 ## Stack y arquitectura
 
-**Sitio 100% estático — sin build, sin frameworks de producción.**
+**Sitio 100% estatico - sin build ni frameworks de produccion.**
 
-- Vanilla HTML5 / CSS3 / JavaScript (todo inline dentro de cada `index.html`)
+- Vanilla HTML5 / CSS3 / JavaScript en archivos separados por responsabilidad
 - PWA con Service Worker (`sw.js`) y Web App Manifest (`manifest.json`)
-- localStorage para persistencia de datos del usuario (no hay backend ni base de datos)
+- `shared/storage.js` como contrato unico para localStorage y backups
+- `shared/format.js` para moneda, fechas y escape de HTML
+- `shared/costing.js` como motor comun de calculadora y ventas
 - `backup.js` (raíz): exportar/restaurar backup completo + recordatorio semanal, compartido por calculadora y registro de ventas
-- jsPDF (CDN) para exportar PDF en el cliente — en `modules/calculadora/` y `modules/registrodeventas/`
-- GoatCounter para analytics anónimos (sin cookies)
-- npm solo como herramienta de desarrollo (Playwright para tests E2E, servidor local)
-- Deploy automático en Vercel al hacer push
+- jsPDF (CDN) para PDF en calculadora y registro de ventas
+- GoatCounter para analytics anonimos (sin cookies)
+- npm solo como herramienta de desarrollo para Playwright y servidor local
+- Deploy automatico en Vercel al hacer push
 
 ## Comandos de desarrollo
 
@@ -56,9 +58,17 @@ Para desplegar: hacer push al repositorio. Vercel detecta el cambio y despliega 
 ├── sw.js                       # Service Worker (caché offline)
 ├── pwa.js                      # Registro del SW + botón de instalación PWA
 ├── analytics.js                # GoatCounter — compartido por todas las páginas
+├── backup.js                   # Backup/restauración compartido entre módulos
 ├── manifest.json               # Web App Manifest
 ├── vercel.json                 # Headers de caché y CORS
+├── demo-productos.json         # Datos de demo para talleres
 ├── assets/                     # Imágenes e íconos institucionales
+├── shared/
+│   ├── migrations.js           # Compatibilidad versionada de datos (esquema actual: 5)
+│   ├── storage.js              # Contrato único para localStorage y backups
+│   ├── costing.js              # Motor de cálculo compartido por calculadora y ventas
+│   ├── format.js               # Moneda, fechas y escape HTML
+│   └── ui.js                   # Portapapeles, toast y slugs
 └── modules/
     ├── calculadora/            # Calculadora de costos con PDF, escenarios y localStorage
     ├── guiadeprompts/          # Biblioteca de prompts IA con favoritos y prompts propios
@@ -67,23 +77,27 @@ Para desplegar: hacer push al repositorio. Vercel detecta el cambio y despliega 
     └── registrodeventas/       # Registro de ventas, control de ingresos, costos y ganancias
 ```
 
-Cada módulo es **autocontenido**: CSS y JS están inline en su `index.html`. Algunos módulos tienen un archivo de datos separado (ej. `guiadeprompts.html`, `combinadordecolores.html`) que contiene la biblioteca de contenidos.
+Cada modulo separa estructura (`index.html`), presentacion (`styles.css`) y comportamiento (`app.js`). Los modulos complejos dividen responsabilidades adicionales: calculadora usa `projects.js` y `pdf.js`; registro de ventas usa `history.js`, `dashboard.js`, `expenses.js`, `closures.js` y `pdf.js`.
 
-## Decisiones de diseño clave
+## Decisiones de arquitectura
 
-**Todo inline, sin archivos externos propios**: CSS y JS viven dentro del `<style>` y `<script>` de cada `index.html` del módulo. Esto simplifica el deploy y elimina dependencias entre archivos, a costa de no compartir estilos entre módulos.
+**Modulos sin build**: cada pagina enlaza sus archivos CSS y JavaScript directamente. Los scripts usan `defer` y respetan este orden: utilidades compartidas, librerias externas y codigo del modulo.
 
-**Caché del Service Worker versionada**: al hacer un deploy con cambios, hay que incrementar `VERSION` en `sw.js` (actualmente `v2.4.0`) y agregar los nuevos archivos al array `PRECACHE`. Esto invalida las caches `app-${VERSION}` y `runtime-${VERSION}` y fuerza la descarga de assets actualizados en todos los clientes.
+**Persistencia centralizada**: los modulos no deben acceder directamente a `localStorage`. Deben usar `AppStorage` y ampliar `shared/storage.js` al incorporar un nuevo tipo de dato persistente.
 
-**Datos en archivos `.html` separados**: los módulos `guiadeprompts`, `combinadordecolores` y `herramientasdigitales` cargan su contenido desde un archivo hermano mediante `fetch()`. Esto permite editar el contenido sin tocar la lógica del módulo.
+**Responsabilidades pequenas**: `app.js` contiene el flujo principal. Las responsabilidades grandes e independientes, como historial, proyectos o PDF, viven en archivos propios. No duplicar versiones completas de un modulo.
 
 **Backup compartido**: `backup.js` en la raíz provee `exportarBackupCompleto()` y `posponerBackup()`. Se incluye en todos los módulos que manejan datos persistentes. Los datos exportados incluyen `calculadora_proyectos`, `calculadora_autosave` y `ventas_historial` en un solo JSON.
 
-**Pruebas**: ejecutar `npm test` antes de integrar cambios. Playwright valida los flujos funcionales; no requiere Service Worker activo durante los tests.
+**Cache del Service Worker versionada**: al cambiar paginas o assets hay que actualizar `PRECACHE` e incrementar `VERSION` en `sw.js` (actualmente `v2.4.0`).
+
+**Pruebas**: ejecutar `npm test` antes de integrar cambios. Playwright valida los flujos funcionales sin Service Worker; el listado offline se audita por separado.
 
 **Paleta institucional**: el sistema de colores sigue la identidad del Gobierno de Santa Fe con variables CSS en `:root`. El gradiente institucional va de naranja → magenta → violeta (`#F2A33B` → `#E85D3A` → `#D5306E` → `#6B3FA0`).
 
-**Persistencia solo local**: localStorage es la única forma de guardar datos del usuario (proyectos de calculadora, prompts favoritos, paletas guardadas). No existe sincronización entre dispositivos ni autenticación.
+**Persistencia solo local**: no hay backend ni cuentas. Los datos quedan en el dispositivo y el backup completo permite trasladarlos o recuperarlos.
+
+**Compatibilidad de datos**: conservar las claves historicas. Toda migracion debe ser aditiva, mantener campos desconocidos y evitar sobrescribir la base completa si algun registro no puede validarse. Backups 1.x, 2.0, 3.0, 4.0 y 5.0 son compatibles. El esquema actual (5) agrega gastos, anulaciones y cierres mensuales sin modificar las claves historicas.
 
 ## Convenciones de desarrollo
 
