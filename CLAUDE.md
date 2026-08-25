@@ -77,7 +77,7 @@ Cada modulo separa estructura (`index.html`), presentacion (`styles.css`) y comp
 
 **Responsabilidades pequenas**: `app.js` contiene el flujo principal. Las responsabilidades grandes e independientes, como historial, proyectos o PDF, viven en archivos propios. No duplicar versiones completas de un modulo.
 
-**Cache del Service Worker versionada**: al cambiar paginas o assets hay que actualizar `PRECACHE` e incrementar `VERSION` en `sw.js` (actualmente `v2.0.0`).
+**Cache del Service Worker versionada**: al cambiar paginas o assets hay que actualizar `PRECACHE` e incrementar `VERSION` en `sw.js` (actualmente `v2.5.0`).
 
 **Pruebas**: ejecutar `npm test` antes de integrar cambios. Playwright valida los flujos funcionales sin Service Worker; el listado offline se audita por separado.
 

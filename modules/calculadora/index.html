@@ -15,10 +15,12 @@
 <meta name="mobile-web-app-capable" content="yes">
 <script src="/pwa.js" defer></script>
 <script src="/analytics.js" defer></script>
+<script src="/shared/materials.js" defer></script>
 <script src="/shared/storage.js" defer></script>
 <script src="/shared/format.js" defer></script>
 <script src="/backup.js" defer></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" defer></script>
+<script src="/modules/calculadora/materials.js" defer></script>
 <script src="/modules/calculadora/app.js" defer></script>
 <script src="/modules/calculadora/projects.js" defer></script>
 <script src="/modules/calculadora/pdf.js" defer></script>
@@ -68,8 +70,9 @@
       </label>
     </div>
     <div id="seccion-insumos">
-      <div class="info-box">
-        Anotá cada material o ingrediente que usás para hacer <strong>una tanda</strong> de tu producto.
+      <div class="info-box materials-intro">
+        <span>Anotá cada material o ingrediente que usás para hacer <strong>una tanda</strong> de tu producto.</span>
+        <button type="button" id="btn-abrir-materiales" class="btn-catalogo">Administrar materiales</button>
       </div>
       <div class="col-labels">
         <span>Material</span><span>Cant.</span><span>$ c/u</span>
@@ -344,6 +347,31 @@
     <div class="modal-btns">
       <button class="btn-cancelar" onclick="cerrarModal('modal-compartir')">Cerrar</button>
     </div>
+  </div>
+</div>
+
+
+<!-- MODAL: Catalogo central de materiales -->
+<div class="modal-overlay" id="modal-materiales" role="dialog" aria-modal="true" aria-labelledby="modal-materiales-titulo">
+  <div class="modal modal-materiales">
+    <div class="material-modal-head">
+      <div><h3 id="modal-materiales-titulo">Mis materiales</h3><p>Cambia un precio una sola vez y se actualizan los productos vinculados.</p></div>
+      <button type="button" class="modal-close" onclick="cerrarModal('modal-materiales')" aria-label="Cerrar">&times;</button>
+    </div>
+    <form id="form-material" class="material-form">
+      <h4 id="material-form-title">Agregar material</h4>
+      <div class="material-form-grid">
+        <label>Producto<input id="material-nombre" required maxlength="80" placeholder="Ej: Harina 000"></label>
+        <label>Marca<input id="material-marca" maxlength="60" placeholder="Opcional"></label>
+        <label>Categoria<select id="material-categoria"><option>Ingredientes</option><option>Envases</option><option>Embalaje</option><option>Limpieza</option><option>Textil</option><option>Otros</option></select></label>
+        <label>Cantidad comprada<input id="material-cantidad" type="number" required min="0.000001" step="any" value="1"></label>
+        <label>Unidad<select id="material-unidad"><option value="kg">kg</option><option value="g">g</option><option value="l">litro</option><option value="ml">ml</option><option value="m">metro</option><option value="cm">cm</option><option value="u">unidad</option></select></label>
+        <label>Precio de compra<input id="material-precio" type="number" required min="0.01" step="any" placeholder="$ 0"></label>
+      </div>
+      <div class="material-form-actions"><button type="button" id="btn-cancelar-edicion-material" class="btn-cancelar" hidden>Cancelar edicion</button><button type="submit" class="btn-guardar">Guardar material</button></div>
+    </form>
+    <input id="buscar-materiales" class="material-search" type="search" placeholder="Buscar por producto, marca o categoria...">
+    <div id="lista-catalogo-materiales" class="catalog-material-list"></div>
   </div>
 </div>
 

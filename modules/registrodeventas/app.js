@@ -23,7 +23,10 @@ function calcDesdeProyecto(p) {
   // los proyectos importados desde JSON de demo son planos. Normalizamos aquí.
   const d = p.datos || p;
   const unidades   = Math.max(d.unidades || 1, 1);
-  const totalIns   = (d.insumos   || []).reduce((a, i) => a + (i.cantidad || 0) * (i.precio   || 0), 0);
+  // El carrito toma el costo vigente y luego lo conserva como snapshot historico.
+  const materials  = AppStorage.getMaterials();
+  const insumos    = (d.insumos || []).map((item) => AppMaterials.resolveIngredient(item, materials));
+  const totalIns   = insumos.reduce((a, i) => a + (i.cantidad || 0) * (i.precio || 0), 0);
   const totalSer   = (d.servicios || []).reduce((a, s) => a + (s.horas    || 0) * (s.precio   || 0), 0);
   const costoFijo  = ((d.gastosMensuales || 0) / (d.diasLaborales || 24)) / unidades;
   const costoUnit  = (totalIns + totalSer) / unidades + costoFijo;

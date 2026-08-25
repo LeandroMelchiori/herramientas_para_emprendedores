@@ -9,7 +9,10 @@
   const KEYS = Object.freeze({
     projects: 'calculadora_proyectos',
     calculatorDraft: 'calculadora_autosave',
+    materials: 'calculadora_materiales',
     sales: 'ventas_historial',
+    expenses: 'gastos_historial',
+    monthlyClosures: 'cierres_mensuales',
     backupLast: 'backup_ultimo',
     backupSnoozedUntil: 'backup_pospuesto_hasta',
     promptFavorites: 'gp_favs',
@@ -66,6 +69,18 @@
     return writeJson(KEYS.projects, Array.isArray(projects) ? projects : []);
   }
 
+  function getMaterials() {
+    const materials = readJson(KEYS.materials, []);
+    if (!Array.isArray(materials)) return [];
+    return global.AppMaterials ? materials.map(global.AppMaterials.normalize).filter(Boolean) : materials;
+  }
+
+  function saveMaterials(materials) {
+    const safe = Array.isArray(materials) ? materials : [];
+    const normalized = global.AppMaterials ? safe.map(global.AppMaterials.normalize).filter(Boolean) : safe;
+    return writeJson(KEYS.materials, normalized);
+  }
+
   function getSales() {
     const sales = readJson(KEYS.sales, []);
     return Array.isArray(sales) ? sales : [];
@@ -86,11 +101,14 @@
 
   function createBackup() {
     return {
-      version: '2.0',
+      version: '6.0',
       exportedAt: new Date().toISOString(),
       calculadora_proyectos: getProjects(),
       calculadora_autosave: getCalculatorDraft(),
+      calculadora_materiales: getMaterials(),
       ventas_historial: getSales(),
+      gastos_historial: readJson(KEYS.expenses, []),
+      cierres_mensuales: readJson(KEYS.monthlyClosures, []),
       guia_favoritos: readJson(KEYS.promptFavorites, []),
       guia_prompts_propios: readJson(KEYS.customPrompts, []),
       color_estado: readJson(KEYS.lastColor, null),
@@ -112,6 +130,9 @@
     const draft = own('calculadora_autosave') ? data.calculadora_autosave
       : own('actual') ? data.actual : undefined;
     const sales = own('ventas_historial') ? data.ventas_historial : undefined;
+    const materials = own('calculadora_materiales') ? data.calculadora_materiales : undefined;
+    const expenses = own('gastos_historial') ? data.gastos_historial : undefined;
+    const closures = own('cierres_mensuales') ? data.cierres_mensuales : undefined;
     const extras = {
       guia_favoritos: [KEYS.promptFavorites, own('guia_favoritos') ? data.guia_favoritos : undefined],
       guia_prompts_propios: [KEYS.customPrompts, own('guia_prompts_propios') ? data.guia_prompts_propios : undefined],
@@ -127,11 +148,16 @@
     if (sales !== undefined && !Array.isArray(sales)) {
       throw new TypeError('El historial de ventas no es valido.');
     }
+    if (materials !== undefined && !Array.isArray(materials)) {
+      throw new TypeError('La lista de materiales no es valida.');
+    }
+    if (expenses !== undefined && !Array.isArray(expenses)) throw new TypeError('La lista de gastos no es valida.');
+    if (closures !== undefined && !Array.isArray(closures)) throw new TypeError('La lista de cierres no es valida.');
     if (draft !== undefined && draft !== null && (typeof draft !== 'object' || Array.isArray(draft))) {
       throw new TypeError('El borrador de la calculadora no es valido.');
     }
 
-    return { projects, draft, sales, extras };
+    return { projects, draft, sales, materials, expenses, closures, extras };
   }
 
   function restoreValue(label, key, value, restored) {
@@ -147,6 +173,9 @@
     if (parsed.projects !== undefined && saveProjects(parsed.projects)) restored.push('proyectos');
     restoreValue('calculo actual', KEYS.calculatorDraft, parsed.draft, restored);
     if (parsed.sales !== undefined && saveSales(parsed.sales)) restored.push('ventas');
+    if (parsed.materials !== undefined && saveMaterials(parsed.materials)) restored.push('materiales');
+    restoreValue('gastos', KEYS.expenses, parsed.expenses, restored);
+    restoreValue('cierres', KEYS.monthlyClosures, parsed.closures, restored);
     for (const [label, [key, value]] of Object.entries(parsed.extras)) {
       restoreValue(label.replaceAll('_', ' '), key, value, restored);
     }
@@ -161,6 +190,8 @@
     remove,
     getProjects,
     saveProjects,
+    getMaterials,
+    saveMaterials,
     getSales,
     saveSales,
     getCalculatorDraft,
