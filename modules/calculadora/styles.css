@@ -834,3 +834,19 @@
 .catalog-material-actions .danger { color:var(--error); }
 .material-empty { color:var(--gris-texto); text-align:center; padding:24px 10px; font-size:.84rem; }
 @media (max-width:600px) { .materials-intro{align-items:stretch;flex-direction:column}.material-form-grid{grid-template-columns:1fr 1fr}.catalog-material{align-items:stretch;flex-direction:column}.catalog-material-actions{justify-content:flex-start} }
+
+
+/* Previsualizacion economica de cada proyecto guardado. */
+.proyecto-preview { margin-top:10px; max-width:440px; }
+.proyecto-precios { display:flex; align-items:baseline; justify-content:space-between; gap:12px; margin-bottom:6px; }
+.proyecto-precios span { color:var(--gris-texto); font-size:.72rem; }
+.proyecto-precios strong { display:block; color:var(--naranja); font-size:1rem; margin-top:1px; }
+.proyecto-precios small { color:var(--gris-texto); font-size:.7rem; text-align:right; }
+.proyecto-composicion { display:flex; height:8px; overflow:hidden; border-radius:5px; background:var(--gris); }
+.proyecto-bar-costo { background:var(--azul); }
+.proyecto-bar-ganancia { background:#35A46F; }
+.proyecto-composicion.has-loss .proyecto-bar-costo { background:var(--error); }
+.proyecto-leyenda { display:flex; justify-content:space-between; gap:10px; color:var(--gris-texto); font-size:.68rem; margin-top:4px; }
+.proyecto-leyenda .loss { color:var(--error); }
+.proyecto-sin-precio { color:var(--gris-texto); font-size:.72rem; margin-top:8px; }
+@media (max-width:600px) { .proyecto-item{align-items:stretch;flex-direction:column}.proyecto-acciones{justify-content:flex-end}.proyecto-preview{max-width:none}.proyecto-precios strong{font-size:.94rem} }
