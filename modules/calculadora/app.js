@@ -13,7 +13,7 @@ let proyectoActivoId         = null;  // id del proyecto cargado (null = cálcul
 let proyectoActivoNombre     = '';    // nombre del proyecto activo para el modal
 
 /* 5 filas vacías para que el emprendedor pueda empezar a llenar de inmediato */
-const filaInsumoVacia  = () => ({ nombre: '', cantidad: 1, precio: 0 });
+const filaInsumoVacia  = () => ({ nombre: '', cantidad: 1, precio: 0, materialId: null, unidad: '' });
 const filaServicioVacia = () => ({ nombre: '', horas: 1, precio: 0 });
 const FILAS_INICIALES  = 5;
 
@@ -48,6 +48,18 @@ document.addEventListener('DOMContentLoaded', () => {
     clearTimeout(autosaveTimer);
     AppStorage.saveCalculatorDraft(leerEstadoCompleto());
   };
+  /* Los cambios de precio se reflejan en el calculo abierto sin alterar ventas historicas. */
+  window.addEventListener('materials:changed', () => {
+    resolverInsumosVinculados();
+    renderizarFilas();
+    actualizar();
+  });
+  window.addEventListener('storage', (event) => {
+    if (event.key !== AppStorage.KEYS.materials) return;
+    resolverInsumosVinculados();
+    renderizarFilas();
+    actualizar();
+  });
   window.addEventListener('pagehide', flushAutosave);
   document.addEventListener('visibilitychange', () => {
     if (document.visibilityState === 'hidden') flushAutosave();
@@ -114,7 +126,7 @@ function sincronizarUIToggle() {
 
 function agregarInsumo() {
   if (estado.insumos.length >= MAX_FILAS) return;
-  estado.insumos.push({ nombre: '', cantidad: 1, precio: 0 });
+  estado.insumos.push(filaInsumoVacia());
   renderizarFilas();
   actualizar();
 }
@@ -142,17 +154,28 @@ function eliminarServicio(i) {
 function renderizarFilas() {
   const listaI = document.getElementById('lista-insumos');
   listaI.innerHTML = '';
+  resolverInsumosVinculados();
   estado.insumos.forEach((ins, i) => {
+    const linked = Boolean(ins.materialId);
+    const unitHint = linked ? '<small>Precio central · ' + escHtml(ins.unidad || 'u') + '</small>' : '';
+    const quantityLabel = linked ? 'Cantidad usada en ' + escHtml(ins.unidad || 'unidades') : 'Cantidad usada';
     const wrap = document.createElement('div');
     wrap.className = 'row-insumo-wrap';
     wrap.innerHTML = `
-      <div class="row-insumo">
-        <input type="text" placeholder="Material" value="${escHtml(ins.nombre)}"
-          oninput="estado.insumos[${i}].nombre=this.value;autosave()">
-        <input type="number" min="0" step="any" value="${ins.cantidad}"
+      <div class="row-insumo ${linked ? 'linked' : ''}">
+        <div class="insumo-name-control">
+          <select aria-label="Origen del material" onchange="vincularMaterial(${i}, this.value)">
+            <option value="">Carga manual</option>
+            ${MaterialCatalog.options(ins.materialId)}
+          </select>
+          <input type="text" placeholder="Material" value="${escHtml(ins.nombre)}" ${linked ? 'readonly' : ''}
+            oninput="estado.insumos[${i}].nombre=this.value;autosave()">
+          ${unitHint}
+        </div>
+        <input type="number" min="0" step="any" value="${ins.cantidad}" aria-label="${quantityLabel}"
           oninput="estado.insumos[${i}].cantidad=parseFloat(this.value)||0;actualizar()">
-        <input type="number" min="0" step="any" value="${ins.precio}"
-          oninput="estado.insumos[${i}].precio=parseFloat(this.value)||0;actualizar()">
+        <input type="number" min="0" step="any" value="${ins.precio}" ${linked ? 'readonly' : ''}
+          aria-label="Precio por unidad" oninput="estado.insumos[${i}].precio=parseFloat(this.value)||0;actualizar()">
       </div>
       <button class="btn-delete" onclick="eliminarInsumo(${i})" aria-label="Eliminar">✕</button>`;
     listaI.appendChild(wrap);
@@ -179,6 +202,22 @@ function renderizarFilas() {
   actualizarBadge('limite-servicios', 'btn-agregar-servicio', estado.servicios.length);
 }
 
+/* Mantiene los insumos vinculados sincronizados con el precio vigente del catalogo. */
+function resolverInsumosVinculados() {
+  const materials = MaterialCatalog.getAll();
+  estado.insumos = estado.insumos.map((insumo) => AppMaterials.resolveIngredient(insumo, materials));
+}
+
+function vincularMaterial(index, materialId) {
+  const current = estado.insumos[index];
+  if (!current) return;
+  estado.insumos[index] = materialId
+    ? AppMaterials.resolveIngredient({ ...current, materialId }, MaterialCatalog.getAll())
+    : { ...current, materialId: null, unidad: '', materialNoEncontrado: false };
+  renderizarFilas();
+  actualizar();
+}
+
 /* Muestra cuántas filas quedan disponibles */
 function actualizarBadge(badgeId, btnId, count) {
   const badge = document.getElementById(badgeId);
@@ -202,6 +241,7 @@ function actualizarBadge(badgeId, btnId, count) {
 /* ══ CÁLCULOS ══ */
 
 function calcular() {
+  resolverInsumosVinculados();
   const unidades       = Math.max(1, parseFloat(document.getElementById('unidades').value) || 1);
   const totalInsumos   = estado.insumos.reduce((s, i) => s + i.cantidad * i.precio, 0);
   const totalServicios = estado.servicios.reduce((s, v) => s + v.horas * v.precio, 0);
@@ -451,6 +491,7 @@ function sincronizarEstadoDesdeDOM() {
 
 function leerEstadoCompleto() {
   sincronizarEstadoDesdeDOM();
+  resolverInsumosVinculados();
   return {
     _schema:         AUTOSAVE_SCHEMA,
     nombreProducto:  document.getElementById('nombre-producto').value,

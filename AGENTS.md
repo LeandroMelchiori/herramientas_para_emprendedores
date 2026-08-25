@@ -29,6 +29,7 @@ App en uso real: [economiasocial.sachadev.me](https://economiasocial.sachadev.me
 - PWA con Service Worker (`sw.js`) y Web App Manifest (`manifest.json`)
 - `shared/storage.js` como contrato unico para localStorage y backups
 - `shared/format.js` para moneda, fechas y escape de HTML
+- `shared/materials.js` como contrato de unidades y precios centralizados
 - `shared/costing.js` como motor comun de calculadora y ventas
 - `backup.js` (raíz): exportar/restaurar backup completo + recordatorio semanal, compartido por calculadora y registro de ventas
 - jsPDF (CDN) para PDF en calculadora y registro de ventas
@@ -64,7 +65,7 @@ Para desplegar: hacer push al repositorio. Vercel detecta el cambio y despliega 
 ├── demo-productos.json         # Datos de demo para talleres
 ├── assets/                     # Imágenes e íconos institucionales
 ├── shared/
-│   ├── migrations.js           # Compatibilidad versionada de datos (esquema actual: 5)
+│   ├── migrations.js           # Compatibilidad versionada de datos (esquema actual: 6)
 │   ├── storage.js              # Contrato único para localStorage y backups
 │   ├── costing.js              # Motor de cálculo compartido por calculadora y ventas
 │   ├── format.js               # Moneda, fechas y escape HTML
@@ -87,9 +88,9 @@ Cada modulo separa estructura (`index.html`), presentacion (`styles.css`) y comp
 
 **Responsabilidades pequenas**: `app.js` contiene el flujo principal. Las responsabilidades grandes e independientes, como historial, proyectos o PDF, viven en archivos propios. No duplicar versiones completas de un modulo.
 
-**Backup compartido**: `backup.js` en la raíz provee `exportarBackupCompleto()` y `posponerBackup()`. Se incluye en todos los módulos que manejan datos persistentes. Los datos exportados incluyen `calculadora_proyectos`, `calculadora_autosave` y `ventas_historial` en un solo JSON.
+**Backup compartido**: `backup.js` en la raíz provee `exportarBackupCompleto()` y `posponerBackup()`. Se incluye en todos los módulos que manejan datos persistentes. Los datos exportados incluyen proyectos, borrador, materiales, ventas, gastos y cierres en un solo JSON.
 
-**Cache del Service Worker versionada**: al cambiar paginas o assets hay que actualizar `PRECACHE` e incrementar `VERSION` en `sw.js` (actualmente `v2.4.0`).
+**Cache del Service Worker versionada**: al cambiar paginas o assets hay que actualizar `PRECACHE` e incrementar `VERSION` en `sw.js` (actualmente `v2.5.0`).
 
 **Pruebas**: ejecutar `npm test` antes de integrar cambios. Playwright valida los flujos funcionales sin Service Worker; el listado offline se audita por separado.
 
@@ -97,7 +98,7 @@ Cada modulo separa estructura (`index.html`), presentacion (`styles.css`) y comp
 
 **Persistencia solo local**: no hay backend ni cuentas. Los datos quedan en el dispositivo y el backup completo permite trasladarlos o recuperarlos.
 
-**Compatibilidad de datos**: conservar las claves historicas. Toda migracion debe ser aditiva, mantener campos desconocidos y evitar sobrescribir la base completa si algun registro no puede validarse. Backups 1.x, 2.0, 3.0, 4.0 y 5.0 son compatibles. El esquema actual (5) agrega gastos, anulaciones y cierres mensuales sin modificar las claves historicas.
+**Compatibilidad de datos**: conservar las claves historicas. Toda migracion debe ser aditiva, mantener campos desconocidos y evitar sobrescribir la base completa si algun registro no puede validarse. Backups 1.x, 2.0, 3.0, 4.0 y 5.0 son compatibles. El esquema actual (6) agrega el catalogo de materiales sin modificar proyectos existentes; conserva compatibilidad con gastos, anulaciones y cierres mensuales.
 
 ## Convenciones de desarrollo
 
