@@ -50,7 +50,8 @@ Permite construir el costo de un producto y estimar un precio de venta sostenibl
 - Punto de equilibrio mensual y diario.
 - Comparación de escenarios de precio.
 - Guardado y autoguardado de proyectos.
-- Búsqueda y paginación de proyectos guardados.
+- Busqueda y paginacion de proyectos guardados.
+- Previsualizacion del precio de venta y la proporcion entre costo y ganancia.
 - Duplicación, exportación, importación y backup en JSON.
 - Estado compartible mediante URL.
 - Resumen descargable en PDF.
@@ -120,7 +121,7 @@ La suite está preparada como PWA:
 - estrategia `stale-while-revalidate` para archivos actualizables;
 - caché versionada para evitar mantener versiones antiguas;
 - aviso cuando existe una actualización;
-- recursos principales precargados por el Service Worker `v2.5.0`.
+- recursos principales precargados por el Service Worker `v2.5.1`.
 
 No requiere tienda de aplicaciones ni un backend para funcionar.
 
@@ -242,7 +243,7 @@ Abrir `http://localhost:3000`.
 
 ## ✅ Pruebas
 
-El repositorio incluye 17 pruebas end-to-end con Playwright, incluidas pruebas del catalogo central:
+El repositorio incluye 18 pruebas end-to-end con Playwright, incluidas pruebas del catalogo central:
 
 - carga sin errores de los cinco módulos;
 - autoguardado, proyectos y materiales vinculados de la calculadora;

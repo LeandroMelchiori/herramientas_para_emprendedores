@@ -90,7 +90,7 @@ Cada modulo separa estructura (`index.html`), presentacion (`styles.css`) y comp
 
 **Backup compartido**: `backup.js` en la raíz provee `exportarBackupCompleto()` y `posponerBackup()`. Se incluye en todos los módulos que manejan datos persistentes. Los datos exportados incluyen proyectos, borrador, materiales, ventas, gastos y cierres en un solo JSON.
 
-**Cache del Service Worker versionada**: al cambiar paginas o assets hay que actualizar `PRECACHE` e incrementar `VERSION` en `sw.js` (actualmente `v2.5.0`).
+**Cache del Service Worker versionada**: al cambiar paginas o assets hay que actualizar `PRECACHE` e incrementar `VERSION` en `sw.js` (actualmente `v2.5.1`).
 
 **Pruebas**: ejecutar `npm test` antes de integrar cambios. Playwright valida los flujos funcionales sin Service Worker; el listado offline se audita por separado.
 

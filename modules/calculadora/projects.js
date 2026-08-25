@@ -205,6 +205,41 @@ function cambiarPaginaProyectos(delta) {
   renderizarProyectos();
 }
 
+/* Resume cada proyecto con precios vigentes, incluidos los materiales vinculados. */
+function resumirProyecto(project) {
+  const data = project.datos || project;
+  const units = Math.max(Number(data.unidades) || 1, 1);
+  const materials = AppStorage.getMaterials();
+  const ingredients = (data.insumos || []).map((item) => AppMaterials.resolveIngredient(item, materials));
+  const inputs = ingredients.reduce((sum, item) => sum + (Number(item.cantidad) || 0) * (Number(item.precio) || 0), 0);
+  const services = (data.servicios || []).reduce((sum, item) => sum + (Number(item.horas) || 0) * (Number(item.precio) || 0), 0);
+  const cost = (inputs + services) / units;
+  const salePrice = data.modo === 'precio' && Number(data.precioManual) > 0
+    ? Number(data.precioManual)
+    : cost * (1 + (Number(data.margen) || 50) / 100);
+  const profit = salePrice - cost;
+  const costPercent = salePrice > 0 ? Math.round(cost / salePrice * 100) : 0;
+  const profitPercent = salePrice > 0 ? Math.round(profit / salePrice * 100) : 0;
+  return { cost, salePrice, profit, costPercent, profitPercent, isLoss: profit < 0 };
+}
+
+function renderProjectPreview(project) {
+  const summary = resumirProyecto(project);
+  if (summary.salePrice <= 0) return '<div class="proyecto-sin-precio">Completá los costos para ver el precio</div>';
+  const costWidth = summary.isLoss ? 100 : Math.max(0, Math.min(100, summary.costPercent));
+  const profitWidth = summary.isLoss ? 0 : 100 - costWidth;
+  const composition = summary.isLoss
+    ? `<span>Costo: <b>${summary.costPercent}%</b></span><span class="loss">Pérdida: <b>${Math.abs(summary.profitPercent)}%</b></span>`
+    : `<span>Costo: <b>${costWidth}%</b></span><span>Ganancia: <b>${profitWidth}%</b></span>`;
+  return `<div class="proyecto-preview">
+    <div class="proyecto-precios"><span>Precio de venta <strong>${fmt(summary.salePrice)}</strong></span><small>Costo por unidad: ${fmt(summary.cost)}</small></div>
+    <div class="proyecto-composicion ${summary.isLoss ? 'has-loss' : ''}" role="img" aria-label="Composicion: costo ${summary.costPercent} por ciento, ${summary.isLoss ? 'pérdida' : 'ganancia'} ${Math.abs(summary.profitPercent)} por ciento">
+      <span class="proyecto-bar-costo" style="width:${costWidth}%"></span><span class="proyecto-bar-ganancia" style="width:${profitWidth}%"></span>
+    </div>
+    <div class="proyecto-leyenda">${composition}</div>
+  </div>`;
+}
+
 function renderizarProyectos() {
   const lista = document.getElementById('lista-proyectos');
   const paginacion = document.getElementById('paginacion-proyectos');
@@ -233,6 +268,7 @@ function renderizarProyectos() {
       <div class="proyecto-info">
         <div class="proyecto-nombre">${escHtml(p.nombre)}</div>
         <div class="proyecto-meta">${p.fecha}</div>
+        ${renderProjectPreview(p)}
       </div>
       <div class="proyecto-acciones">
         <button class="btn-proyecto-cargar" onclick="cargarProyecto(${p.id})">Cargar</button>

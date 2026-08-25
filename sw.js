@@ -9,7 +9,7 @@
    ============================================================ */
 
 // Subí este número en cada deploy para invalidar las caches viejas.
-const VERSION   = 'v2.5.0';
+const VERSION   = 'v2.5.1';
 const APP_CACHE = `app-${VERSION}`;       // Núcleo: HTML + iconos + assets propios
 const RUNTIME   = `runtime-${VERSION}`;   // Externos: Google Fonts, CDNs, etc.
 
