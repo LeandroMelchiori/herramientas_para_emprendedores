@@ -243,10 +243,12 @@ Abrir `http://localhost:3000`.
 
 ## ✅ Pruebas
 
-El repositorio incluye 18 pruebas end-to-end con Playwright, incluidas pruebas del catalogo central:
+El repositorio incluye 21 pruebas end-to-end con Playwright, incluidas pruebas de aceptacion del catalogo central:
 
 - carga sin errores de los cinco módulos;
 - autoguardado, proyectos y materiales vinculados de la calculadora;
+- conversiones de peso, volumen, longitud y unidades;
+- precios manuales por debajo del costo y restauracion de referencias vinculadas;
 - costos, margen, punto de equilibrio y precio manual;
 - carrito, snapshots, ventas pendientes y pagos parciales;
 - gastos reales, anulaciones reversibles y cierres mensuales;
