@@ -29,9 +29,9 @@ function copyPrompt(btn) {
 
   doCopy(text);
   btn.textContent = '✓ Copiado!'; btn.classList.add('copied');
-  showToast('✓ Prompt copiado — pegalo en Claude, ChatGPT o Gemini');
+  showToast('Texto copiado. Pegalo en ChatGPT, Gemini o Claude.');
   trackEvent('Copiar prompt', { titulo: (card.querySelector('.prompt-title')?.textContent || '').slice(0,100), categoria: card.closest('.category')?.dataset.cat || 'mine' });
-  setTimeout(() => { btn.textContent = '📋 Copiar'; btn.classList.remove('copied'); }, 2000);
+  setTimeout(() => { btn.textContent = 'Copiar texto'; btn.classList.remove('copied'); }, 2000);
 }
 
 function filterCat(cat, btn) {
@@ -40,7 +40,7 @@ function filterCat(cat, btn) {
   if (btn) btn.classList.add('active');
   // Reflejar la categoría elegida en el botón desplegable y cerrar el panel
   const cur = document.getElementById('filter-current');
-  if (cur && btn) { const parts = btn.textContent.trim().split(' '); cur.textContent = parts.slice(1).join(' ') || parts[0]; }
+  if (cur && btn) { cur.textContent = btn.textContent.trim(); }
   closeFilterPanel();
   applyFilters();
 }
@@ -130,6 +130,8 @@ function refreshStars(){
     const f = isFav(card.dataset.key);
     b.textContent = f ? '★' : '☆';
     b.classList.toggle('on', f);
+    b.setAttribute('aria-pressed', String(f));
+    b.setAttribute('aria-label', f ? 'Quitar de favoritos' : 'Guardar en favoritos');
   });
 }
 
@@ -138,7 +140,7 @@ function updateCounts(){
   document.querySelectorAll('.category').forEach(cat=>{
     const n = cat.querySelectorAll('.prompt-card').length;
     const c = cat.querySelector('.cat-count');
-    if(c) c.textContent = n + (n===1 ? ' prompt' : ' prompts');
+    if(c) c.textContent = n + (n===1 ? ' ejemplo' : ' ejemplos');
   });
 }
 
@@ -158,7 +160,7 @@ function buildMineCard(p){
       '<button class="fav-btn" type="button" aria-label="Favorito"></button>'+
       '<button class="mine-edit" type="button" title="Editar">✎</button>'+
       '<button class="mine-del" type="button" title="Eliminar">🗑</button>'+
-      '<button class="copy-btn" onclick="copyPrompt(this)">📋 Copiar</button>'+
+      '<button class="copy-btn" onclick="copyPrompt(this)">Copiar texto</button>'+
     '</div>';
   card.querySelector('.fav-btn').addEventListener('click',()=>{ toggleFav(card.dataset.key); refreshStars(); if(activeCat==='favs') applyFilters(); });
   card.querySelector('.mine-edit').addEventListener('click',()=>openForm(p.id));

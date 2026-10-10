@@ -3,11 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Guía de Prompts para Emprendedores</title>
+<title>Crear contenido con IA | Herramientas para Emprendedores</title>
 
 <!-- ══ PWA: instalable + funciona offline ══ -->
 <link rel="manifest" href="/manifest.json">
-<meta name="theme-color" content="#060b14">
+<meta name="theme-color" content="#07121d">
 <link rel="icon" href="/favicon.ico" sizes="any">
 <link rel="apple-touch-icon" href="/assets/icons/apple-touch-icon.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -16,78 +16,57 @@
 <script src="/pwa.js" defer></script>
 <script src="/analytics.js" defer></script>
 
-<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/shared/base.css">
 <link rel="stylesheet" href="/modules/guiadeprompts/styles.css">
+<link rel="stylesheet" href="/shared/library.css">
 </head>
-<body>
-<!-- ══ Botón volver al inicio ══ -->
-<a href="/" id="back-home-btn">← Todas las herramientas</a>
-
-
-<div style="background:#0a0f1a;padding:0.45rem 1rem;display:flex;justify-content:flex-end;align-items:center;gap:0.9rem;border-bottom:1px solid rgba(0,212,255,0.12);">
-  <span style="color:#475569;font-size:0.7rem;letter-spacing:0.06em;font-family:'JetBrains Mono',monospace;">creado por Sacha Melchiori</span>
-  <a href="https://www.instagram.com/sacha.melchiori" target="_blank" rel="noopener noreferrer" title="Instagram" style="color:#475569;transition:color 0.15s;display:flex;" onmouseover="this.style.color='#00d4ff'" onmouseout="this.style.color='#475569'">
-    <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
-  </a>
-  <a href="https://www.linkedin.com/in/leandromelchiori-developer/" target="_blank" rel="noopener noreferrer" title="LinkedIn" style="color:#475569;transition:color 0.15s;display:flex;" onmouseover="this.style.color='#00d4ff'" onmouseout="this.style.color='#475569'">
-    <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
-  </a>
-</div>
+<body class="library-page library-ai">
+<a class="skip-link" href="#contenido">Saltar al contenido</a>
+<nav class="suite-nav" aria-label="Navegación de herramientas">
+  <a href="/" id="back-home-btn">← Todas las herramientas</a>
+  <img src="/assets/banner-santa-fe.png" width="908" height="217" alt="Gobierno de Santa Fe">
+</nav>
 <header>
   <div class="header-inner">
-    <div class="header-tag">Herramienta para emprendedores</div>
-    <h1>Guía de <em>Prompts</em><br>para tu Emprendimiento</h1>
-    <p>Prompts listos para usar con Claude, ChatGPT o Gemini. Cada uno está estructurado con las 5 partes clave para que la IA te entienda mejor.</p>
-    <div class="header-tip">
-      <strong>¿Por qué esta estructura?</strong> Cuando le das a la IA un rol, contexto, tarea clara, formato esperado y tono, las respuestas mejoran drásticamente — pasan de genéricas a específicas para tu emprendimiento.
-    </div>
+    <p class="library-eyebrow">Economía Social · Herramientas para emprender</p>
+    <h1>Creá contenido con <em>inteligencia artificial</em></h1>
+    <p>Elegí qué querés escribir. Copiá el texto y usalo en ChatGPT, Gemini o Claude.</p>
   </div>
 </header>
-
-<div class="legend-bar">
-  <div class="legend-inner">
-    <span class="legend-label">Estructura:</span>
-    <span class="leg"><span class="leg-dot" style="background:#64748b"></span>Rol</span>
-    <span class="leg"><span class="leg-dot" style="background:#3b82f6"></span>Contexto</span>
-    <span class="leg"><span class="leg-dot" style="background:#00ff88"></span>Tarea</span>
-    <span class="leg"><span class="leg-dot" style="background:#f97316"></span>Formato</span>
-    <span class="leg"><span class="leg-dot" style="background:#a855f7"></span>Tono</span>
-  </div>
-</div>
 
 <div class="filter-bar">
   <div class="filter-bar-inner">
     <div class="filter-top">
-      <input id="search-input" type="search" placeholder="› buscar prompt..." aria-label="Buscar prompts">
-      <button id="filter-toggle" type="button" aria-expanded="false" aria-label="Mostrar categorías">☰ <span id="filter-current">Todos</span></button>
+      <input id="search-input" type="search" placeholder="Ej.: publicación, clientes, ventas" aria-label="Buscar un texto para IA">
+      <button id="filter-toggle" type="button" aria-expanded="false" aria-label="Elegir categoría" aria-controls="filter-panel"><span id="filter-current">Todos</span></button>
     </div>
     <div class="filter-panel" id="filter-panel" hidden>
-      <button class="filter-btn active" onclick="filterCat('all',this)">✦ Todos</button>
-      <button class="filter-btn" onclick="filterCat('favs',this)">⭐ Favoritos</button>
-      <button class="filter-btn" onclick="filterCat('mine',this)">✍️ Mis Prompts</button>
-      <button class="filter-btn" onclick="filterCat('redes',this)">📱 Redes sociales</button>
-      <button class="filter-btn" onclick="filterCat('ventas',this)">💬 Ventas y clientes</button>
-      <button class="filter-btn" onclick="filterCat('marca',this)">✨ Identidad de marca</button>
-      <button class="filter-btn" onclick="filterCat('contenido',this)">📅 Contenido</button>
-      <button class="filter-btn" onclick="filterCat('textos',this)">✍️ Textos</button>
-      <button class="filter-btn" onclick="filterCat('wabiz',this)">📲 WhatsApp Business</button>
-      <button class="filter-btn" onclick="filterCat('tiendanube',this)">🛒 Tiendanube</button>
+      <button class="filter-btn active" onclick="filterCat('all',this)">Todos</button>
+      <button class="filter-btn" onclick="filterCat('favs',this)">Favoritos</button>
+      <button class="filter-btn" onclick="filterCat('mine',this)">Mis textos</button>
+      <button class="filter-btn" onclick="filterCat('redes',this)">Redes sociales</button>
+      <button class="filter-btn" onclick="filterCat('ventas',this)">Ventas y clientes</button>
+      <button class="filter-btn" onclick="filterCat('marca',this)">Identidad de marca</button>
+      <button class="filter-btn" onclick="filterCat('contenido',this)">Contenido</button>
+      <button class="filter-btn" onclick="filterCat('textos',this)">Textos</button>
+      <button class="filter-btn" onclick="filterCat('wabiz',this)">WhatsApp Business</button>
+      <button class="filter-btn" onclick="filterCat('tiendanube',this)">Tiendanube</button>
     </div>
   </div>
 </div>
 
-<main>
+<main id="contenido">
 
-<div class="tip-card">
-  <h3>Cómo usar estos prompts en 3 pasos</h3>
+<details class="quick-help">
+  <summary>¿Cómo uso estos textos?</summary>
   <ol>
-    <li><strong>Copiá</strong> el prompt con el botón de cada tarjeta.</li>
-    <li><strong>Pegalo</strong> en Claude, ChatGPT o Gemini (todos tienen versión gratuita).</li>
-    <li><strong>Reemplazá</strong> los textos en <span style="color:#00d4ff">[ corchetes ]</span> con la info de tu emprendimiento y enviá.</li>
+    <li><strong>Copiá</strong> el texto del ejemplo que necesitás.</li>
+    <li><strong>Pegalo</strong> en ChatGPT, Gemini o Claude.</li>
+    <li><strong>Completá</strong> lo que está entre [corchetes] con tus datos y enviá.</li>
   </ol>
-</div>
-
+  <p>Estas instrucciones se llaman <strong>prompts</strong>. Antes de publicar, revisá la respuesta de la IA.</p>
+</details>
 <!-- ════════════════ REDES SOCIALES ════════════════ -->
 <div class="category" data-cat="redes">
   <div class="category-header">
@@ -111,7 +90,7 @@
     </div>
     <div class="prompt-footer">
       <div class="prompt-tip">💡 Podés pedirle que mezcle elementos de las opciones que más te gusten.</div>
-      <button class="copy-btn" onclick="copyPrompt(this)">📋 Copiar</button>
+      <button class="copy-btn" onclick="copyPrompt(this)">Copiar texto</button>
     </div>
   </div>
 
@@ -130,7 +109,7 @@
     </div>
     <div class="prompt-footer">
       <div class="prompt-tip">💡 Si tenés una promo o descuento, agregalo en el contexto.</div>
-      <button class="copy-btn" onclick="copyPrompt(this)">📋 Copiar</button>
+      <button class="copy-btn" onclick="copyPrompt(this)">Copiar texto</button>
     </div>
   </div>
 
@@ -149,7 +128,7 @@
     </div>
     <div class="prompt-footer">
       <div class="prompt-tip">💡 Las publicaciones de proceso tienen mucho más alcance orgánico que las fotos de producto solo.</div>
-      <button class="copy-btn" onclick="copyPrompt(this)">📋 Copiar</button>
+      <button class="copy-btn" onclick="copyPrompt(this)">Copiar texto</button>
     </div>
   </div>
 
@@ -168,7 +147,7 @@
     </div>
     <div class="prompt-footer">
       <div class="prompt-tip">💡 La historia 1 engancha, 2 y 3 desarrollan, la 4 revela y tiene el llamado a la acción.</div>
-      <button class="copy-btn" onclick="copyPrompt(this)">📋 Copiar</button>
+      <button class="copy-btn" onclick="copyPrompt(this)">Copiar texto</button>
     </div>
   </div>
 
@@ -187,7 +166,7 @@
     </div>
     <div class="prompt-footer">
       <div class="prompt-tip">💡 Los hashtags locales (ej: #SantaFe #EmprendedoresSantaFe) tienen menos competencia y más alcance en tu zona.</div>
-      <button class="copy-btn" onclick="copyPrompt(this)">📋 Copiar</button>
+      <button class="copy-btn" onclick="copyPrompt(this)">Copiar texto</button>
     </div>
   </div>
 </div>
@@ -215,7 +194,7 @@
     </div>
     <div class="prompt-footer">
       <div class="prompt-tip">💡 Cerrar con una pregunta aumenta mucho las chances de que el cliente responda.</div>
-      <button class="copy-btn" onclick="copyPrompt(this)">📋 Copiar</button>
+      <button class="copy-btn" onclick="copyPrompt(this)">Copiar texto</button>
     </div>
   </div>
 
@@ -234,7 +213,7 @@
     </div>
     <div class="prompt-footer">
       <div class="prompt-tip">💡 Esperá al menos 2-3 días antes de hacer seguimiento. Un solo mensaje es suficiente.</div>
-      <button class="copy-btn" onclick="copyPrompt(this)">📋 Copiar</button>
+      <button class="copy-btn" onclick="copyPrompt(this)">Copiar texto</button>
     </div>
   </div>
 
@@ -253,7 +232,7 @@
     </div>
     <div class="prompt-footer">
       <div class="prompt-tip">💡 Responder bien un reclamo puede convertir a un cliente insatisfecho en uno fiel.</div>
-      <button class="copy-btn" onclick="copyPrompt(this)">📋 Copiar</button>
+      <button class="copy-btn" onclick="copyPrompt(this)">Copiar texto</button>
     </div>
   </div>
 
@@ -272,7 +251,7 @@
     </div>
     <div class="prompt-footer">
       <div class="prompt-tip">💡 WhatsApp Business permite hasta 300 caracteres en la descripción de cada producto.</div>
-      <button class="copy-btn" onclick="copyPrompt(this)">📋 Copiar</button>
+      <button class="copy-btn" onclick="copyPrompt(this)">Copiar texto</button>
     </div>
   </div>
 </div>
@@ -300,7 +279,7 @@
     </div>
     <div class="prompt-footer">
       <div class="prompt-tip">💡 La propuesta de valor es lo primero que tenés que decir cuando alguien te pregunta qué hacés.</div>
-      <button class="copy-btn" onclick="copyPrompt(this)">📋 Copiar</button>
+      <button class="copy-btn" onclick="copyPrompt(this)">Copiar texto</button>
     </div>
   </div>
 
@@ -319,7 +298,7 @@
     </div>
     <div class="prompt-footer">
       <div class="prompt-tip">💡 Las historias reales conectan mucho más que los textos de venta. No tengas miedo de mostrarte vulnerable.</div>
-      <button class="copy-btn" onclick="copyPrompt(this)">📋 Copiar</button>
+      <button class="copy-btn" onclick="copyPrompt(this)">Copiar texto</button>
     </div>
   </div>
 
@@ -338,7 +317,7 @@
     </div>
     <div class="prompt-footer">
       <div class="prompt-tip">💡 Antes de quedarte con uno, buscalo en Instagram para ver si ya está tomado.</div>
-      <button class="copy-btn" onclick="copyPrompt(this)">📋 Copiar</button>
+      <button class="copy-btn" onclick="copyPrompt(this)">Copiar texto</button>
     </div>
   </div>
 
@@ -357,7 +336,7 @@
     </div>
     <div class="prompt-footer">
       <div class="prompt-tip">💡 El mejor slogan es el que el propio cliente repite cuando te recomienda.</div>
-      <button class="copy-btn" onclick="copyPrompt(this)">📋 Copiar</button>
+      <button class="copy-btn" onclick="copyPrompt(this)">Copiar texto</button>
     </div>
   </div>
 </div>
@@ -385,7 +364,7 @@
     </div>
     <div class="prompt-footer">
       <div class="prompt-tip">💡 Planificar el lunes toda la semana te ahorra mucho estrés y hace que tus redes se vean más consistentes.</div>
-      <button class="copy-btn" onclick="copyPrompt(this)">📋 Copiar</button>
+      <button class="copy-btn" onclick="copyPrompt(this)">Copiar texto</button>
     </div>
   </div>
 
@@ -404,7 +383,7 @@
     </div>
     <div class="prompt-footer">
       <div class="prompt-tip">💡 Guardá esta lista y usala cada vez que no sepas qué publicar.</div>
-      <button class="copy-btn" onclick="copyPrompt(this)">📋 Copiar</button>
+      <button class="copy-btn" onclick="copyPrompt(this)">Copiar texto</button>
     </div>
   </div>
 
@@ -423,7 +402,7 @@
     </div>
     <div class="prompt-footer">
       <div class="prompt-tip">💡 Publicar 3-5 días antes de la fecha tiene más impacto que hacerlo el mismo día.</div>
-      <button class="copy-btn" onclick="copyPrompt(this)">📋 Copiar</button>
+      <button class="copy-btn" onclick="copyPrompt(this)">Copiar texto</button>
     </div>
   </div>
 
@@ -442,7 +421,7 @@
     </div>
     <div class="prompt-footer">
       <div class="prompt-tip">💡 Los primeros 2 segundos son los más importantes — si no enganchás ahí, la gente se va.</div>
-      <button class="copy-btn" onclick="copyPrompt(this)">📋 Copiar</button>
+      <button class="copy-btn" onclick="copyPrompt(this)">Copiar texto</button>
     </div>
   </div>
 </div>
@@ -470,7 +449,7 @@
     </div>
     <div class="prompt-footer">
       <div class="prompt-tip">💡 La diferencia entre "torta de 3 pisos" y "torta que convierte cualquier cumpleaños en un momento único" es enorme.</div>
-      <button class="copy-btn" onclick="copyPrompt(this)">📋 Copiar</button>
+      <button class="copy-btn" onclick="copyPrompt(this)">Copiar texto</button>
     </div>
   </div>
 
@@ -489,7 +468,7 @@
     </div>
     <div class="prompt-footer">
       <div class="prompt-tip">💡 Un mensaje bien redactado puede ser la diferencia entre que te respondan o no.</div>
-      <button class="copy-btn" onclick="copyPrompt(this)">📋 Copiar</button>
+      <button class="copy-btn" onclick="copyPrompt(this)">Copiar texto</button>
     </div>
   </div>
 
@@ -508,7 +487,7 @@
     </div>
     <div class="prompt-footer">
       <div class="prompt-tip">💡 Siempre pedile permiso al cliente antes de publicar su testimonio.</div>
-      <button class="copy-btn" onclick="copyPrompt(this)">📋 Copiar</button>
+      <button class="copy-btn" onclick="copyPrompt(this)">Copiar texto</button>
     </div>
   </div>
 
@@ -527,7 +506,7 @@
     </div>
     <div class="prompt-footer">
       <div class="prompt-tip">💡 Comunicar los aumentos con anticipación y transparencia genera mucho más respeto que subirlos sin avisar.</div>
-      <button class="copy-btn" onclick="copyPrompt(this)">📋 Copiar</button>
+      <button class="copy-btn" onclick="copyPrompt(this)">Copiar texto</button>
     </div>
   </div>
 </div>
@@ -563,7 +542,7 @@
     </div>
     <div class="prompt-footer">
       <div class="prompt-tip">💡 En WhatsApp Business: Ajustes → Herramientas para la empresa → Mensaje de bienvenida.</div>
-      <button class="copy-btn" onclick="copyPrompt(this)">📋 Copiar</button>
+      <button class="copy-btn" onclick="copyPrompt(this)">Copiar texto</button>
     </div>
   </div>
 
@@ -582,7 +561,7 @@
     </div>
     <div class="prompt-footer">
       <div class="prompt-tip">💡 Podés programarlo para que se active solo en ciertos horarios y días desde la app.</div>
-      <button class="copy-btn" onclick="copyPrompt(this)">📋 Copiar</button>
+      <button class="copy-btn" onclick="copyPrompt(this)">Copiar texto</button>
     </div>
   </div>
 
@@ -601,7 +580,7 @@
     </div>
     <div class="prompt-footer">
       <div class="prompt-tip">💡 En WhatsApp Business guardás esto como respuesta rápida con el atajo /precio y la enviás con un solo toque.</div>
-      <button class="copy-btn" onclick="copyPrompt(this)">📋 Copiar</button>
+      <button class="copy-btn" onclick="copyPrompt(this)">Copiar texto</button>
     </div>
   </div>
 
@@ -620,7 +599,7 @@
     </div>
     <div class="prompt-footer">
       <div class="prompt-tip">💡 Guardalo con el atajo /envio para enviarlo con un toque cada vez que te pregunten.</div>
-      <button class="copy-btn" onclick="copyPrompt(this)">📋 Copiar</button>
+      <button class="copy-btn" onclick="copyPrompt(this)">Copiar texto</button>
     </div>
   </div>
 
@@ -639,7 +618,7 @@
     </div>
     <div class="prompt-footer">
       <div class="prompt-tip">💡 Este mensaje reduce muchísimo las consultas ansiosas de "¿llegó mi pedido?" porque el cliente ya sabe qué esperar.</div>
-      <button class="copy-btn" onclick="copyPrompt(this)">📋 Copiar</button>
+      <button class="copy-btn" onclick="copyPrompt(this)">Copiar texto</button>
     </div>
   </div>
 
@@ -658,7 +637,7 @@
     </div>
     <div class="prompt-footer">
       <div class="prompt-tip">💡 Esta descripción aparece debajo del nombre de tu emprendimiento cuando alguien te guarda o busca en WhatsApp.</div>
-      <button class="copy-btn" onclick="copyPrompt(this)">📋 Copiar</button>
+      <button class="copy-btn" onclick="copyPrompt(this)">Copiar texto</button>
     </div>
   </div>
 
@@ -695,7 +674,7 @@
     </div>
     <div class="prompt-footer">
       <div class="prompt-tip">💡 Una buena descripción reduce las preguntas por WhatsApp y mejora el posicionamiento en Google de tu tienda.</div>
-      <button class="copy-btn" onclick="copyPrompt(this)">📋 Copiar</button>
+      <button class="copy-btn" onclick="copyPrompt(this)">Copiar texto</button>
     </div>
   </div>
 
@@ -714,7 +693,7 @@
     </div>
     <div class="prompt-footer">
       <div class="prompt-tip">💡 Las tiendas que muestran la historia real del emprendedor generan más confianza y convierten mejor.</div>
-      <button class="copy-btn" onclick="copyPrompt(this)">📋 Copiar</button>
+      <button class="copy-btn" onclick="copyPrompt(this)">Copiar texto</button>
     </div>
   </div>
 
@@ -733,7 +712,7 @@
     </div>
     <div class="prompt-footer">
       <div class="prompt-tip">💡 Tener políticas claras visibles en la tienda reduce reclamos y genera más confianza para comprar.</div>
-      <button class="copy-btn" onclick="copyPrompt(this)">📋 Copiar</button>
+      <button class="copy-btn" onclick="copyPrompt(this)">Copiar texto</button>
     </div>
   </div>
 
@@ -752,7 +731,7 @@
     </div>
     <div class="prompt-footer">
       <div class="prompt-tip">💡 En Tiendanube: Panel → Marketing → Emails automáticos → Carrito abandonado. Activarlo puede recuperar hasta un 15% de ventas perdidas.</div>
-      <button class="copy-btn" onclick="copyPrompt(this)">📋 Copiar</button>
+      <button class="copy-btn" onclick="copyPrompt(this)">Copiar texto</button>
     </div>
   </div>
 
@@ -771,7 +750,7 @@
     </div>
     <div class="prompt-footer">
       <div class="prompt-tip">💡 En Tiendanube: Panel → Marketing → Pop-up de suscripción. Capturar emails es uno de los activos más valiosos de tu tienda.</div>
-      <button class="copy-btn" onclick="copyPrompt(this)">📋 Copiar</button>
+      <button class="copy-btn" onclick="copyPrompt(this)">Copiar texto</button>
     </div>
   </div>
 
@@ -781,11 +760,11 @@
 <div class="category" data-cat="mine">
   <div class="category-header">
     <span class="cat-emoji">✍️</span>
-    <span class="cat-title">Mis Prompts</span>
+    <span class="cat-title">Mis textos</span>
     <span class="cat-count">0 prompts</span>
   </div>
   <div class="mine-toolbar">
-    <button class="mine-btn primary" id="btn-new-prompt" type="button">➕ Crear prompt</button>
+    <button class="mine-btn primary" id="btn-new-prompt" type="button">Crear mi texto</button>
     <button class="mine-btn" id="btn-export" type="button">⬇ Exportar</button>
     <label class="mine-btn" for="import-input">⬆ Importar</label>
     <input type="file" id="import-input" accept="application/json" hidden>
@@ -811,21 +790,11 @@
 
 </main>
 
-<footer>Guía de Prompts para Emprendedores · Creado por <strong style="color:#00d4ff">Leandro Sacha Melchiori</strong>
-  <div style="margin-top:0.6rem;display:flex;justify-content:center;gap:1.2rem;">
-    <a href="https://www.instagram.com/sacha.melchiori" target="_blank" style="color:#94a3b8;text-decoration:none;font-size:0.78rem;display:flex;align-items:center;gap:0.35rem;transition:color 0.15s;" onmouseover="this.style.color='#00d4ff'" onmouseout="this.style.color='#94a3b8'">
-      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
-      @sacha.melchiori
-    </a>
-    <a href="https://www.linkedin.com/in/leandromelchiori-developer/" target="_blank" style="color:#94a3b8;text-decoration:none;font-size:0.78rem;display:flex;align-items:center;gap:0.35rem;transition:color 0.15s;" onmouseover="this.style.color='#00d4ff'" onmouseout="this.style.color='#94a3b8'">
-      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
-      leandromelchiori-developer
-    </a>
-  </div>
-</footer>
+<footer>Creado por <strong>Leandro Sacha Melchiori</strong><div class="footer-links"><a href="/">Todas las herramientas</a><a href="/privacidad.html">Privacidad</a><a href="https://www.linkedin.com/in/leandromelchiori-developer/" target="_blank" rel="noopener noreferrer">LinkedIn</a></div></footer>
 <div id="toast"></div>
 
 <script src="/shared/storage.js" defer></script>
 <script src="/modules/guiadeprompts/app.js" defer></script>
+<script src="/shared/library.js" defer></script>
 </body>
 </html>

@@ -18,10 +18,12 @@ function refreshStars() {
     btn.textContent = on ? '★' : '☆';
     btn.title = on ? 'Quitar de favoritas' : 'Guardar en favoritas';
     btn.classList.toggle('active', on);
+    btn.setAttribute('aria-pressed', String(on));
+    btn.setAttribute('aria-label', btn.title);
   });
   var count = getFavs().length;
   var favBtn = document.getElementById('favs-filter-btn');
-  if (favBtn) favBtn.textContent = count > 0 ? ('⭐ Favoritas (' + count + ')') : '⭐ Favoritas';
+  if (favBtn) favBtn.textContent = count > 0 ? ('Favoritas (' + count + ')') : 'Favoritas';
 }
 
 // ── Filter state ──

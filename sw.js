@@ -9,7 +9,7 @@
    ============================================================ */
 
 // Subí este número en cada deploy para invalidar las caches viejas.
-const VERSION   = 'v2.5.1';
+const VERSION   = 'v2.5.3';
 const APP_CACHE = `app-${VERSION}`;       // Núcleo: HTML + iconos + assets propios
 const RUNTIME   = `runtime-${VERSION}`;   // Externos: Google Fonts, CDNs, etc.
 
@@ -22,6 +22,8 @@ const PRECACHE = [
   '/privacidad.html',
   '/privacidad.css',
   '/shared/base.css',
+  '/shared/library.css',
+  '/shared/library.js',
   '/shared/storage.js',
   '/shared/format.js',
   '/modules/calculadora/',

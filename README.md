@@ -119,7 +119,7 @@ La suite está preparada como PWA:
 - estrategia `stale-while-revalidate` para archivos actualizables;
 - caché versionada para evitar mantener versiones antiguas;
 - aviso cuando existe una actualización;
-- recursos principales precargados por el Service Worker `v2.5.1`.
+- recursos principales precargados por el Service Worker `v2.5.3`.
 
 No requiere tienda de aplicaciones ni un backend para funcionar.
 
@@ -288,3 +288,7 @@ Desarrollado por **Leandro Sacha Melchiori**.
 
 - [GitHub](https://github.com/LeandroMelchiori)
 - [LinkedIn](https://www.linkedin.com/in/leandromelchiori-developer/)
+
+### Bibliotecas de recursos e IA
+
+Las bibliotecas conservan su identidad oscura: IA usa acentos cian y bloques de colores; marketing mantiene las tarjetas con colores de marca. Los ejemplos y las descripciones se muestran completos, sin desplegables. Comparten navegación institucional, encabezados compactos y controles legibles en celular. Se conservan las claves de favoritos y los textos propios.

@@ -3,11 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Herramientas Gratuitas para Marketing Digital</title>
+<title>Herramientas digitales | Herramientas para Emprendedores</title>
 
 <!-- ══ PWA: instalable + funciona offline ══ -->
 <link rel="manifest" href="/manifest.json">
-<meta name="theme-color" content="#D5306E">
+<meta name="theme-color" content="#08131a">
 <link rel="icon" href="/favicon.ico" sizes="any">
 <link rel="apple-touch-icon" href="/assets/icons/apple-touch-icon.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -16,60 +16,54 @@
 <script src="/pwa.js" defer></script>
 <script src="/analytics.js" defer></script>
 
-<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,700;12..96,800&family=Nunito+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;700;800&family=Nunito+Sans:wght@400;500;600;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/shared/base.css">
 <link rel="stylesheet" href="/modules/herramientasdigitales/styles.css">
+<link rel="stylesheet" href="/shared/library.css">
 </head>
-<body>
+<body class="library-page library-digital">
 
-<a href="/" id="back-home-btn">← Todas las herramientas</a>
-
+<a class="skip-link" href="#contenido">Saltar al contenido</a>
+<nav class="suite-nav" aria-label="Navegación de herramientas">
+  <a href="/" id="back-home-btn">← Todas las herramientas</a>
+  <img src="/assets/banner-santa-fe.png" width="908" height="217" alt="Gobierno de Santa Fe">
+</nav>
 <header>
-  <div class="header-glow glow-1"></div>
-  <div class="header-glow glow-2"></div>
   <div class="header-inner">
-    <div class="header-eyebrow"><span class="eyebrow-dot"></span>100% gratuitas</div>
-    <h1>Herramientas Digitales<br>para tu <span>Emprendimiento</span></h1>
-    <p>Las mejores herramientas gratuitas para diseñar, editar videos, buscar inspiración y gestionar tus redes — todas desde el celular o la computadora, sin gastar un peso.</p>
-    <div class="header-meta">
-      <div class="meta-item"><div class="meta-num" id="meta-total">26</div><div class="meta-label">herramientas</div></div>
-      <div class="meta-item"><div class="meta-num" id="meta-cats">7</div><div class="meta-label">categorías</div></div>
-      <div class="meta-item"><div class="meta-num">$0</div><div class="meta-label">costo</div></div>
-    </div>
+    <p class="library-eyebrow">Economía Social · Herramientas para emprender</p>
+    <h1>Herramientas para tu<br><span>marketing digital</span></h1>
+    <p>Encontrá opciones para diseñar, crear videos y organizar tu emprendimiento.</p>
   </div>
 </header>
 
 <div class="filter-bar">
   <div class="filter-top">
     <input type="search" id="search-input" class="search-input"
-      placeholder="🔍 Buscar herramienta..."
+      placeholder="Ej.: fotos, videos, ventas"
       autocomplete="off" aria-label="Buscar herramienta"
       oninput="onSearch(this.value)">
-    <button class="quiz-toggle-btn" id="quiz-btn" onclick="toggleQuiz()" aria-expanded="false">✨ ¿Por dónde empiezo?</button>
+    <button class="quiz-toggle-btn" id="quiz-btn" onclick="toggleQuiz()" aria-expanded="false">¿Por dónde empiezo?</button>
   </div>
   <div class="filter-tabs-wrap">
     <div class="filter-inner">
       <button class="filter-btn active" onclick="filterCat('all',this)">Todas</button>
-      <button class="filter-btn favs-btn" id="favs-filter-btn" onclick="filterCat('favs',this)">⭐ Favoritas</button>
-      <button class="filter-btn" onclick="filterCat('diseno',this)">🎨 Diseño</button>
-      <button class="filter-btn" onclick="filterCat('video',this)">🎬 Video</button>
-      <button class="filter-btn" onclick="filterCat('inspiracion',this)">💡 Inspiración</button>
-      <button class="filter-btn" onclick="filterCat('imagenes',this)">🖼️ Imágenes</button>
-      <button class="filter-btn" onclick="filterCat('gestion',this)">📊 Gestión</button>
-      <button class="filter-btn" onclick="filterCat('ventas',this)">🛒 Ventas Online</button>
-      <button class="filter-btn" onclick="filterCat('ia',this)">🤖 IA</button>
+      <button class="filter-btn favs-btn" id="favs-filter-btn" onclick="filterCat('favs',this)">Favoritas</button>
+      <button class="filter-btn" onclick="filterCat('diseno',this)">Diseño</button>
+      <button class="filter-btn" onclick="filterCat('video',this)">Video</button>
+      <button class="filter-btn" onclick="filterCat('inspiracion',this)">Inspiración</button>
+      <button class="filter-btn" onclick="filterCat('imagenes',this)">Imágenes</button>
+      <button class="filter-btn" onclick="filterCat('gestion',this)">Gestión</button>
+      <button class="filter-btn" onclick="filterCat('ventas',this)">Ventas Online</button>
+      <button class="filter-btn" onclick="filterCat('ia',this)">IA</button>
     </div>
   </div>
 </div>
 
-<main>
+<main id="contenido">
 
 <div id="quiz-panel" class="quiz-panel" hidden></div>
 
-<div class="intro-box">
-  <span class="intro-icon">💡</span>
-  <p>Todas tienen un <strong>plan gratuito</strong> que es más que suficiente para emprendedores que empiezan. No necesitás tarjeta de crédito ni pagar nada para comenzar.</p>
-</div>
+<p class="library-note">Opciones con plan gratuito. Algunas funciones pueden ser pagas: revisá las condiciones al entrar.</p>
 
 <!-- ══ DISEÑO ══ -->
 <div class="category" data-cat="diseno">
@@ -706,5 +700,6 @@
 
 <script src="/shared/storage.js" defer></script>
 <script src="/modules/herramientasdigitales/app.js" defer></script>
+<script src="/shared/library.js" defer></script>
 </body>
 </html>
