@@ -1,4 +1,14 @@
-/* Utilidades compartidas sin imponer el diseño particular de cada modulo. */
+/* Base visual y utilidades compartidas para toda la suite. */
+:root {
+  --suite-gradient: linear-gradient(100deg, #f2a33b 0%, #e85d3a 30%, #d5306e 63%, #6b3fa0 100%);
+  --suite-ink: #25233a;
+  --suite-muted: #626176;
+  --suite-border: #e5dfe4;
+  --suite-surface: #ffffff;
+  --suite-focus: #6b3fa0;
+  --suite-shadow: 0 12px 34px rgba(54, 35, 61, .14);
+}
+
 [hidden] {
   display: none !important;
 }
@@ -16,7 +26,7 @@
 }
 
 :focus-visible {
-  outline: 3px solid color-mix(in srgb, currentColor 55%, transparent);
+  outline: 3px solid var(--suite-focus);
   outline-offset: 3px;
 }
 
@@ -30,20 +40,40 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 40px;
-  height: 40px;
-  color: #2e3147;
-  font-size: 1.2rem;
+  width: auto;
+  min-width: 44px;
+  min-height: 44px;
+  padding: 0 14px;
+  color: var(--suite-ink);
+  font-size: .78rem;
+  font-weight: 700;
   text-decoration: none;
-  background: rgba(255, 255, 255, 0.92);
-  border: 1px solid #e7e8f0;
-  border-radius: 50%;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
-  transition: transform 0.15s, box-shadow 0.15s;
+  background: rgba(255, 255, 255, .96);
+  border: 1px solid var(--suite-border);
+  border-radius: 999px;
+  box-shadow: var(--suite-shadow);
+  backdrop-filter: blur(12px);
+  transition: transform .18s, box-shadow .18s, border-color .18s;
 }
 #back-home-btn:hover {
-  transform: scale(1.08);
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.2);
+  transform: translateY(-2px);
+  border-color: #d5306e;
+  box-shadow: 0 16px 38px rgba(54, 35, 61, .2);
+}
+
+body:has(> #backup-reminder:not([hidden])) #back-home-btn {
+  top: 68px;
+}
+
+button,
+a,
+input,
+select,
+textarea { touch-action: manipulation; }
+
+@media (max-width: 520px) {
+  #back-home-btn { top: 10px; left: 10px; }
+  body:has(> #backup-reminder:not([hidden])) #back-home-btn { top: 84px; }
 }
 
 @media (prefers-reduced-motion: reduce) {

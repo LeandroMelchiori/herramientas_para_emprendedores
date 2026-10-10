@@ -310,3 +310,43 @@ footer strong { color: var(--accent); font-weight: 600; }
 footer a { color: var(--muted); text-decoration: none; transition: color 0.2s; }
 footer a:hover { color: var(--accent); }
 .footer-links { margin-top: 0.6rem; display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap; }
+
+/* Renovación visual 2026: catálogo más ordenado y fácil de explorar */
+:root {
+  --bg: #08131a;
+  --bg2: #0d1d24;
+  --card: #10242b;
+  --accent: #72debd;
+  --muted: #a8b9bd;
+  --border: rgba(168, 185, 189, 0.17);
+}
+body {
+  background:
+    radial-gradient(circle at 10% 0%, rgba(114, 222, 189, 0.12), transparent 32rem),
+    radial-gradient(circle at 95% 8%, rgba(122, 46, 130, 0.12), transparent 30rem),
+    var(--bg);
+}
+header { padding: 6rem 1.25rem 2.8rem; border-bottom: 1px solid var(--border); }
+.header-inner, main { max-width: 920px; }
+h1 { font-size: clamp(2.1rem, 7vw, 4rem); line-height: 1; letter-spacing: -0.045em; }
+.subtitle { max-width: 65ch; line-height: 1.7; }
+.search-input, .filter-btn { min-height: 46px; }
+.filter-btn { border-radius: 999px; }
+.tool-card {
+  border-radius: 16px;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.16);
+  transition: transform 180ms ease, border-color 180ms ease, box-shadow 180ms ease;
+}
+.tool-card:hover { transform: translateY(-3px); box-shadow: 0 18px 38px rgba(0, 0, 0, 0.22); }
+.tool-link, .fav-btn { min-height: 44px; }
+@media (max-width: 600px) {
+  header { padding: 5.2rem 1rem 2rem; }
+  main { padding-inline: 0.75rem; }
+  .tool-card { border-radius: 14px; }
+  .filters { gap: 0.45rem; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tool-card { transition: none; }
+  .tool-card:hover { transform: none; }
+}

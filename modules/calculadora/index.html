@@ -27,7 +27,7 @@
 </head>
 <body>
 <!-- ══ Botón volver al inicio ══ -->
-<a href="/" id="back-home-btn" title="Volver al inicio" aria-label="Volver al inicio">←</a>
+<a href="/" id="back-home-btn">← Todas las herramientas</a>
 
 
 <header>
@@ -49,13 +49,13 @@
   <button class="nav-tab" onclick="goTo(1)"><span class="tab-num">2</span>Servicios</button>
   <button class="nav-tab" onclick="goTo(2)"><span class="tab-num">3</span>Precio</button>
   <button class="nav-tab" onclick="goTo(3)"><span class="tab-num">4</span>Ventas</button>
-  <button class="nav-tab" onclick="goTo(4)"><span class="tab-num">💾</span>Proyectos</button>
+  <button class="nav-tab" onclick="goTo(4)"><span class="tab-num">5</span>Proyectos</button>
 </div>
 
 <!-- ══ PÁGINA 1: INSUMOS ══ -->
 <div class="page active" id="page-0">
   <div class="nombre-prod">
-    <input type="text" id="nombre-producto" placeholder="¿Qué producís?" oninput="actualizar()">
+    <input type="text" id="nombre-producto" aria-label="Nombre del producto" placeholder="¿Qué producís?" oninput="actualizar()">
   </div>
 
   <div class="card">
@@ -90,7 +90,7 @@
   <div class="card">
     <div class="card-title">¿Cuántas unidades hace esa tanda?</div>
     <div class="produccion-field">
-      <label>Unidades producidas:</label>
+      <label for="unidades">Unidades producidas:</label>
       <input type="number" id="unidades" value="1" min="1" oninput="actualizar()">
       <span>unidades por tanda</span>
     </div>

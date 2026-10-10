@@ -303,7 +303,9 @@
     color: #ccc;
     cursor: pointer;
     font-size: 1rem;
-    padding: 0 2px;
+    width: 44px;
+    height: 44px;
+    padding: 0;
     transition: color 0.15s;
     line-height: 1;
     align-self: center;
@@ -593,11 +595,11 @@
     margin-bottom: 10px;
   }
   .card-title-row .card-title { margin-bottom: 0; }
-  .switch { position: relative; width: 46px; height: 26px; flex-shrink: 0; }
+  .switch { position: relative; width: 46px; height: 44px; flex-shrink: 0; }
   .switch input { opacity: 0; width: 0; height: 0; position: absolute; }
   .switch .slider {
     position: absolute;
-    inset: 0;
+    inset: 9px 0;
     background: #ccc;
     border-radius: 26px;
     cursor: pointer;
@@ -693,7 +695,8 @@
     font-size: 0.72rem;
     font-family: 'DM Sans', sans-serif;
     cursor: pointer;
-    padding: 4px 6px;
+    min-height: 44px;
+    padding: 4px 8px;
     border-radius: 6px;
     opacity: 0.6;
     white-space: nowrap;
@@ -799,3 +802,22 @@
     margin-bottom: 10px;
   }
   .btn-compartir:hover { background: #1a4f8a; }
+
+  /* Renovación visual: más aire, jerarquía y controles cómodos en celular. */
+  :root { --naranja:#B94718; --naranja-claro:#D96D32; --naranja-palido:#FFF0E7; --azul:#315F96; --azul-palido:#EDF4FB; --gris:#F7F4F2; --gris-texto:#5F5C66; --negro:#292535; --borde:#E6DCD7; --sombra:0 8px 28px rgba(78,45,32,.07); }
+  body { background: linear-gradient(#F7F4F2,#FBF9F7); }
+  header { min-height:112px; display:grid; place-items:end center; padding:62px 24px 18px; background:linear-gradient(120deg,#A8401D,#C85A25 60%,#D7793F); }
+  header h1 { font-size:clamp(1.7rem,5vw,2.25rem); letter-spacing:-.02em; }
+  .nav-tabs { position:sticky; top:0; z-index:50; justify-content:center; padding-inline:max(.4rem,calc((100vw - 760px)/2)); background:#A8401D; box-shadow:0 7px 20px rgba(81,36,20,.14); }
+  .nav-tab { min-width:92px; min-height:58px; border-bottom-width:4px; }
+  .nav-tab.active { border-bottom-color:#FFF0C7; background:rgba(255,255,255,.13); }
+  .page { max-width:760px; margin-inline:auto; padding:24px 16px 48px; }
+  .card { padding:clamp(18px,4vw,26px); border-radius:18px; }
+  .card-title { color:#994117; }
+  .field-group input, .row-insumo input, .produccion-field input, .modal input { min-height:46px; border-radius:10px; background:#FCFAF9; }
+  .btn-agregar, .btn-step, .btn-guardar, .btn-pdf, .btn-compartir { min-height:46px; border-radius:11px; font-weight:700; }
+  .resultado-card { padding:22px; border-radius:18px; box-shadow:var(--sombra); }
+  .resultado-card.naranja { background:linear-gradient(135deg,#A8401D,#C85A25); }
+  .resultado-card.azul { background:linear-gradient(135deg,#264D7A,#376EA9); }
+  .nombre-prod { border-radius:16px; background:linear-gradient(135deg,#A8401D,#C85A25); box-shadow:var(--sombra); }
+  @media (max-width:560px) { header{min-height:104px;padding-top:58px}.nav-tabs{justify-content:flex-start}.page{padding-top:18px}.row-insumo{grid-template-columns:1fr 54px 70px;gap:6px}.col-labels{grid-template-columns:1fr 54px 70px;gap:6px} }

@@ -512,3 +512,41 @@ footer {
 
 /* Sin resultados de búsqueda */
 #no-results { display:none; text-align:center; color: var(--ink-muted); font-family:'JetBrains Mono',monospace; font-size:0.85rem; padding:2rem 1rem; }
+
+/* Renovación visual 2026: interfaz oscura más cálida, clara y accesible */
+:root {
+  --cyan: #71d9ee;
+  --cyan-dim: rgba(113, 217, 238, 0.12);
+  --bg: #07121d;
+  --bg-card: #0d1d2a;
+  --ink: #f4f8fb;
+  --ink-muted: #a8b7c4;
+  --border: rgba(168, 183, 196, 0.18);
+  --border-hard: rgba(113, 217, 238, 0.28);
+}
+body {
+  background:
+    radial-gradient(circle at 12% 0%, rgba(113, 217, 238, 0.13), transparent 32rem),
+    radial-gradient(circle at 92% 10%, rgba(202, 75, 138, 0.11), transparent 28rem),
+    var(--bg);
+}
+header { padding: 6rem 1.25rem 2.7rem; border-bottom: 1px solid var(--border); }
+header .header-inner, main { max-width: 780px; }
+h1 { font-size: clamp(2.1rem, 7vw, 3.8rem); line-height: 1; letter-spacing: -0.045em; }
+.subtitle { max-width: 62ch; color: var(--ink-muted); line-height: 1.7; }
+.search-wrap, .filters-wrap { border-radius: 14px; }
+#search-input, #filter-toggle, .mine-input { min-height: 46px; }
+.prompt-card, .mine-form {
+  border-radius: 16px;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.16);
+}
+.prompt-card { padding: clamp(1rem, 3vw, 1.35rem); }
+.copy-btn, .fav-btn, .filter-btn, .mine-form button { min-height: 44px; }
+.filter-btn { border-radius: 999px; }
+@media (max-width: 560px) {
+  header { padding: 5.2rem 1rem 2rem; }
+  main { padding-inline: 0.75rem; }
+  .prompt-card { border-radius: 14px; }
+  .mine-form-actions { flex-direction: column; }
+  .mine-form-actions button { width: 100%; }
+}

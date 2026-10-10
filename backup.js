@@ -30,7 +30,7 @@
     AppStorage.writeJson(AppStorage.KEYS.backupLast, Date.now());
     AppStorage.remove(AppStorage.KEYS.backupSnoozedUntil);
     hideBanner();
-    if (typeof global.mostrarToast === 'function') global.mostrarToast('Backup descargado ?');
+    if (typeof global.mostrarToast === 'function') global.mostrarToast('Backup descargado ✓');
     if (typeof global.trackEvent === 'function') global.trackEvent('backup_exportar');
   }
 
@@ -60,8 +60,8 @@
     banner.style.cssText = 'display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:wrap;background:#FEF3E2;border-bottom:2px solid #F2A33B;padding:10px 16px;font-size:.82rem;color:#92400E;text-align:center';
 
     const message = document.createElement('span');
-    message.textContent = 'Pas? m?s de una semana desde tu ?ltimo backup.';
-    banner.append(message, createButton('Hacer backup ahora', exportFullBackup, true), createButton('M?s tarde', snoozeBackup));
+    message.textContent = 'Pasó más de una semana desde tu último backup.';
+    banner.append(message, createButton('Hacer backup ahora', exportFullBackup, true), createButton('Más tarde', snoozeBackup));
     document.body.prepend(banner);
 
     const last = Number(AppStorage.readJson(AppStorage.KEYS.backupLast, 0));

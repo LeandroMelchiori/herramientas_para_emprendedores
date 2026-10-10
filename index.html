@@ -3,12 +3,12 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Herramientas para Emprendedores</title>
-<meta name="description" content="Suite de herramientas gratuitas para emprendedores. Calculá tus costos, encontrá tus colores, dominá el marketing digital y mucho más.">
+<title>Herramientas para Emprendedores | Economía Social Santa Fe</title>
+<meta name="description" content="Herramientas gratuitas y simples para calcular costos, registrar ventas, crear una marca, usar inteligencia artificial y mejorar tu presencia digital.">
 
 <!-- ══ PWA: instalable + funciona offline ══ -->
 <link rel="manifest" href="/manifest.json">
-<meta name="theme-color" content="#D5306E">
+<meta name="theme-color" content="#7A2E82">
 <link rel="icon" href="/favicon.ico" sizes="any">
 <link rel="apple-touch-icon" href="/assets/icons/apple-touch-icon.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -23,140 +23,153 @@
 <link rel="stylesheet" href="/styles.css">
 </head>
 <body>
+<a class="skip-link" href="#contenido">Saltar al contenido</a>
 
 <!-- ══ HEADER INSTITUCIONAL ══ -->
-<div class="top-header">
-  <img src="assets/banner-santa-fe.png" alt="Gobierno de Santa Fe - Provincia">
-</div>
+<header class="top-header">
+  <a href="#inicio" aria-label="Ir al inicio"><img src="assets/banner-santa-fe.png" width="908" height="217" alt="Gobierno de Santa Fe - Provincia"></a>
+  <div class="institution-copy"><strong>Economía Social</strong><span>Recursos para acompañar tu emprendimiento</span></div>
+  <a class="privacy-link" href="/privacidad.html">Tus datos están protegidos</a>
+</header>
 <div class="gradient-line"></div>
 
 <!-- ══ HERO ══ -->
-<section class="hero">
+<main id="contenido">
+<section class="hero" id="inicio">
   <div class="hero-inner">
-    <div class="hero-badge">🛠 Suite de herramientas</div>
-    <h1>Herramientas para<br>Emprendedores</h1>
-    <p>Todo lo que necesitás para hacer crecer tu emprendimiento, en un solo lugar.</p>
-    <div class="hero-stats">
-      <div class="stat">
-        <div class="stat-num">5</div>
-        <div class="stat-label">Herramientas</div>
-      </div>
-      <div class="stat">
-        <div class="stat-num">100%</div>
-        <div class="stat-label">Gratuito</div>
-      </div>
-      <div class="stat">
-        <div class="stat-num">0</div>
-        <div class="stat-label">Registros</div>
-      </div>
+    <div class="hero-badge">Herramientas simples · Resultados concretos</div>
+    <h1>Hacé crecer tu emprendimiento con más <em>claridad.</em></h1>
+    <p>Calculá, organizá, vendé y comunicá mejor. Todo desde tu celular, gratis y sin crear una cuenta.</p>
+    <div class="hero-actions">
+      <a class="button button-primary" href="#herramientas">Elegir una herramienta</a>
+      <a class="button button-secondary" href="#como-funciona">Ver cómo funciona</a>
     </div>
+    <ul class="trust-list" aria-label="Beneficios de la plataforma">
+      <li>100% gratuito</li><li>Sin registros</li><li>Tus datos quedan en tu dispositivo</li>
+    </ul>
   </div>
+  <aside class="quick-start" aria-labelledby="quick-title">
+    <p class="quick-label">Empezá por lo que necesitás hoy</p>
+    <h2 id="quick-title">¿Qué querés resolver?</h2>
+    <nav aria-label="Accesos rápidos">
+      <a href="/modules/calculadora/"><span>Calcular mis costos</span><strong>01</strong></a>
+      <a href="/modules/registrodeventas/"><span>Registrar una venta</span><strong>02</strong></a>
+      <a href="/modules/guiadeprompts/"><span>Usar IA en mi negocio</span><strong>03</strong></a>
+      <a href="/modules/combinadordecolores/"><span>Elegir colores para mi marca</span><strong>04</strong></a>
+      <a href="/modules/herramientasdigitales/"><span>Mejorar mi presencia digital</span><strong>05</strong></a>
+    </nav>
+  </aside>
 </section>
 
 <!-- ══ HERRAMIENTAS ══ -->
-<section class="tools-section">
-  <div class="section-label">Herramientas disponibles</div>
+<section class="tools-section" id="herramientas">
+  <div class="section-heading">
+    <div><div class="section-label">Caja de herramientas</div><h2>Elegí qué querés mejorar hoy.</h2></div>
+    <p>Cada herramienta te guía paso a paso, usa palabras simples y funciona tanto en celular como en computadora.</p>
+  </div>
+  <div class="tools-grid">
 
   <!-- Calculadora de Costos -->
-  <a class="tool-card" href="/modules/calculadora/">
+  <a class="tool-card tool-costos" href="/modules/calculadora/">
     <div class="tool-card-inner">
-      <div class="tool-icon">🧮</div>
+      <div class="tool-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="4" y="2" width="16" height="20" rx="2"/><path d="M8 6h8M8 10h2m4 0h2M8 14h2m4 0h2M8 18h2m4 0h2"/></svg></div>
       <div class="tool-info">
         <div class="tool-tag">Finanzas</div>
-        <div class="tool-name">Calculadora de Costos</div>
+      <h3 class="tool-name">Calculadora de Costos</h3>
         <div class="tool-desc">Calculá el precio de venta de tus productos con margen, punto de equilibrio y resumen en PDF.</div>
       </div>
-      <div class="tool-arrow">→</div>
+      <div class="tool-arrow" aria-hidden="true">→</div>
     </div>
     <div class="tool-footer">
-      <span class="pill popular">⭐ Popular</span>
+      <span class="pill popular">Más usada</span>
     </div>
   </a>
 
   <!-- Guía de Prompts -->
-  <a class="tool-card" href="/modules/guiadeprompts/">
+  <a class="tool-card tool-ia" href="/modules/guiadeprompts/">
     <div class="tool-card-inner">
-      <div class="tool-icon">🤖</div>
+      <div class="tool-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3 9.5 8.5 4 11l5.5 2.5L12 19l2.5-5.5L20 11l-5.5-2.5z"/></svg></div>
       <div class="tool-info">
         <div class="tool-tag">Inteligencia Artificial</div>
-        <div class="tool-name">Guía de Prompts</div>
-        <div class="tool-desc">Prompts listos para usar con IA. Creá contenido, responde clientes y tomá mejores decisiones.</div>
+      <h3 class="tool-name">Guía de Prompts</h3>
+        <div class="tool-desc">Prompts listos para usar con IA. Creá contenido, respondé a clientes y tomá mejores decisiones.</div>
       </div>
-      <div class="tool-arrow">→</div>
+      <div class="tool-arrow" aria-hidden="true">→</div>
     </div>
   </a>
 
   <!-- Combinador de Colores -->
-  <a class="tool-card" href="/modules/combinadordecolores/">
+  <a class="tool-card tool-marca" href="/modules/combinadordecolores/">
     <div class="tool-card-inner">
-      <div class="tool-icon">🎨</div>
+      <div class="tool-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3a9 9 0 1 0 0 18h1.5a2 2 0 0 0 0-4H12a2 2 0 0 1 0-4h3a6 6 0 0 0 0-12z"/><circle cx="7.5" cy="10" r="1"/><circle cx="9.5" cy="6.5" r="1"/><circle cx="14" cy="6" r="1"/></svg></div>
       <div class="tool-info">
         <div class="tool-tag">Diseño</div>
-        <div class="tool-name">Combinador de Colores</div>
-        <div class="tool-desc">Encontrá la paleta perfecta para tu marca. Genera combinaciones armónicas y exportalas.</div>
+      <h3 class="tool-name">Combinador de Colores</h3>
+        <div class="tool-desc">Encontrá la paleta perfecta para tu marca. Generá combinaciones armónicas y exportalas.</div>
       </div>
-      <div class="tool-arrow">→</div>
+      <div class="tool-arrow" aria-hidden="true">→</div>
     </div>
   </a>
 
   <!-- Herramientas de Marketing -->
-  <a class="tool-card" href="/modules/herramientasdigitales/">
+  <a class="tool-card tool-digitales" href="/modules/herramientasdigitales/">
     <div class="tool-card-inner">
-      <div class="tool-icon">📱</div>
+      <div class="tool-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="4" y="3" width="16" height="18" rx="3"/><path d="M8 7h8M8 11h8M8 15h5"/></svg></div>
       <div class="tool-info">
         <div class="tool-tag">Marketing Digital</div>
-        <div class="tool-name">Herramientas de Marketing</div>
+      <h3 class="tool-name">Herramientas de Marketing</h3>
         <div class="tool-desc">Recursos y herramientas gratuitas para crecer en redes sociales y conquistar clientes online.</div>
       </div>
-      <div class="tool-arrow">→</div>
+      <div class="tool-arrow" aria-hidden="true">→</div>
     </div>
   </a>
 
   <!-- Registro de Ventas -->
-  <a class="tool-card" href="/modules/registrodeventas/">
+  <a class="tool-card tool-ventas" href="/modules/registrodeventas/">
     <div class="tool-card-inner">
-      <div class="tool-icon">🛒</div>
+      <div class="tool-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M3 4h2l2 12h10l3-8H6"/><circle cx="9" cy="20" r="1"/><circle cx="17" cy="20" r="1"/></svg></div>
       <div class="tool-info">
         <div class="tool-tag">Finanzas</div>
-        <div class="tool-name">Registro de Ventas</div>
+      <h3 class="tool-name">Registro de Ventas</h3>
         <div class="tool-desc">Armá carritos de venta con tus productos, registrá cada operación con fecha y hora, y controlá ingresos, costos y ganancias.</div>
       </div>
-      <div class="tool-arrow">→</div>
+      <div class="tool-arrow" aria-hidden="true">→</div>
     </div>
     <div class="tool-footer">
-      <span class="pill nuevo">✦ Nuevo</span>
+      <span class="pill nuevo">Nueva</span>
     </div>
   </a>
 
-  <div class="info-box">
-    <div class="info-icon">💡</div>
-    <p>Todas las herramientas son <strong>100% gratuitas</strong> y funcionan desde el celular sin necesidad de instalar nada.</p>
   </div>
-
 </section>
 
+<section class="confidence-section" aria-labelledby="confidence-title">
+  <div class="confidence-copy"><div class="section-label">Hechas para la vida real</div><h2 id="confidence-title">Fáciles de usar. Sin costos escondidos.</h2><p>No necesitás conocimientos técnicos. Podés empezar, probar y volver cuando quieras.</p></div>
+  <div class="confidence-grid">
+    <article><span>01</span><h3>Sin cuentas</h3><p>No pedimos usuario, contraseña ni tarjeta.</p></article>
+    <article><span>02</span><h3>Datos privados</h3><p>La información se guarda en tu propio dispositivo.</p></article>
+    <article><span>03</span><h3>Siempre disponibles</h3><p>Instalá la aplicación y usá las funciones principales sin conexión.</p></article>
+  </div>
+</section>
+
+<section class="steps-section" id="como-funciona">
+  <div class="section-heading"><div><div class="section-label">Cómo funciona</div><h2>Empezar te lleva menos de un minuto.</h2></div></div>
+  <ol class="steps-grid">
+    <li><span>1</span><h3>Elegí</h3><p>Entrá en la herramienta que resuelve lo que necesitás hoy.</p></li>
+    <li><span>2</span><h3>Completá</h3><p>Seguí las indicaciones y cargá solamente la información necesaria.</p></li>
+    <li><span>3</span><h3>Usá el resultado</h3><p>Guardá, copiá, descargá o consultá el resultado cuando lo necesites.</p></li>
+  </ol>
+</section>
+</main>
+
 <!-- ══ COLABORACIÓN ══ -->
-<div class="footer-collab">
-  <div class="footer-collab-label">Ministerio de Igualdad y Desarrollo Humano</div>
-  <div class="footer-collab-label">Dirección de Economia Social</div>
-  <img src="assets/banco-solidario-santa-fe.png" alt="Banco Solidario - Gobierno de Santa Fe">
-</div>  
+<section class="footer-collab" aria-label="Instituciones participantes">
+  <div><span>Una iniciativa de</span><strong>Ministerio de Igualdad y Desarrollo Humano</strong><strong>Dirección de Economía Social</strong></div>
+  <img src="assets/banco-solidario-santa-fe.png" width="1744" height="494" alt="Banco Solidario - Gobierno de Santa Fe">
+</section>
 
 <!-- ══ FOOTER ══ -->
-<footer>
-  Creado por Leandro Sacha Melchiori
-  <a href="https://www.linkedin.com/in/leandromelchiori-developer/" target="_blank" rel="noopener">
-    <img src="https://cdn.simpleicons.org/linkedin/9A9DB0" alt="LinkedIn" width="14" height="14" onerror="this.replaceWith('🔗')">
-    LinkedIn
-  </a>
-  <a href="https://www.instagram.com/sacha.melchiori/" target="_blank" rel="noopener">
-    <img src="https://cdn.simpleicons.org/instagram/9A9DB0" alt="Instagram" width="14" height="14" onerror="this.replaceWith('📸')">
-    Instagram
-  </a>
-  <div style="margin-top:12px;font-size:0.75rem;">
-    <a href="/privacidad.html" style="color:var(--ink-muted);text-decoration:underline;">Política de privacidad</a>
-  </div>
-</footer>
+<footer><p>Creado por <strong>Leandro Sacha Melchiori</strong></p><nav aria-label="Enlaces del pie de página"><a href="https://www.linkedin.com/in/leandromelchiori-developer/" target="_blank" rel="noopener noreferrer">LinkedIn</a><a href="https://www.instagram.com/sacha.melchiori/" target="_blank" rel="noopener noreferrer">Instagram</a><a href="/privacidad.html">Política de privacidad</a></nav></footer>
 
 </body>
 </html>

@@ -27,7 +27,7 @@
 </head>
 <body>
 <!-- ══ Botón volver al inicio ══ -->
-<a href="/" id="back-home-btn" title="Volver al inicio" aria-label="Volver al inicio">←</a>
+<a href="/" id="back-home-btn">← Todas las herramientas</a>
 
 <div id="hero">
   <div id="hero-overlay"></div>
@@ -50,7 +50,7 @@
     <p class="card-title">Personalizar color</p>
     <div id="circle-wrap">
       <div id="circle-preview" style="position:relative">
-        <input type="color" id="native-picker" oninput="fromHex(this.value)">
+        <input type="color" id="native-picker" aria-label="Elegir color principal" oninput="fromHex(this.value)">
         <div id="circle-badge">🎨</div>
       </div>
       <div>
@@ -78,15 +78,15 @@
     <div id="panel-hsl" style="display:none">
       <div class="slider-wrap">
         <div class="slider-header"><span class="slider-label">Matiz (Hue)</span><span class="slider-value" id="v-h">25°</span></div>
-        <div class="slider-track-wrap"><div class="slider-track" id="t-h"></div><input type="range" id="s-h" min="0" max="359" value="25" oninput="fromHslSliders()"></div>
+        <div class="slider-track-wrap"><div class="slider-track" id="t-h"></div><input type="range" id="s-h" aria-label="Matiz" min="0" max="359" value="25" oninput="fromHslSliders()"></div>
       </div>
       <div class="slider-wrap">
         <div class="slider-header"><span class="slider-label">Saturación</span><span class="slider-value" id="v-hs">72%</span></div>
-        <div class="slider-track-wrap"><div class="slider-track" id="t-hs"></div><input type="range" id="s-hs" min="0" max="100" value="72" oninput="fromHslSliders()"></div>
+        <div class="slider-track-wrap"><div class="slider-track" id="t-hs"></div><input type="range" id="s-hs" aria-label="Saturación" min="0" max="100" value="72" oninput="fromHslSliders()"></div>
       </div>
       <div class="slider-wrap">
         <div class="slider-header"><span class="slider-label">Luminosidad</span><span class="slider-value" id="v-hl">55%</span></div>
-        <div class="slider-track-wrap"><div class="slider-track" id="t-hl"></div><input type="range" id="s-hl" min="2" max="97" value="55" oninput="fromHslSliders()"></div>
+        <div class="slider-track-wrap"><div class="slider-track" id="t-hl"></div><input type="range" id="s-hl" aria-label="Luminosidad" min="2" max="97" value="55" oninput="fromHslSliders()"></div>
       </div>
       <div class="code-display" id="hsl-display"></div>
     </div>
@@ -94,15 +94,15 @@
     <div id="panel-rgb" style="display:none">
       <div class="slider-wrap">
         <div class="slider-header"><span class="slider-label">Rojo (R)</span><span class="slider-value" id="v-r">224</span></div>
-        <div class="slider-track-wrap"><div class="slider-track" id="t-r"></div><input type="range" id="s-r" min="0" max="255" value="224" oninput="fromRgbSliders()"></div>
+        <div class="slider-track-wrap"><div class="slider-track" id="t-r"></div><input type="range" id="s-r" aria-label="Rojo" min="0" max="255" value="224" oninput="fromRgbSliders()"></div>
       </div>
       <div class="slider-wrap">
         <div class="slider-header"><span class="slider-label">Verde (G)</span><span class="slider-value" id="v-g">123</span></div>
-        <div class="slider-track-wrap"><div class="slider-track" id="t-g"></div><input type="range" id="s-g" min="0" max="255" value="123" oninput="fromRgbSliders()"></div>
+        <div class="slider-track-wrap"><div class="slider-track" id="t-g"></div><input type="range" id="s-g" aria-label="Verde" min="0" max="255" value="123" oninput="fromRgbSliders()"></div>
       </div>
       <div class="slider-wrap">
         <div class="slider-header"><span class="slider-label">Azul (B)</span><span class="slider-value" id="v-b">57</span></div>
-        <div class="slider-track-wrap"><div class="slider-track" id="t-b"></div><input type="range" id="s-b" min="0" max="255" value="57" oninput="fromRgbSliders()"></div>
+        <div class="slider-track-wrap"><div class="slider-track" id="t-b"></div><input type="range" id="s-b" aria-label="Azul" min="0" max="255" value="57" oninput="fromRgbSliders()"></div>
       </div>
       <div class="code-display" id="rgb-display"></div>
     </div>
@@ -110,7 +110,7 @@
     <div id="panel-hex" style="display:none">
       <div id="hex-row">
         <div id="hex-preview-box"></div>
-        <input type="text" id="hex-input" placeholder="#RRGGBB" maxlength="7" oninput="fromHexInput(this.value)">
+        <input type="text" id="hex-input" aria-label="Color en formato hexadecimal" placeholder="#RRGGBB" maxlength="7" oninput="fromHexInput(this.value)">
       </div>
       <div id="hex-error">Formato inválido — usá # seguido de 6 caracteres (ej: #FF5733)</div>
       <p style="font-size:0.7rem;color:#ccc;font-family:'DM Sans',sans-serif;text-transform:uppercase;letter-spacing:0.1em;margin-bottom:0.45rem;">Ejemplos rápidos:</p>
@@ -168,7 +168,7 @@
   <!-- Simulación de daltonismo -->
   <div class="card">
     <p class="card-title">Simular daltonismo</p>
-    <select id="cb-select" class="cb-select">
+    <select id="cb-select" class="cb-select" aria-label="Tipo de visión a simular">
       <option value="normal">Visión normal</option>
       <option value="protanopia">Protanopía (dificultad con el rojo)</option>
       <option value="deuteranopia">Deuteranopía (dificultad con el verde)</option>

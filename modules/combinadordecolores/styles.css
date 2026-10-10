@@ -105,3 +105,39 @@ input[type=range]::-moz-range-thumb { width: 20px; height: 20px; border-radius: 
   .cb-select { width: 100%; padding: 0.55rem 0.7rem; border-radius: 9px; border: 1.5px solid #ddd; font-family: 'DM Sans', sans-serif; font-size: 0.84rem; color: #333; background: #fafafa; margin-bottom: 0.7rem; }
   .cb-strip { display: flex; height: 48px; border-radius: 9px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
   .cb-strip span { flex: 1; }
+
+/* Renovación visual 2026: más legibilidad y una experiencia táctil consistente */
+body {
+  background: linear-gradient(180deg, #f3f0ed 0%, #faf8f6 100%);
+  color: #292536;
+}
+#hero {
+  min-height: 210px;
+  display: flex;
+  align-items: flex-end;
+  padding: 76px max(1.5rem, calc((100vw - 720px) / 2)) 2.2rem;
+  border-bottom: 1px solid rgba(41, 37, 54, 0.1);
+}
+#hero-content { width: min(100%, 720px); margin-inline: auto; }
+#hero-title { font-size: clamp(2rem, 7vw, 3.35rem); line-height: 1; letter-spacing: -0.04em; }
+.wrap { max-width: 720px; padding: 1.4rem 1rem 4rem; }
+.card {
+  padding: clamp(1.2rem, 4vw, 1.7rem);
+  margin-bottom: 1rem;
+  border: 1px solid #e5dfda;
+  border-radius: 18px;
+  box-shadow: 0 8px 28px rgba(57, 43, 34, 0.07);
+}
+.card-title { color: #706b75; font-weight: 700; }
+.preset-btn, .tab-btn, .feat-btn, .harmony-btn { min-height: 44px; }
+.tab-btn { font-weight: 600; }
+#hex-input, .cb-select { min-height: 46px; }
+.quick-color { width: 36px; height: 36px; }
+.color-swatch { min-height: 42px; }
+.palette-card { min-height: 52px; }
+@media (max-width: 480px) {
+  #hero { min-height: 190px; padding: 74px 1rem 1.6rem; }
+  .wrap { padding-inline: 0.75rem; }
+  .card { border-radius: 15px; padding: 1rem; }
+  .feat-btn { flex-basis: 100%; }
+}

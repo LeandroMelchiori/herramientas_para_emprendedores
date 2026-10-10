@@ -147,14 +147,14 @@ function renderizarFilas() {
     wrap.className = 'row-insumo-wrap';
     wrap.innerHTML = `
       <div class="row-insumo">
-        <input type="text" placeholder="Material" value="${escHtml(ins.nombre)}"
+        <input type="text" aria-label="Nombre del material ${i + 1}" placeholder="Material" value="${escHtml(ins.nombre)}"
           oninput="estado.insumos[${i}].nombre=this.value;autosave()">
-        <input type="number" min="0" step="any" value="${ins.cantidad}"
+        <input type="number" aria-label="Cantidad del material ${i + 1}" min="0" step="any" value="${ins.cantidad}"
           oninput="estado.insumos[${i}].cantidad=parseFloat(this.value)||0;actualizar()">
-        <input type="number" min="0" step="any" value="${ins.precio}"
+        <input type="number" aria-label="Precio unitario del material ${i + 1}" min="0" step="any" value="${ins.precio}"
           oninput="estado.insumos[${i}].precio=parseFloat(this.value)||0;actualizar()">
       </div>
-      <button class="btn-delete" onclick="eliminarInsumo(${i})" aria-label="Eliminar">✕</button>`;
+      <button class="btn-delete" onclick="eliminarInsumo(${i})" aria-label="Eliminar material ${i + 1}">✕</button>`;
     listaI.appendChild(wrap);
   });
   actualizarBadge('limite-insumos', 'btn-agregar-insumo', estado.insumos.length);
@@ -166,14 +166,14 @@ function renderizarFilas() {
     wrap.className = 'row-insumo-wrap';
     wrap.innerHTML = `
       <div class="row-insumo">
-        <input type="text" placeholder="${i === 0 ? 'Mano de obra' : 'Servicio'}" value="${escHtml(srv.nombre)}"
+        <input type="text" aria-label="Nombre del servicio ${i + 1}" placeholder="${i === 0 ? 'Mano de obra' : 'Servicio'}" value="${escHtml(srv.nombre)}"
           oninput="estado.servicios[${i}].nombre=this.value;autosave()">
-        <input type="number" min="0" step="any" value="${srv.horas}"
+        <input type="number" aria-label="Horas del servicio ${i + 1}" min="0" step="any" value="${srv.horas}"
           oninput="estado.servicios[${i}].horas=parseFloat(this.value)||0;actualizar()">
-        <input type="number" min="0" step="any" value="${srv.precio}"
+        <input type="number" aria-label="Precio por hora del servicio ${i + 1}" min="0" step="any" value="${srv.precio}"
           oninput="estado.servicios[${i}].precio=parseFloat(this.value)||0;actualizar()">
       </div>
-      <button class="btn-delete" onclick="eliminarServicio(${i})" aria-label="Eliminar">✕</button>`;
+      <button class="btn-delete" onclick="eliminarServicio(${i})" aria-label="Eliminar servicio ${i + 1}">✕</button>`;
     listaS.appendChild(wrap);
   });
   actualizarBadge('limite-servicios', 'btn-agregar-servicio', estado.servicios.length);
