@@ -102,7 +102,7 @@ function descargarPDF() {
     insumosConDatos.forEach(ins => {
       fila(
         ins.nombre || '(sin nombre)',
-        `${ins.cantidad} × ${fmt(ins.precio)} = ${fmt(ins.cantidad * ins.precio)}`
+        `${ins.cantidad}${ins.unidad ? ` ${ins.unidad}` : ""} × ${fmt(ins.precio)}${ins.unidad ? `/${ins.unidad}` : ""} = ${fmt(ins.cantidad * ins.precio)}`
       );
     });
     filaDestacada('Total materiales', fmt(c.totalInsumos)); y += 2;

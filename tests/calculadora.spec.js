@@ -52,4 +52,16 @@ test.describe('Calculadora de costos', () => {
     await page.locator('.nav-tab').nth(4).click();
     await expect(page.locator('#lista-proyectos')).toContainText('Alfajores de maicena');
   });
+
+  test('previsualiza precio y composicion en proyectos guardados', async ({ page }) => {
+    await page.evaluate(project => AppStorage.saveProjects([project]), demoProject);
+    await page.reload();
+    await page.locator('.nav-tab').nth(4).click();
+    const preview = page.locator('.proyecto-preview').first();
+    await expect(preview).toContainText('Precio de venta');
+    await expect(preview).toContainText('Costo por unidad');
+    await expect(preview).toContainText('Costo: 67%');
+    await expect(preview).toContainText('Ganancia: 33%');
+    await expect(preview.locator('.proyecto-bar-costo')).toHaveAttribute('style', /width:67%/);
+  });
 });

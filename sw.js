@@ -9,7 +9,7 @@
    ============================================================ */
 
 // Subí este número en cada deploy para invalidar las caches viejas.
-const VERSION   = 'v2.5.3';
+const VERSION   = 'v2.6.0';
 const APP_CACHE = `app-${VERSION}`;       // Núcleo: HTML + iconos + assets propios
 const RUNTIME   = `runtime-${VERSION}`;   // Externos: Google Fonts, CDNs, etc.
 
@@ -24,10 +24,12 @@ const PRECACHE = [
   '/shared/base.css',
   '/shared/library.css',
   '/shared/library.js',
+  '/shared/materials.js',
   '/shared/storage.js',
   '/shared/format.js',
   '/modules/calculadora/',
   '/modules/calculadora/styles.css',
+  '/modules/calculadora/materials.js',
   '/modules/calculadora/app.js',
   '/modules/calculadora/projects.js',
   '/modules/calculadora/pdf.js',

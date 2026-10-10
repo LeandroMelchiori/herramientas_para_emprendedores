@@ -42,14 +42,18 @@ Muchos emprendimientos gestionan costos, precios, ventas y comunicación utiliza
 
 Permite construir el costo de un producto y estimar un precio de venta sostenible.
 
-- Insumos, materiales, mano de obra y producción por tanda.
+- Catalogo central de materiales con producto, marca, presentacion y precio.
+- Vinculacion de un mismo material con varios productos y actualizacion automatica de costos.
+- Conversion de kg/g, l/ml, m/cm y unidades, con historial breve de precios.
+- Insumos manuales compatibles con proyectos anteriores, mano de obra y produccion por tanda.
 - Costo unitario y precio sugerido.
 - Margen de ganancia editable mediante slider e input numérico.
 - Cálculo inverso del margen.
 - Punto de equilibrio mensual y diario.
 - Comparación de escenarios de precio.
 - Guardado y autoguardado de proyectos.
-- Búsqueda y paginación de proyectos guardados.
+- Busqueda y paginacion de proyectos guardados.
+- Previsualizacion del precio de venta y la proporcion entre costo y ganancia.
 - Duplicación, exportación, importación y backup en JSON.
 - Estado compartible mediante URL.
 - Resumen descargable en PDF.
@@ -119,7 +123,7 @@ La suite está preparada como PWA:
 - estrategia `stale-while-revalidate` para archivos actualizables;
 - caché versionada para evitar mantener versiones antiguas;
 - aviso cuando existe una actualización;
-- recursos principales precargados por el Service Worker `v2.5.3`.
+- recursos principales precargados por el Service Worker `v2.6.0`.
 
 No requiere tienda de aplicaciones ni un backend para funcionar.
 
@@ -156,7 +160,7 @@ GoatCounter    ─► analítica anónima y eventos de uso
 Vercel         ─► publicación estática y headers de caché
 ```
 
-El registro de ventas lee los proyectos creados en la calculadora, lo que permite reutilizar costos y precios sin volver a cargar los productos.
+El registro de ventas lee los proyectos creados en la calculadora y resuelve los materiales vinculados con su precio vigente. Al confirmar una venta conserva un snapshot del costo, por lo que los cambios posteriores no alteran el historial.
 
 ---
 
@@ -193,12 +197,13 @@ El proyecto no utiliza framework frontend ni proceso de build para la aplicació
 ├── shared/
 │   ├── migrations.js
 │   ├── storage.js
+│   ├── materials.js            ← conversiones y resolucion central de precios
 │   ├── costing.js
 │   ├── format.js
 │   └── ui.js
 ├── assets/
 ├── modules/
-│   ├── calculadora/
+│   ├── calculadora/             ← incluye materials.js para gestionar el catalogo
 │   ├── registrodeventas/
 │   ├── guiadeprompts/
 │   ├── combinadordecolores/
@@ -240,14 +245,16 @@ Abrir `http://localhost:3000`.
 
 ## ✅ Pruebas
 
-El repositorio incluye más de 60 pruebas end-to-end con Playwright distribuidas en 13 archivos:
+El repositorio incluye 21 pruebas end-to-end con Playwright, incluidas pruebas de aceptacion del catalogo central:
 
 - carga sin errores de los cinco módulos;
-- autoguardado y proyectos de la calculadora;
+- autoguardado, proyectos y materiales vinculados de la calculadora;
+- conversiones de peso, volumen, longitud y unidades;
+- precios manuales por debajo del costo y restauracion de referencias vinculadas;
 - costos, margen, punto de equilibrio y precio manual;
 - carrito, snapshots, ventas pendientes y pagos parciales;
 - gastos reales, anulaciones reversibles y cierres mensuales;
-- backup actual y compatibilidad con formatos anteriores;
+- backup version 6 y compatibilidad con formatos anteriores;
 - conversiones, armonías y contraste de colores;
 - catálogos editoriales de prompts y herramientas.
 
