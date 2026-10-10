@@ -87,6 +87,8 @@ Cada modulo separa estructura (`index.html`), presentacion (`styles.css`) y comp
 
 ## Convenciones de desarrollo
 
+**Nombres de ramas y atribuciones**: usar nombres descriptivos de la tarea, sin prefijos de herramientas o asistentes (por ejemplo, `visual-refresh` o `catalogo-materiales`). No agregar firmas de IA, trailers de coautoría de asistentes ni comentarios de autoría por IA en nuevos commits o código. Mantener la identidad Git configurada. No reescribir commits históricos ni renombrar o eliminar ramas remotas sin autorización explícita.
+
 **Comentarios en el código**: todo bloque lógico no trivial debe tener un comentario breve que explique el *por qué* o el *qué hace*, no cómo. Una línea es suficiente; evitar comentarios que solo repitan lo que el código ya dice.
 
 **README.md**: actualizarlo en cada commit que agregue, quite o modifique funcionalidad visible para el usuario o la estructura del proyecto.
