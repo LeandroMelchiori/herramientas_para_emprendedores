@@ -15,7 +15,7 @@
 
 El proyecto se utiliza en actividades vinculadas con la **Dirección de Economía Social del Gobierno de Santa Fe** y prioriza tres criterios: acceso gratuito, funcionamiento desde el celular y privacidad de la información.
 
-La interfaz fue renovada para priorizar tareas concretas, lectura clara y controles cómodos en celular. La portada orienta a cada persona según lo que necesita resolver y los módulos mantienen una identidad visual común, con accesibilidad, navegación consistente y objetivos expresados en lenguaje simple.
+La interfaz prioriza tareas concretas, lectura clara y controles cómodos en celular. La portada muestra las cinco herramientas desde el primer vistazo, con opciones expresadas como acciones simples, y los módulos mantienen una identidad visual común y accesible.
 
 🔗 **Aplicación publicada:** [economiasocial.sachadev.me](https://economiasocial.sachadev.me)
 
@@ -119,7 +119,7 @@ La suite está preparada como PWA:
 - estrategia `stale-while-revalidate` para archivos actualizables;
 - caché versionada para evitar mantener versiones antiguas;
 - aviso cuando existe una actualización;
-- recursos principales precargados por el Service Worker `v2.5.0`.
+- recursos principales precargados por el Service Worker `v2.5.1`.
 
 No requiere tienda de aplicaciones ni un backend para funcionar.
 
