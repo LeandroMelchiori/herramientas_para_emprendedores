@@ -4,10 +4,17 @@
 
   let editingId = null;
   let search = '';
+  let returnFocus = null;
+  let returnRow = null;
 
   const getAll = () => AppStorage.getMaterials();
   const saveAll = (items) => AppStorage.saveMaterials(items);
   const fmtCost = (value) => AppFormat.currencyARS(value);
+  function formError(message) {
+    const node = document.getElementById('material-form-error');
+    node.textContent = message;
+    node.hidden = !message;
+  }
 
   function projectsUsing(materialId) {
     return AppStorage.getProjects().filter((project) =>
@@ -41,14 +48,13 @@
       const linked = projectsUsing(item.id).length;
       return `<article class="catalog-material ${item.activo ? '' : 'inactive'}">
         <div class="catalog-material-main">
-          <strong>${AppFormat.escapeHTML(item.nombre)}</strong>
-          <span>${AppFormat.escapeHTML(item.marca || 'Sin marca')} &middot; ${item.cantidadPresentacion} ${item.unidadPresentacion} por ${fmtCost(item.precioCompra)}</span>
-          <small>${fmtCost(item.costoUnidad)} por ${item.unidadUso} &middot; ${linked} ${linked === 1 ? 'producto vinculado' : 'productos vinculados'}</small>
+          <strong>${AppFormat.escapeHTML(AppMaterials.materialLabel(item))}</strong>
+          <small>Costo unitario: ${fmtCost(item.costoUnidad)} &middot; ${linked} ${linked === 1 ? 'producto vinculado' : 'productos vinculados'}</small>
         </div>
         <div class="catalog-material-actions">
-          <button type="button" data-material-action="edit" data-id="${item.id}">Editar</button>
-          <button type="button" data-material-action="toggle" data-id="${item.id}">${item.activo ? 'Desactivar' : 'Activar'}</button>
-          ${linked ? '' : `<button type="button" class="danger" data-material-action="delete" data-id="${item.id}">Eliminar</button>`}
+          <button type="button" data-material-action="edit" data-id="${AppFormat.escapeHTML(item.id)}">Editar</button>
+          <button type="button" data-material-action="toggle" data-id="${AppFormat.escapeHTML(item.id)}">${item.activo ? 'Desactivar' : 'Activar'}</button>
+          ${linked ? '' : `<button type="button" class="danger" data-material-action="delete" data-id="${AppFormat.escapeHTML(item.id)}">Eliminar</button>`}
         </div>
       </article>`;
     }).join('');
@@ -58,31 +64,39 @@
     editingId = null;
     const form = document.getElementById('form-material');
     form?.reset();
-    document.getElementById('material-cantidad').value = 1;
-    document.getElementById('material-unidad').value = 'kg';
     document.getElementById('material-form-title').textContent = 'Agregar material';
     document.getElementById('btn-cancelar-edicion-material').hidden = true;
+    formError('');
   }
 
-  function open() {
+  function open(id) {
+    returnFocus = document.activeElement;
+    returnRow = returnFocus?.closest('.ingredient-row')?.dataset.index;
     resetForm();
     render();
     abrirModal('modal-materiales');
+    if (typeof id === 'string') edit(id);
+    else document.getElementById('material-nombre').focus();
+  }
+
+  function close() {
+    cerrarModal('modal-materiales');
+    const target = returnFocus?.isConnected ? returnFocus
+      : document.querySelector(`#lista-insumos [data-index="${returnRow}"] [data-field="nombre"]`);
+    (target || document.getElementById('btn-abrir-materiales')).focus();
   }
 
   function edit(id) {
     const item = getAll().find((material) => material.id === id);
     if (!item) return;
     editingId = id;
-    document.getElementById('material-nombre').value = item.nombre;
-    document.getElementById('material-marca').value = item.marca;
+    document.getElementById('material-nombre').value = AppMaterials.materialLabel(item);
     document.getElementById('material-categoria').value = item.categoria;
-    document.getElementById('material-cantidad').value = item.cantidadPresentacion;
-    document.getElementById('material-unidad').value = item.unidadPresentacion;
-    document.getElementById('material-precio').value = item.precioCompra;
+    document.getElementById('material-precio').value = item.costoUnidad;
     document.getElementById('material-form-title').textContent = 'Editar material';
     document.getElementById('btn-cancelar-edicion-material').hidden = false;
     document.getElementById('material-nombre').focus();
+    formError('');
   }
 
   function submit(event) {
@@ -94,25 +108,33 @@
       ...(previous || {}),
       id: previous?.id,
       nombre: document.getElementById('material-nombre').value,
-      marca: document.getElementById('material-marca').value,
+      marca: '',
+      calculoDirecto: true,
+      costoDirecto: document.getElementById('material-precio').value,
+      unidadUso: previous?.unidadUso || 'u',
       categoria: document.getElementById('material-categoria').value,
-      cantidadPresentacion: document.getElementById('material-cantidad').value,
-      unidadPresentacion: document.getElementById('material-unidad').value,
-      precioCompra: document.getElementById('material-precio').value,
       actualizadoEn: now,
     };
-    if (previous && Number(previous.precioCompra) !== Number(raw.precioCompra)) {
-      raw.historialPrecios = [...previous.historialPrecios, { fecha: now, precio: previous.precioCompra }].slice(-24);
+    if (previous && Number(previous.costoUnidad) !== Number(raw.costoDirecto)) {
+      raw.historialPrecios = [...previous.historialPrecios, { fecha: now, precio: previous.precioCompra, costoUnitario: previous.costoUnidad }].slice(-24);
     }
     const normalized = AppMaterials.normalize(raw);
-    if (!normalized.nombre || normalized.precioCompra <= 0) {
-      mostrarToast('Completa el nombre y un precio mayor a cero');
+    if (!normalized.nombre || normalized.costoUnidad <= 0) {
+      formError('Completá el nombre y un precio mayor a cero.');
       return;
+    }
+    if (items.some(item => item.id !== editingId && AppMaterials.sameVariant(item, normalized))) {
+      formError('Ese nombre ya está guardado. Buscá el material y editá su costo; no hace falta duplicarlo.');
+      return;
+    }
+    if (previous) {
+      const count = projectsUsing(previous.id).length;
+      if (!confirm(`Vas a actualizar el material guardado. Se recalcularán ${count} proyecto(s) vinculado(s) y los cálculos abiertos que lo usen. Las ventas ya registradas no cambian. ¿Guardar estos cambios?`)) return;
     }
     const index = items.findIndex((item) => item.id === editingId);
     if (index >= 0) items[index] = normalized;
     else items.unshift(normalized);
-    saveAll(items);
+    if (!saveAll(items)) return formError('No se pudo guardar. Conservá un respaldo y revisá el espacio del dispositivo.');
     resetForm();
     render();
     global.dispatchEvent(new CustomEvent('materials:changed'));
@@ -142,6 +164,15 @@
   }
 
   document.addEventListener('DOMContentLoaded', () => {
+    // El catálogo mantiene el foco dentro del diálogo y permite volver con Escape.
+    document.getElementById('modal-materiales').addEventListener('keydown', event => {
+      if (event.key === 'Escape') { event.preventDefault(); close(); }
+      if (event.key !== 'Tab') return;
+      const controls = [...event.currentTarget.querySelectorAll('button, input, select')].filter(el => !el.disabled && el.getClientRects().length);
+      const first = controls[0], last = controls[controls.length - 1];
+      if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last.focus(); }
+      if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first.focus(); }
+    });
     document.getElementById('btn-abrir-materiales')?.addEventListener('click', open);
     document.getElementById('form-material')?.addEventListener('submit', submit);
     document.getElementById('btn-cancelar-edicion-material')?.addEventListener('click', resetForm);
@@ -154,5 +185,5 @@
     });
   });
 
-  global.MaterialCatalog = Object.freeze({ getAll, options, render, open, resetForm });
+  global.MaterialCatalog = Object.freeze({ getAll, options, render, open, close, resetForm });
 })(window);

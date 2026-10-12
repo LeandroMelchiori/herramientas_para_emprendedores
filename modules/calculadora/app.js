@@ -156,29 +156,7 @@ function renderizarFilas() {
   listaI.innerHTML = '';
   resolverInsumosVinculados();
   estado.insumos.forEach((ins, i) => {
-    const linked = Boolean(ins.materialId);
-    const unitHint = linked ? '<small>Precio central · ' + escHtml(ins.unidad || 'u') + '</small>' : '';
-    const quantityLabel = linked ? 'Cantidad usada en ' + escHtml(ins.unidad || 'unidades') : 'Cantidad usada';
-    const wrap = document.createElement('div');
-    wrap.className = 'row-insumo-wrap';
-    wrap.innerHTML = `
-      <div class="row-insumo ${linked ? 'linked' : ''}">
-        <div class="insumo-name-control">
-          <select aria-label="Origen del material" onchange="vincularMaterial(${i}, this.value)">
-            <option value="">Carga manual</option>
-            ${MaterialCatalog.options(ins.materialId)}
-          </select>
-          <input type="text" aria-label="Nombre del material ${i + 1}" placeholder="Material" value="${escHtml(ins.nombre)}" ${linked ? 'readonly' : ''}
-            oninput="estado.insumos[${i}].nombre=this.value;autosave()">
-          ${unitHint}
-        </div>
-        <input type="number" min="0" step="any" value="${ins.cantidad}" aria-label="${quantityLabel}"
-          oninput="estado.insumos[${i}].cantidad=parseFloat(this.value)||0;actualizar()">
-        <input type="number" min="0" step="any" value="${ins.precio}" ${linked ? 'readonly' : ''}
-          aria-label="Precio por unidad" oninput="estado.insumos[${i}].precio=parseFloat(this.value)||0;actualizar()">
-      </div>
-      <button class="btn-delete" onclick="eliminarInsumo(${i})" aria-label="Eliminar material ${i + 1}">✕</button>`;
-    listaI.appendChild(wrap);
+    listaI.appendChild(IngredientRows.create(i));
   });
   actualizarBadge('limite-insumos', 'btn-agregar-insumo', estado.insumos.length);
 
@@ -475,10 +453,7 @@ const fmt = AppFormat.currencyARS;
 function sincronizarEstadoDesdeDOM() {
   document.querySelectorAll('#lista-insumos .row-insumo-wrap').forEach((wrap, i) => {
     if (!estado.insumos[i]) return;
-    const [nombreI, cantI, precioI] = wrap.querySelectorAll('input');
-    if (nombreI)  estado.insumos[i].nombre   = nombreI.value;
-    if (cantI)    estado.insumos[i].cantidad  = parseFloat(cantI.value)  || 0;
-    if (precioI)  estado.insumos[i].precio    = parseFloat(precioI.value) || 0;
+    wrap.sync?.();
   });
   document.querySelectorAll('#lista-servicios .row-insumo-wrap').forEach((wrap, i) => {
     if (!estado.servicios[i]) return;

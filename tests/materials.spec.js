@@ -18,22 +18,20 @@ test.describe('Catalogo central de materiales', () => {
 
   test('crea un material y lo vincula a un insumo', async ({ page }) => {
     await page.getByRole('button', { name: 'Administrar materiales' }).click();
-    await page.fill('#material-nombre', 'Harina 000');
-    await page.fill('#material-marca', 'Molino Norte');
-    await page.fill('#material-cantidad', '1');
-    await page.selectOption('#material-unidad', 'kg');
+    await page.fill('#material-nombre', 'Harina 000 Molino Norte — 1 kg');
     await page.fill('#material-precio', '1500');
     await page.getByRole('button', { name: 'Guardar material' }).click();
 
     const id = await page.evaluate(() => AppStorage.getMaterials()[0].id);
     await page.getByRole('button', { name: 'Cerrar' }).click();
     const row = page.locator('#lista-insumos .row-insumo-wrap').first();
-    await row.locator('select').selectOption(id);
-    await row.locator('input[type="number"]').first().fill('250');
+    await row.getByRole('combobox', { name: 'Nombre del material 1' }).fill('Harina');
+    await row.getByRole('option', { name: /Harina 000/ }).click();
+    await row.locator('[data-field="cantidad"]').fill('0.25');
     await expect(page.locator('#total-insumos')).toContainText('375');
 
     const linked = await page.evaluate(() => leerEstadoCompleto().insumos[0]);
-    expect(linked).toMatchObject({ materialId: id, cantidad: 250, precio: 1.5, unidad: 'g' });
+    expect(linked).toMatchObject({ materialId: id, cantidad: 0.25, precio: 1500 });
   });
 
   test('actualiza varios productos sin cambiar snapshots de ventas', async ({ page }) => {
@@ -71,6 +69,31 @@ test.describe('Catalogo central de materiales', () => {
     expect(result.backup.calculadora_materiales).toHaveLength(1);
     expect(result.restored[0]).toMatchObject({ nombre: 'Frasco', costoUnidad: 500 });
     expect(result.afterLegacy).toHaveLength(1);
+  });
+
+  test('costo directo sobrevive al respaldo y mantiene el costo histórico de venta', async ({ page }) => {
+    await page.evaluate(() => {
+      AppStorage.saveMaterials([AppMaterials.normalize({ id: 'directo', nombre: 'Harina Pureza — 1 kg', calculoDirecto: true, costoDirecto: 1500 })]);
+      AppStorage.saveProjects([{ id: 78, nombre: 'Pan nuevo', datos: {
+        unidades: 1, insumos: [{ materialId: 'directo', nombre: 'Harina Pureza — 1 kg', cantidad: 0.25, precio: 1500 }],
+        servicios: [], margen: 50, modo: 'slider', gastosMensuales: 0, diasLaborales: 24,
+      } }]);
+      const backup = AppStorage.createBackup();
+      localStorage.clear();
+      AppStorage.restoreBackup(backup);
+    });
+    await page.goto('/modules/registrodeventas/');
+    await page.selectOption('#select-producto', '78');
+    await page.click('#btn-agregar');
+    await page.click('#btn-finalizar');
+    const result = await page.evaluate(() => {
+      const material = AppStorage.getMaterials()[0];
+      material.costoDirecto = 2000;
+      AppStorage.saveMaterials([AppMaterials.normalize(material)]);
+      return { snapshot: AppStorage.getSales()[0].totalCosto,
+        current: calcDesdeProyecto(AppStorage.getProjects()[0]).costoUnit };
+    });
+    expect(result).toEqual({ snapshot: 375, current: 500 });
   });
 
   test('la venta conserva el costo aunque luego cambie el material', async ({ page }) => {

@@ -42,9 +42,15 @@ Muchos emprendimientos gestionan costos, precios, ventas y comunicación utiliza
 
 Permite construir el costo de un producto y estimar un precio de venta sostenible.
 
-- Catalogo central de materiales con producto, marca, presentacion y precio.
+- Catálogo central de materiales con nombre y costo unitario.
+- Fila compacta: nombre, cantidad, costo unitario y total automático (cantidad × costo unitario), sin tarjetas ni campos extra de compra.
+- La marca y la medida se escriben en el nombre, por ejemplo «Harina Pureza — 1 kg». Cada presentación se guarda con un nombre distinto; el texto no se interpreta ni convierte automáticamente.
+- Los materiales vinculados protegen sus datos y permiten editar la cantidad usada. «Editar solo en este cálculo» desvincula al cambiar un dato; la edición central solicita confirmación y muestra cuántos proyectos afecta.
+- Una sola acción «Editar» despliega las opciones de edición local o del catálogo, con una explicación de su alcance. Se cierra con Escape o al salir de la fila y conserva la protección del material.
+- Cantidades fraccionarias: para un material de 1 kg con costo unitario de $1500, una cantidad de 0,25 da un total de $375.
+- Búsqueda y guardado desde la misma fila, con validación de nombres duplicados. Los datos siguen siendo locales y las ventas registradas conservan su costo histórico.
 - Vinculacion de un mismo material con varios productos y actualizacion automatica de costos.
-- Conversion de kg/g, l/ml, m/cm y unidades, con historial breve de precios.
+- Los materiales anteriores conservan su unidad de cálculo, conversiones y precios; se indica esa base en el nombre visible para no reinterpretar cantidades ya cargadas. Se conserva el historial breve de precios.
 - Insumos manuales compatibles con proyectos anteriores, mano de obra y produccion por tanda.
 - Costo unitario y precio sugerido.
 - Margen de ganancia editable mediante slider e input numérico.
@@ -123,7 +129,7 @@ La suite está preparada como PWA:
 - estrategia `stale-while-revalidate` para archivos actualizables;
 - caché versionada para evitar mantener versiones antiguas;
 - aviso cuando existe una actualización;
-- recursos principales precargados por el Service Worker `v2.6.0`.
+- recursos principales precargados por el Service Worker `v2.7.3`.
 
 No requiere tienda de aplicaciones ni un backend para funcionar.
 
@@ -245,7 +251,7 @@ Abrir `http://localhost:3000`.
 
 ## ✅ Pruebas
 
-El repositorio incluye 21 pruebas end-to-end con Playwright, incluidas pruebas de aceptacion del catalogo central:
+El repositorio incluye pruebas end-to-end con Playwright, incluidas pruebas de aceptación del catálogo central:
 
 - carga sin errores de los cinco módulos;
 - autoguardado, proyectos y materiales vinculados de la calculadora;

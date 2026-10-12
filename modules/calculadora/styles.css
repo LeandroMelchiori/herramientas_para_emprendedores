@@ -827,6 +827,58 @@
 .insumo-name-control select, .material-form select { width:100%; border:1.5px solid var(--borde); border-radius:8px; background:var(--blanco); color:var(--gris-texto); font:600 .72rem 'DM Sans',sans-serif; padding:6px 8px; margin-bottom:5px; }
 .insumo-name-control small { display:block; color:var(--azul); font-size:.68rem; margin:3px 2px 0; }
 .row-insumo.linked input[readonly] { background:var(--azul-palido); color:var(--azul); }
+
+/* Carga compacta con etiquetas visibles y total junto al costo unitario. */
+#seccion-insumos .col-labels { display:none; }
+.ingredient-row { align-items:flex-start; gap:8px; padding:16px 0; border-bottom:1px solid var(--borde, #eadbd4); }
+.ingredient-body { flex:1; min-width:0; }
+.ingredient-main { display:grid; grid-template-columns:minmax(0, 1fr) 80px 115px 115px; gap:10px; align-items:end; }
+.ingredient-name { display:flex; flex-direction:column; gap:6px; }
+.ingredient-main output { display:block; min-height:46px; padding:10px; box-sizing:border-box; border:1px solid #bca89c; border-radius:10px; background:#f3efeb; color:#302920; font-size:1rem; font-weight:500; overflow-wrap:anywhere; font-variant-numeric:tabular-nums; }
+.ingredient-footer { display:flex; flex-wrap:wrap; justify-content:space-between; align-items:center; gap:4px 12px; }
+.ingredient-footer .ingredient-status { margin:4px 0; }
+.ingredient-footer .ingredient-actions { gap:8px; }
+.ingredient-row label { display:flex; flex-direction:column; gap:6px; min-width:0; color:#604a40; font-size:.78rem; font-weight:600; }
+.ingredient-row input { width:100%; min-width:0; min-height:46px; border:1px solid #bca89c; border-radius:10px; background:#fcfaf9; color:#302920; font:inherit; font-size:1rem; font-weight:400; }
+.ingredient-row input { padding:10px; box-sizing:border-box; }
+.ingredient-row input[readonly] { background:#f3efeb; color:#62554d; }
+.ingredient-row.linked input[readonly] { background:#f6f2ee; }
+.ingredient-row :is(input, button, select, summary):focus-visible { outline:3px solid var(--naranja, #b64312); outline-offset:3px; }
+.ingredient-row .btn-delete { min-width:44px; min-height:44px; margin-top:22px; align-self:flex-start; color:#74594c; }
+.ingredient-row :is(input, select, button, summary) { scroll-margin-top:140px; }
+.ingredient-help, .ingredient-status, .ingredient-error { font-size:.8rem; line-height:1.55; margin:8px 0; overflow-wrap:anywhere; }
+.ingredient-help { color:#705e53; }
+.ingredient-status { color:#675448; }
+.ingredient-error { color:#9d231b; }
+.ingredient-actions { display:flex; flex-wrap:wrap; gap:8px; }
+.ingredient-row button[data-action] { min-height:44px; border:1px solid #d5b3a2; border-radius:8px; padding:8px 12px; background:white; color:#983913; font:inherit; font-size:.8rem; cursor:pointer; }
+.ingredient-row button[data-action]:hover { background:#fff3ea; }
+.ingredient-row button[data-action]:active { background:#f6e2d5; }
+.ingredient-row button[data-action="edit"] { display:inline-flex; align-items:center; gap:8px; border-color:transparent; background:transparent; padding:8px; font-weight:600; }
+.ingredient-row button[data-action="edit"]:hover, .ingredient-row button[data-action="edit"][aria-expanded="true"] { background:var(--naranja-palido); }
+.ingredient-row button[data-action="edit"][aria-expanded="true"] span { transform:rotate(180deg); }
+.ingredient-edit-options { display:grid; margin-top:4px; border:1px solid var(--borde); border-radius:10px; overflow:hidden; }
+.ingredient-edit-options button[data-action] { display:flex; flex-direction:column; gap:4px; width:100%; padding:12px; text-align:left; border:0; border-radius:0; }
+.ingredient-edit-options button + button { border-top:1px solid var(--borde); }
+.ingredient-edit-options button span { color:var(--gris-texto); font-weight:400; line-height:1.5; }
+.ingredient-edit-options button:focus-visible { outline-offset:-3px; }
+.ingredient-row [hidden] { display:none !important; }
+.ingredient-name { position:relative; }
+.material-suggestions { position:absolute; z-index:20; top:100%; left:0; right:0; min-width:220px; max-height:260px; overflow:auto; border:1px solid #bca89c; border-radius:10px; background:white; box-shadow:0 8px 24px #30292022; }
+.material-suggestions button { width:100%; min-height:60px; display:flex; flex-direction:column; gap:4px; text-align:left; padding:10px 12px; background:white; color:#302920; border:0; border-bottom:1px solid #eadbd4; font:inherit; cursor:pointer; white-space:normal; overflow-wrap:anywhere; }
+.material-suggestions button span { font-weight:400; }
+.material-suggestions button:hover, .material-suggestions [aria-selected="true"] { background:#fff0e4; }
+@media(max-width:600px) {
+  #back-home-btn { position:absolute; }
+  .ingredient-row { position:relative; }
+  .ingredient-row .btn-delete { position:absolute; right:0; top:36px; margin-top:0; }
+  .ingredient-main { grid-template-columns:minmax(0, .8fr) minmax(0, 1fr) minmax(0, 1.3fr); gap:8px; }
+  .ingredient-main label { font-size:.72rem; }
+  .ingredient-main output { font-size:.85rem; padding:11px 6px; white-space:nowrap; overflow-x:auto; }
+  .ingredient-name { grid-column:1 / -1; margin-right:52px; }
+  .ingredient-actions button { flex:1 1 auto; }
+  .material-suggestions { min-width:0; }
+}
 .materials-intro { display:flex; align-items:center; justify-content:space-between; gap:12px; }
 .btn-catalogo { flex-shrink:0; border:1px solid var(--naranja); border-radius:8px; background:white; color:var(--naranja); padding:8px 10px; font:700 .75rem 'DM Sans',sans-serif; cursor:pointer; }
 .modal-materiales { max-width:760px; max-height:92vh; overflow-y:auto; }

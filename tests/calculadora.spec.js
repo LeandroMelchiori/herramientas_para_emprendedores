@@ -35,9 +35,9 @@ test.describe('Calculadora de costos', () => {
     await expect(page).toHaveTitle(/Calculadora/);
     await page.locator('#nombre-producto').fill('Pan casero');
     const firstRow = page.locator('#lista-insumos .row-insumo-wrap').first();
-    await firstRow.locator('input').nth(0).fill('Harina');
-    await firstRow.locator('input').nth(1).fill('2');
-    await firstRow.locator('input').nth(2).fill('1500');
+    await firstRow.locator('[data-field="nombre"]').fill('Harina');
+    await firstRow.locator('[data-field="cantidad"]').fill('2');
+    await firstRow.locator('[data-field="precio"]').fill('1500');
     await page.waitForTimeout(650);
 
     const draft = await page.evaluate(() => AppStorage.getCalculatorDraft());
