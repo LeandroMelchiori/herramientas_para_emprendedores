@@ -129,7 +129,7 @@ La suite está preparada como PWA:
 - estrategia `stale-while-revalidate` para archivos actualizables;
 - caché versionada para evitar mantener versiones antiguas;
 - aviso cuando existe una actualización;
-- recursos principales precargados por el Service Worker `v2.7.3`.
+- recursos principales precargados por el Service Worker `v2.7.5`.
 
 No requiere tienda de aplicaciones ni un backend para funcionar.
 
@@ -147,6 +147,8 @@ La aplicación está diseñada con un enfoque local-first:
 - no se crean perfiles de seguimiento entre sitios.
 
 La política completa está disponible en [economiasocial.sachadev.me/privacidad.html](https://economiasocial.sachadev.me/privacidad.html).
+
+La página de privacidad incluye un índice por temas, texto de lectura de al menos 16 px, navegación por teclado, enlaces de regreso y una presentación para impresión. No muestra una sección de consultas ni un contacto provisional hasta contar con un correo específico. Se conservan las declaraciones de la política y su fecha original; la revisión de interfaz no implica una validación legal del texto.
 
 ## Desarrollo
 

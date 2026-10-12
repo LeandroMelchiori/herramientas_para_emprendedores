@@ -2,6 +2,7 @@ const { test, expect } = require('@playwright/test');
 
 const pages = [
   ['Inicio', '/'],
+  ['Privacidad', '/privacidad.html'],
   ['Calculadora', '/modules/calculadora/'],
   ['Guia de prompts', '/modules/guiadeprompts/'],
   ['Combinador de colores', '/modules/combinadordecolores/'],

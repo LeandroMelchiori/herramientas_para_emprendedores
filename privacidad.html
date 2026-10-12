@@ -8,7 +8,7 @@
 
 <!-- ══ PWA + íconos ══ -->
 <link rel="manifest" href="/manifest.json">
-<meta name="theme-color" content="#D5306E">
+<meta name="theme-color" content="#6B3FA0">
 <link rel="icon" href="/favicon.ico" sizes="any">
 <link rel="apple-touch-icon" href="/assets/icons/apple-touch-icon.png">
 <script src="/analytics.js" defer></script>
@@ -18,21 +18,34 @@
 <link rel="stylesheet" href="/privacidad.css">
 </head>
 <body>
-<a href="/" id="back-home-btn" title="Volver al inicio">← Todas las herramientas</a>
-
-<header>
-  <div class="tag">Transparencia</div>
-  <h1>Política de Privacidad</h1>
-  <p>Cuidamos tu privacidad. Esto es todo lo que hacemos —y lo que no hacemos— con la información.</p>
+<a class="skip-link" href="#contenido">Saltar al contenido</a>
+<header class="privacy-header" id="inicio">
+  <div class="page-width">
+    <a href="/" class="back-link"><span aria-hidden="true">←</span> Todas las herramientas</a>
+    <p class="eyebrow">Herramientas para Emprendedores · Transparencia</p>
+    <h1>Política de Privacidad</h1>
+    <p class="lead">Cuidamos tu privacidad. Esto es todo lo que hacemos —y lo que no hacemos— con la información.</p>
+    <p class="updated">Última actualización del contenido: <time datetime="2026-06">junio de 2026</time></p>
+  </div>
 </header>
 
-<main>
-  <div class="card intro">
+<div class="privacy-layout page-width">
+  <nav class="privacy-index" aria-labelledby="indice-titulo">
+    <h2 id="indice-titulo">En esta página</h2>
+    <ol>
+      <li><a href="#que-medimos">Qué medimos</a></li>
+      <li><a href="#que-no-hacemos">Qué no hacemos</a></li>
+      <li><a href="#como-lo-hacemos">Cómo lo hacemos</a></li>
+      <li><a href="#datos-guardados">Tus datos guardados</a></li>
+    </ol>
+  </nav>
+<main id="contenido" tabindex="-1">
+  <div class="privacy-summary">
     <p>Este sitio usa <strong>estadísticas anónimas</strong> para entender qué herramientas sirven más y poder mejorarlas. No recolectamos datos personales ni te seguimos por la web.</p>
   </div>
 
-  <div class="card">
-    <h2>📊 Qué medimos (de forma anónima)</h2>
+  <section aria-labelledby="que-medimos">
+    <h2 id="que-medimos" tabindex="-1">Qué medimos <span>(de forma anónima)</span></h2>
     <ul>
       <li>Cantidad de visitas y de visitantes (sin identificar a nadie).</li>
       <li>País y región aproximada desde donde se usa.</li>
@@ -40,34 +53,34 @@
       <li>Desde dónde llegaste (Google, Instagram, link directo, etc.).</li>
       <li>Qué herramientas y funciones se usan más (por ejemplo, qué prompts se copian).</li>
     </ul>
-  </div>
+  </section>
 
-  <div class="card ok">
-    <h2>🔒 Qué NO hacemos</h2>
+  <section aria-labelledby="que-no-hacemos">
+    <h2 id="que-no-hacemos" tabindex="-1">Qué no hacemos</h2>
     <ul>
       <li>No pedimos ni guardamos datos personales: ni nombre, ni email, ni DNI.</li>
       <li>No usamos cookies de seguimiento.</li>
       <li>No creamos perfiles tuyos ni te reconocemos entre visitas a lo largo del tiempo.</li>
       <li>No vendemos ni compartimos datos con terceros, ni mostramos publicidad.</li>
     </ul>
-  </div>
+  </section>
 
-  <div class="card">
-    <h2>🛠 Cómo lo hacemos</h2>
+  <section aria-labelledby="como-lo-hacemos">
+    <h2 id="como-lo-hacemos" tabindex="-1">Cómo lo hacemos</h2>
     <p>Usamos <strong>GoatCounter</strong>, una herramienta de estadísticas respetuosa de la privacidad que funciona <strong>sin cookies</strong>. La dirección IP se usa solo en el momento para estimar la ubicación aproximada y <strong>no se almacena</strong> de forma que te identifique. Por eso este sitio no necesita el típico cartel de "aceptar cookies".</p>
-  </div>
+  </section>
 
-  <div class="card">
-    <h2>💾 Lo que guardás en tus herramientas</h2>
+  <section aria-labelledby="datos-guardados">
+    <h2 id="datos-guardados" tabindex="-1">Lo que guardás en tus herramientas</h2>
     <p>Cuando guardás paletas de color, marcás prompts como favoritos o creás tus propios prompts, esa información se almacena <strong>únicamente en tu dispositivo</strong> (en el navegador). No se envía a ningún servidor ni la vemos nosotros. Si limpiás los datos del navegador, se borra.</p>
-  </div>
+  </section>
 
-  <p class="note">Última actualización: junio de 2026 · Ante cualquier consulta, escribinos por
-    <a href="https://www.instagram.com/sacha.melchiori" target="_blank" rel="noopener">Instagram</a>.</p>
+  <a class="top-link" href="#inicio">Volver arriba <span aria-hidden="true">↑</span></a>
 </main>
+</div>
 
 <footer>
-  Herramientas para Emprendedores · <a href="/">Volver al inicio</a>
+  <div class="page-width"><span>Herramientas para Emprendedores</span><a href="/">Volver al inicio</a></div>
 </footer>
 </body>
 </html>
